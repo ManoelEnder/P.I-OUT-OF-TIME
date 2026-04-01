@@ -7,13 +7,16 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Jullya/CenasJu/TelaInicio.unity
     guid: b09e39be72e9776489ed65eabca2e217
   - enabled: 1
     path: Assets/Jullya/CenasJu/Menu.unity
     guid: b9640fd9fc335f14d91bc0cac4ef58a5
+  - enabled: 1
+    path: Assets/Jullya/CenasJu/CenaLabFut.unity
+    guid: 9350555faa844ba42ae571c19a10eb43
   - enabled: 1
     path: Assets/Manoel/Manoel.unity
     guid: bebe863774f31c44c93357bf854a33e6

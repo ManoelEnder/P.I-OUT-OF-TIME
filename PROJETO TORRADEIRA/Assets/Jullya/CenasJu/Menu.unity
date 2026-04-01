@@ -767,7 +767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069b2bf85c75fae448149e74fd20be45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeScene
-  sceneName: Manoel
+  sceneName: CenaLabFut
 --- !u!1 &522648044
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,13 +1523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32554e7c53cbeb54c9c7fcc04a6f15aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleMenuHandler
-  playButton: {fileID: 2080845149}
-  optionsButton: {fileID: 347397439}
-  creditsButton: {fileID: 866316066}
-  quitButton: {fileID: 1156782663}
-  playSceneName: 
-  optionsSceneName: 
-  creditsSceneName: 
 --- !u!1 &1148907871
 GameObject:
   m_ObjectHideFlags: 0
