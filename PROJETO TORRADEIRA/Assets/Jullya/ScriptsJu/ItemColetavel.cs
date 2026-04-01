@@ -1,13 +1,18 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class ItemColetavel : MonoBehaviour
 {
     public string itemNome;
 
-    public float distancia = 3f; 
+    public float distancia = 3f;
     public TMP_Text texto;
     public Transform player;
+
+    public float tempoParaMudarCena = 3f;
+    public string nomeDaCena;
 
     private bool coletado = false;
 
@@ -16,9 +21,8 @@ public class ItemColetavel : MonoBehaviour
         if (coletado || player == null || texto == null) return;
 
         float dist = Vector3.Distance(transform.position, player.position);
-        bool podeColetar = dist <= distancia;
 
-        if (podeColetar)
+        if (dist <= distancia)
         {
             texto.text = "Aperte E para coletar: " + itemNome;
 
@@ -36,7 +40,23 @@ public class ItemColetavel : MonoBehaviour
     void Coletar()
     {
         coletado = true;
-        texto.text = "";
-        Destroy(gameObject);
+        texto.text = "Item coletado!";
+
+        // 🔥 esconder o objeto sem desativar ele
+        if (GetComponent<MeshRenderer>() != null)
+            GetComponent<MeshRenderer>().enabled = false;
+
+        if (GetComponent<Collider>() != null)
+            GetComponent<Collider>().enabled = false;
+
+        // 🔥 AGORA funciona
+        StartCoroutine(MudarCena());
+    }
+
+    IEnumerator MudarCena()
+    {
+        yield return new WaitForSeconds(tempoParaMudarCena);
+
+        SceneManager.LoadScene(nomeDaCena);
     }
 }

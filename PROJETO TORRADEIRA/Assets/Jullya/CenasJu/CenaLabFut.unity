@@ -11218,6 +11218,8 @@ MonoBehaviour:
   distancia: 2
   texto: {fileID: 1646236140}
   player: {fileID: 1152051253}
+  tempoParaMudarCena: 2
+  nomeDaCena: Manoel
 --- !u!135 &1412786884
 SphereCollider:
   m_ObjectHideFlags: 0
