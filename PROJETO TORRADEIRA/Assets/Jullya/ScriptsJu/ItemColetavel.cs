@@ -11,8 +11,8 @@ public class ItemColetavel : MonoBehaviour
     public TMP_Text texto;
     public Transform player;
 
-    public float tempoParaMudarCena = 3f;
     public string nomeDaCena;
+    public FadeController fade;
 
     private bool coletado = false;
 
@@ -24,7 +24,8 @@ public class ItemColetavel : MonoBehaviour
 
         if (dist <= distancia)
         {
-            texto.text = "Aperte E para coletar: " + itemNome;
+            if (texto.text == "")
+                texto.text = "Aperte E para coletar: " + itemNome;
 
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -33,30 +34,38 @@ public class ItemColetavel : MonoBehaviour
         }
         else
         {
-            texto.text = "";
+            if (!coletado)
+                texto.text = "";
         }
     }
 
     void Coletar()
     {
         coletado = true;
+
         texto.text = "Item coletado!";
 
-        // 🔥 esconder o objeto sem desativar ele
-        if (GetComponent<MeshRenderer>() != null)
-            GetComponent<MeshRenderer>().enabled = false;
+        
+        MeshRenderer render = GetComponent<MeshRenderer>();
+        if (render != null) render.enabled = false;
 
-        if (GetComponent<Collider>() != null)
-            GetComponent<Collider>().enabled = false;
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
 
-        // 🔥 AGORA funciona
         StartCoroutine(MudarCena());
     }
 
     IEnumerator MudarCena()
     {
-        yield return new WaitForSeconds(tempoParaMudarCena);
+       
+        if (fade != null)
+        {
+            yield return StartCoroutine(fade.FadeOut());
+        }
 
+        yield return new WaitForSeconds(1f);
+
+        
         SceneManager.LoadScene(nomeDaCena);
     }
 }
