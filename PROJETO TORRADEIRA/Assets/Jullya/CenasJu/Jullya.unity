@@ -1296,6 +1296,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6039375101891603646, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
+      propertyPath: m_VolumeLayerMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 6573121677053309227, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -1347,7 +1351,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2300057808486696369, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1696681359}
   m_SourcePrefab: {fileID: 100100000, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
 --- !u!1 &1263575909
 GameObject:
@@ -2135,6 +2142,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1696681357 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2300057808486696369, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
+  m_PrefabInstance: {fileID: 1256255953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1696681359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696681357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 75e48736f4da1ab49a37c0a47cc703ec, type: 2}
 --- !u!1 &1744083025
 GameObject:
   m_ObjectHideFlags: 0
