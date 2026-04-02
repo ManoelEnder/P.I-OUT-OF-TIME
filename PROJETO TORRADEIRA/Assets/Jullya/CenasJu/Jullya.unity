@@ -189,12 +189,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -432,8 +432,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.52
-  m_fontSizeBase: 20.52
+  m_fontSize: 51.8
+  m_fontSizeBase: 51.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -470,7 +470,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -2.9288177, w: 0}
+  m_margin: {x: 0, y: 0, z: -1038.9844, w: -136.54765}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -500,7 +500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -239.51436, y: 292}
+  m_AnchoredPosition: {x: -823, y: 442}
   m_SizeDelta: {x: 368.9713, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &176838675
@@ -1032,8 +1032,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 49.12
+  m_fontSizeBase: 49.12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1070,7 +1070,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -445.24927, y: 0, z: -392.14413, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1100,7 +1100,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -179}
+  m_AnchoredPosition: {x: -431, y: -436}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &821600493
@@ -2200,8 +2200,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.5
-  m_fontSizeBase: 21.5
+  m_fontSize: 49.9
+  m_fontSizeBase: 49.9
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2238,7 +2238,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -250.43799, y: 0, z: -264.52014, w: 0}
+  m_margin: {x: -275.21878, y: 0, z: -1533.1194, w: -118.85649}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2268,7 +2268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -125}
+  m_AnchoredPosition: {x: -625, y: -330}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1997962679
@@ -2280,16 +2280,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.2052877
+      objectReference: {fileID: 0}
+    - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.9040885
+      objectReference: {fileID: 0}
+    - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.258862
+      value: 8.0405
       objectReference: {fileID: 0}
     - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.86
+      value: 3.6708
       objectReference: {fileID: 0}
     - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.4539285
+      value: 2.9377
       objectReference: {fileID: 0}
     - target: {fileID: 5157990247262826365, guid: 21b5e1c569440aa4cbbf1d0541e1a908, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2361,8 +2369,8 @@ MonoBehaviour:
   temBateria: 1
   temSensor: 1
   temCircuito: 1
-  missaoAceita: 1
-  missaoCompleta: 1
+  missaoAceita: 0
+  missaoCompleta: 0
 --- !u!4 &2027813887
 Transform:
   m_ObjectHideFlags: 0

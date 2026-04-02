@@ -73,7 +73,7 @@ public class MontagemCamera : MonoBehaviour
         if (etapa == 3 && GameManager.instancia.temCircuito)
         {
             circuito.SetActive(true);
-            texto.text = "Circuito instalado!";
+       
             etapa++;
             AtualizarMissao();
             return;
