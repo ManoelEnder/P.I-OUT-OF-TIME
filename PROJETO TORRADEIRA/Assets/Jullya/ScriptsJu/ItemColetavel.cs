@@ -39,7 +39,7 @@ public class ItemColetavel : MonoBehaviour
         }
     }
 
-    void Coletar()
+    public void Coletar()
     {
         coletado = true;
 

@@ -18,6 +18,7 @@ public class PhotoCamera : MonoBehaviour
     public Image cooldownBar;
     public TextMeshProUGUI photoCounter;
     public GameObject crosshair;
+    public GameObject cameraHUD;
 
     public float cooldown = 2f;
     public float flashDuration = 0.07f;
@@ -27,6 +28,7 @@ public class PhotoCamera : MonoBehaviour
 
     bool canShoot = true;
     int photoCount = 0;
+    bool cameraMode = false;
 
     void Start()
     {
@@ -52,22 +54,41 @@ public class PhotoCamera : MonoBehaviour
         if (photoCounter != null)
             photoCounter.text = "Fotos: 0";
 
+        if (cameraHUD != null)
+            cameraHUD.SetActive(false);
+
         foreach (Renderer r in temporalRenderers)
             r.enabled = false;
     }
 
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame && canShoot)
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+            ToggleCameraMode();
+
+        if (cameraMode && Mouse.current.leftButton.wasPressedThisFrame && canShoot)
             StartCoroutine(TakePhoto());
+    }
+
+    void ToggleCameraMode()
+    {
+        cameraMode = !cameraMode;
+
+        if (cameraHUD != null)
+            cameraHUD.SetActive(cameraMode);
+
+        if (crosshair != null)
+            crosshair.SetActive(!cameraMode);
+
+        foreach (Renderer r in temporalRenderers)
+            r.enabled = cameraMode;
+
+        playerCam.fieldOfView = cameraMode ? 40f : 60f;
     }
 
     IEnumerator TakePhoto()
     {
         canShoot = false;
-
-        if (crosshair != null)
-            crosshair.SetActive(false);
 
         photoCount++;
         if (photoCounter != null)
@@ -80,17 +101,28 @@ public class PhotoCamera : MonoBehaviour
 
         photoCam.fieldOfView = playerCam.fieldOfView;
 
-        foreach (Renderer r in temporalRenderers)
-            r.enabled = true;
-
         yield return new WaitForEndOfFrame();
+
+        Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            if (hit.collider.CompareTag("Temporal"))
+            {
+                Renderer r = hit.collider.GetComponent<Renderer>();
+                if (r != null)
+                    r.enabled = true;
+
+                ItemColetavel item = hit.collider.GetComponent<ItemColetavel>();
+                if (item != null)
+                    item.Coletar();
+            }
+        }
 
         photoCam.enabled = true;
         photoCam.Render();
         photoCam.enabled = false;
-
-        foreach (Renderer r in temporalRenderers)
-            r.enabled = false;
 
         if (audioSource != null && shutterSound != null)
             audioSource.PlayOneShot(shutterSound);
@@ -125,21 +157,6 @@ public class PhotoCamera : MonoBehaviour
             cooldownBar.fillAmount = 0f;
 
         canShoot = true;
-
-        if (crosshair != null)
-            crosshair.SetActive(true);
-
-        Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f))
-        {
-            EvidenceObject evidence = hit.collider.GetComponent<EvidenceObject>();
-            if (evidence != null)
-            {
-                evidence.Collect();
-            }
-        }
     }
 
     IEnumerator FlashCoroutine()
