@@ -12,8 +12,14 @@ public class MontagemCamera : MonoBehaviour
     public GameObject circuito;
 
     public TMP_Text texto;
+    public TMP_Text textoMissao;
 
-    private int etapa = 0; // 🔥 controla a ordem
+    private int etapa = 0;
+
+    void Start()
+    {
+        AtualizarMissao();
+    }
 
     void Update()
     {
@@ -37,50 +43,59 @@ public class MontagemCamera : MonoBehaviour
 
     void Montar()
     {
-        // LENTE
         if (etapa == 0 && GameManager.instancia.temLente)
         {
             lente.SetActive(true);
             texto.text = "Lente instalada!";
             etapa++;
+            AtualizarMissao();
             return;
         }
 
-        // BATERIA
         if (etapa == 1 && GameManager.instancia.temBateria)
         {
             bateria.SetActive(true);
             texto.text = "Bateria instalada!";
             etapa++;
+            AtualizarMissao();
             return;
         }
 
-        // SENSOR
         if (etapa == 2 && GameManager.instancia.temSensor)
         {
             sensor.SetActive(true);
             texto.text = "Sensor instalado!";
             etapa++;
+            AtualizarMissao();
             return;
         }
 
-        // CIRCUITO
         if (etapa == 3 && GameManager.instancia.temCircuito)
         {
             circuito.SetActive(true);
             texto.text = "Circuito instalado!";
             etapa++;
+            AtualizarMissao();
             return;
         }
 
-        // FINAL
+  
         if (etapa >= 4)
         {
             texto.text = "Câmera completa! O futuro foi restaurado!";
+            GameManager.instancia.missaoCompleta = true;
+        }
+    }
+
+    void AtualizarMissao()
+    {
+        if (etapa < 4)
+        {
+            textoMissao.text = "Objetivo: Monte a câmera\nPeças: " + etapa + "/4";
         }
         else
         {
-            texto.text = "Você não tem a próxima peça!";
+            textoMissao.text = "Objetivo concluído!";
         }
     }
 }
