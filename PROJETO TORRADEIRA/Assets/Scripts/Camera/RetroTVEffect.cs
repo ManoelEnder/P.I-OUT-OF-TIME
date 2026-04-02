@@ -3,40 +3,31 @@ using UnityEngine.UI;
 
 public class RetroTVEffect : MonoBehaviour
 {
-    public RectTransform noise;
-    public RectTransform scanlines;
+    public float speed = 50f;
+    public float flickerSpeed = 10f;
+    public float flickerAmount = 0.1f;
 
-    public float noiseSpeed = 50f;
-    public float scanSpeed = 20f;
-
-    public Image noiseImg;
-    public Image scanImg;
-
-    float baseNoiseAlpha;
-    float baseScanAlpha;
+    RectTransform rect;
+    Image img;
+    Color baseColor;
 
     void Start()
     {
-        baseNoiseAlpha = noiseImg.color.a;
-        baseScanAlpha = scanImg.color.a;
+        rect = GetComponent<RectTransform>();
+        img = GetComponent<Image>();
+        baseColor = img.color;
     }
 
     void Update()
     {
-    
-        noise.anchoredPosition += new Vector2(30f, noiseSpeed) * Time.deltaTime;
+        rect.anchoredPosition += Vector2.up * speed * Time.deltaTime;
 
-        scanlines.anchoredPosition += Vector2.up * scanSpeed * Time.deltaTime;
+        if (rect.anchoredPosition.y > Screen.height)
+        {
+            rect.anchoredPosition = new Vector2(0, -Screen.height);
+        }
 
-        if (noise.anchoredPosition.y > Screen.height)
-            noise.anchoredPosition = new Vector2(0, -Screen.height);
-
-        if (scanlines.anchoredPosition.y > Screen.height)
-            scanlines.anchoredPosition = new Vector2(0, 0);
-
-        float flicker = 1 + Mathf.Sin(Time.time * 12f) * 0.05f;
-
-        noiseImg.color = new Color(1, 1, 1, baseNoiseAlpha * flicker);
-        scanImg.color = new Color(1, 1, 1, baseScanAlpha * flicker);
+        float flicker = 1 + Mathf.Sin(Time.time * flickerSpeed) * flickerAmount;
+        img.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * flicker);
     }
 }
