@@ -1579,11 +1579,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 938cec61813001745a270aedeacdeca7, type: 3}
---- !u!1 &1381719223 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -516098083770646512, guid: 89f8bb3b93a342941bc43608168bf9e6, type: 3}
-  m_PrefabInstance: {fileID: 243713753}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1445469681
 GameObject:
   m_ObjectHideFlags: 0
@@ -1987,9 +1982,9 @@ MonoBehaviour:
   player: {fileID: 1224559227}
   distancia: 4
   lente: {fileID: 380066473}
-  bateria: {fileID: 1381719223}
-  sensor: {fileID: 1803633853}
-  circuito: {fileID: 309232483}
+  bateria: {fileID: 500907105}
+  sensor: {fileID: 309232483}
+  circuito: {fileID: 1803633853}
   flash: {fileID: 626230812}
   visor: {fileID: 1065927632}
   carcaca: {fileID: 500907105}
