@@ -10,14 +10,27 @@ public class MontagemCamera : MonoBehaviour
     public GameObject bateria;
     public GameObject sensor;
     public GameObject circuito;
+    public GameObject flash;
+    public GameObject visor;
+    public GameObject carcaca;
 
     public TMP_Text texto;
     public TMP_Text textoMissao;
 
     private int etapa = 0;
+    private const int TOTAL_PECAS = 7;
 
     void Start()
     {
+        // garante que tudo começa desligado
+        lente.SetActive(false);
+        bateria.SetActive(false);
+        sensor.SetActive(false);
+        circuito.SetActive(false);
+        flash.SetActive(false);
+        visor.SetActive(false);
+        carcaca.SetActive(false);
+
         AtualizarMissao();
     }
 
@@ -25,15 +38,12 @@ public class MontagemCamera : MonoBehaviour
     {
         float dist = Vector3.Distance(transform.position, player.position);
 
-        if (dist <= distancia)
+        if (dist <= distancia && etapa < TOTAL_PECAS)
         {
-            if (etapa < 4)
-                texto.text = "Aperte E para montar";
+            texto.text = "Aperte E para montar";
 
             if (Input.GetKeyDown(KeyCode.E))
-            {
                 Montar();
-            }
         }
         else
         {
@@ -43,44 +53,48 @@ public class MontagemCamera : MonoBehaviour
 
     void Montar()
     {
-        if (etapa == 0 && GameManager.instancia.temLente)
+        switch (etapa)
         {
-            lente.SetActive(true);
-            texto.text = "Lente instalada!";
-            etapa++;
-            AtualizarMissao();
-            return;
+            case 0:
+                lente.SetActive(true);
+                texto.text = "Lente instalada!";
+                break;
+
+            case 1:
+                bateria.SetActive(true);
+                texto.text = "Bateria instalada!";
+                break;
+
+            case 2:
+                sensor.SetActive(true);
+                texto.text = "Sensor instalado!";
+                break;
+
+            case 3:
+                circuito.SetActive(true);
+                texto.text = "Circuito instalado!";
+                break;
+
+            case 4:
+                flash.SetActive(true);
+                texto.text = "Flash instalado!";
+                break;
+
+            case 5:
+                visor.SetActive(true);
+                texto.text = "Visor instalado!";
+                break;
+
+            case 6:
+                carcaca.SetActive(true);
+                texto.text = "Carcaça instalada!";
+                break;
         }
 
-        if (etapa == 1 && GameManager.instancia.temBateria)
-        {
-            bateria.SetActive(true);
-            texto.text = "Bateria instalada!";
-            etapa++;
-            AtualizarMissao();
-            return;
-        }
+        etapa++;
+        AtualizarMissao();
 
-        if (etapa == 2 && GameManager.instancia.temSensor)
-        {
-            sensor.SetActive(true);
-            texto.text = "Sensor instalado!";
-            etapa++;
-            AtualizarMissao();
-            return;
-        }
-
-        if (etapa == 3 && GameManager.instancia.temCircuito)
-        {
-            circuito.SetActive(true);
-       
-            etapa++;
-            AtualizarMissao();
-            return;
-        }
-
-  
-        if (etapa >= 4)
+        if (etapa >= TOTAL_PECAS)
         {
             texto.text = "Câmera completa! O futuro foi restaurado!";
             GameManager.instancia.missaoCompleta = true;
@@ -89,13 +103,9 @@ public class MontagemCamera : MonoBehaviour
 
     void AtualizarMissao()
     {
-        if (etapa < 4)
-        {
-            textoMissao.text = "Objetivo: Monte a câmera\nPeças: " + etapa + "/4";
-        }
+        if (etapa < TOTAL_PECAS)
+            textoMissao.text = "Objetivo: Monte a câmera\nPeças: " + etapa + "/" + TOTAL_PECAS;
         else
-        {
             textoMissao.text = "Objetivo concluído!";
-        }
     }
 }
