@@ -1,42 +1,36 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RetroTVEffect : MonoBehaviour
 {
-    public RectTransform noise;
-    public RectTransform scanlines;
+    public RectTransform img1;
+    public RectTransform img2;
+    public float speed = 50f;
 
-    public float noiseSpeed = 50f;
-    public float scanSpeed = 20f;
-
-    public Image noiseImg;
-    public Image scanImg;
-
-    float baseNoiseAlpha;
-    float baseScanAlpha;
+    float height;
 
     void Start()
     {
-        baseNoiseAlpha = noiseImg.color.a;
-        baseScanAlpha = scanImg.color.a;
+        height = img1.rect.height;
+
+        img1.anchoredPosition = new Vector2(0, 0);
+        img2.anchoredPosition = new Vector2(0, -height);
     }
 
     void Update()
     {
-    
-        noise.anchoredPosition += new Vector2(30f, noiseSpeed) * Time.deltaTime;
+        float move = speed * Time.deltaTime;
 
-        scanlines.anchoredPosition += Vector2.up * scanSpeed * Time.deltaTime;
+        img1.anchoredPosition += new Vector2(0, move);
+        img2.anchoredPosition += new Vector2(0, move);
 
-        if (noise.anchoredPosition.y > Screen.height)
-            noise.anchoredPosition = new Vector2(0, -Screen.height);
+        if (img1.anchoredPosition.y >= height)
+        {
+            img1.anchoredPosition = new Vector2(0, img2.anchoredPosition.y - height);
+        }
 
-        if (scanlines.anchoredPosition.y > Screen.height)
-            scanlines.anchoredPosition = new Vector2(0, 0);
-
-        float flicker = 1 + Mathf.Sin(Time.time * 12f) * 0.05f;
-
-        noiseImg.color = new Color(1, 1, 1, baseNoiseAlpha * flicker);
-        scanImg.color = new Color(1, 1, 1, baseScanAlpha * flicker);
+        if (img2.anchoredPosition.y >= height)
+        {
+            img2.anchoredPosition = new Vector2(0, img1.anchoredPosition.y - height);
+        }
     }
 }

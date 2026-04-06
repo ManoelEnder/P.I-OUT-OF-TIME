@@ -20,8 +20,14 @@ public class PhotoCamera : MonoBehaviour
     public GameObject crosshair;
     public GameObject cameraHUD;
 
+    public Image fadeImage;
+
     public float cooldown = 2f;
     public float flashDuration = 0.07f;
+
+    public float zoomFOV = 40f;
+    public float normalFOV = 60f;
+    public float transitionTime = 0.4f;
 
     RenderTexture rt;
     Texture2D photo;
@@ -57,6 +63,13 @@ public class PhotoCamera : MonoBehaviour
         if (cameraHUD != null)
             cameraHUD.SetActive(false);
 
+        if (fadeImage != null)
+        {
+            Color c = fadeImage.color;
+            c.a = 0f;
+            fadeImage.color = c;
+        }
+
         foreach (Renderer r in temporalRenderers)
             r.enabled = false;
     }
@@ -74,16 +87,62 @@ public class PhotoCamera : MonoBehaviour
     {
         cameraMode = !cameraMode;
 
-        if (cameraHUD != null)
-            cameraHUD.SetActive(cameraMode);
-
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
 
-        foreach (Renderer r in temporalRenderers)
-            r.enabled = cameraMode;
+        StopAllCoroutines();
+        StartCoroutine(CameraTransition(cameraMode));
+    }
 
-        playerCam.fieldOfView = cameraMode ? 40f : 60f;
+    IEnumerator CameraTransition(bool entering)
+    {
+        float startFOV = playerCam.fieldOfView;
+        float targetFOV = entering ? zoomFOV : normalFOV;
+
+        float t = 0f;
+
+        if (cameraHUD != null)
+            cameraHUD.SetActive(true);
+
+        if (crosshair != null)
+            crosshair.SetActive(false);
+
+        foreach (Renderer r in temporalRenderers)
+            r.enabled = entering;
+
+        while (t < transitionTime)
+        {
+            t += Time.deltaTime;
+            float lerp = t / transitionTime;
+
+            playerCam.fieldOfView = Mathf.Lerp(startFOV, targetFOV, lerp);
+
+            if (fadeImage != null)
+            {
+                Color c = fadeImage.color;
+                c.a = entering
+                    ? Mathf.Lerp(0f, 0.35f, lerp)
+                    : Mathf.Lerp(0.35f, 0f, lerp);
+
+                fadeImage.color = c;
+            }
+
+            yield return null;
+        }
+
+        playerCam.fieldOfView = targetFOV;
+
+        if (!entering)
+        {
+            if (cameraHUD != null)
+                cameraHUD.SetActive(false);
+
+            if (crosshair != null)
+                crosshair.SetActive(true);
+
+            foreach (Renderer r in temporalRenderers)
+                r.enabled = false;
+        }
     }
 
     IEnumerator TakePhoto()
