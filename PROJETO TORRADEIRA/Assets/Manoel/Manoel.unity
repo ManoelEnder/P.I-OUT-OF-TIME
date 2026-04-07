@@ -1226,7 +1226,7 @@ GameObject:
   - component: {fileID: 939613043}
   - component: {fileID: 939613045}
   - component: {fileID: 939613044}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TemporalHintParticles (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6155,7 +6155,7 @@ GameObject:
   - component: {fileID: 1197453078}
   - component: {fileID: 1197453080}
   - component: {fileID: 1197453079}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TemporalHintParticles (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11371,7 +11371,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -11470,9 +11470,9 @@ MonoBehaviour:
   cameraHUD: {fileID: 1673972301}
   fadeImage: {fileID: 1933174960}
   cooldown: 2
-  flashDuration: 0.3
+  flashDuration: 0.07
   zoomFOV: 40
-  normalFOV: 60
+  normalFOV: 50
   transitionTime: 0.4
   tempoRevelado: 30
 --- !u!82 &1385445669
@@ -11701,7 +11701,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 1433970451}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
@@ -18012,7 +18012,7 @@ GameObject:
   - component: {fileID: 1830085822}
   - component: {fileID: 1830085824}
   - component: {fileID: 1830085823}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TemporalHintParticles (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23351,7 +23351,7 @@ GameObject:
   - component: {fileID: 2096402512}
   - component: {fileID: 2096402514}
   - component: {fileID: 2096402513}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TemporalHintParticles (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

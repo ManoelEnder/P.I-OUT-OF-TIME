@@ -49,12 +49,20 @@ public class PhotoCamera : MonoBehaviour
         photoCam.targetTexture = rt;
         photoCam.enabled = false;
 
-        temporais = GameObject.FindGameObjectsWithTag("Temporal")
-            .SelectMany(obj => obj.GetComponentsInChildren<Renderer>())
-            .ToArray();
+        List<Renderer> lista = new List<Renderer>();
 
-        foreach (Renderer r in temporais)
-            r.enabled = false;
+        Renderer[] todosRenderers = FindObjectsOfType<Renderer>(true);
+
+        foreach (Renderer r in todosRenderers)
+        {
+            if (r.gameObject.CompareTag("Temporal"))
+            {
+                lista.Add(r);
+                r.enabled = false;
+            }
+        }
+
+        temporais = lista.ToArray();
 
         photoPreview.gameObject.SetActive(false);
         Color p = photoPreview.color;
@@ -73,6 +81,10 @@ public class PhotoCamera : MonoBehaviour
 
         if (photoCounter != null)
             photoCounter.text = "Fotos: 0";
+
+        Debug.Log("Objetos encontrados: " + temporais.Length);
+
+        AtualizarVisibilidade();
     }
 
     void Update()
@@ -161,6 +173,8 @@ public class PhotoCamera : MonoBehaviour
                 RevelarPorTempo(r);
         }
 
+        AtualizarVisibilidade();
+
         photoCam.enabled = true;
         photoCam.Render();
         photoCam.enabled = false;
@@ -207,7 +221,8 @@ public class PhotoCamera : MonoBehaviour
 
         revelados.Remove(r);
 
-        AtualizarVisibilidade();
+        if (!cameraMode && r != null)
+            r.enabled = false;
     }
 
     void AtualizarVisibilidade()
