@@ -1531,6 +1531,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5772214640489968425, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
+      propertyPath: sensibilidade
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 6039375101891603646, guid: ada709ba1cf610a469a289cd1510e506, type: 3}
       propertyPath: m_VolumeTrigger
       value: 
