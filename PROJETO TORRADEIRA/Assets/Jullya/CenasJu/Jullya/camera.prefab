@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7368978780057484996
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.9586248
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.973
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.9783627
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.67941445
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.67941445
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.19594914
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.19594908
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -32.176
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      propertyPath: m_Name
+      value: camera
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2883681315305487046}
+  m_SourcePrefab: {fileID: 100100000, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+--- !u!1 &7674897897883337621 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f2bbcd7dc026ce84ea4cf7033f759cdd, type: 3}
+  m_PrefabInstance: {fileID: 7368978780057484996}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2883681315305487046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7674897897883337621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
+  itemNome: camera
+  distancia: 3
+  texto: {fileID: 0}
+  player: {fileID: 0}
+  nomeDaCena: Manoel
+  fade: {fileID: 0}
