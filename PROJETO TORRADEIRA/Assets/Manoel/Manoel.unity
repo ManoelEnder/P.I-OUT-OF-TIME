@@ -242,7 +242,6 @@ GameObject:
   - component: {fileID: 188796637}
   - component: {fileID: 188796636}
   - component: {fileID: 188796635}
-  - component: {fileID: 188796638}
   m_Layer: 3
   m_Name: Object (5)
   m_TagString: Temporal
@@ -259,12 +258,11 @@ Transform:
   m_GameObject: {fileID: 188796633}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.8, y: 0, z: 0}
+  m_LocalPosition: {x: 4.7731104, y: 0, z: -21.27227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1197453078}
-  m_Father: {fileID: 1500403481}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &188796635
 BoxCollider:
@@ -343,24 +341,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188796633}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &188796638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188796633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  itemNome: Bateria
-  distancia: 3
-  texto: {fileID: 0}
-  player: {fileID: 0}
-  nomeDaCena: 
-  fade: {fileID: 0}
 --- !u!1 &275803348
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,7 +759,6 @@ GameObject:
   - component: {fileID: 568527110}
   - component: {fileID: 568527109}
   - component: {fileID: 568527108}
-  - component: {fileID: 568527111}
   m_Layer: 3
   m_Name: Object (2)
   m_TagString: Temporal
@@ -796,12 +775,11 @@ Transform:
   m_GameObject: {fileID: 568527106}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1, y: 0, z: 0}
+  m_LocalPosition: {x: 1.07311, y: 0, z: -21.27227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 939613043}
-  m_Father: {fileID: 1500403481}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &568527108
 BoxCollider:
@@ -880,24 +858,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568527106}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &568527111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 568527106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  itemNome: Bateria
-  distancia: 3
-  texto: {fileID: 0}
-  player: {fileID: 0}
-  nomeDaCena: 
-  fade: {fileID: 0}
 --- !u!1 &609276182
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,11 +1242,11 @@ Transform:
   m_GameObject: {fileID: 939613042}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 2.4450002, y: 0.51, z: -0.13999939}
+  m_LocalPosition: {x: 3.51811, y: 0.51, z: -21.41227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 568527107}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!199 &939613044
 ParticleSystemRenderer:
@@ -6211,11 +6171,11 @@ Transform:
   m_GameObject: {fileID: 1197453077}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -5.365, y: 0.51, z: -0.13999939}
+  m_LocalPosition: {x: -0.59188956, y: 0.51, z: -21.41227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 188796634}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!199 &1197453079
 ParticleSystemRenderer:
@@ -11501,10 +11461,9 @@ MonoBehaviour:
   photoCam: {fileID: 1385445667}
   playerCam: {fileID: 1433970454}
   photoPreview: {fileID: 275803350}
-  temporalRenderers: []
   flashImage: {fileID: 1250877734}
-  audioSource: {fileID: 0}
-  shutterSound: {fileID: 0}
+  audioSource: {fileID: 1385445669}
+  shutterSound: {fileID: 8300000, guid: 5a1031b833824a649905920e86b5fece, type: 3}
   cooldownBar: {fileID: 1251883960}
   photoCounter: {fileID: 1686159201}
   crosshair: {fileID: 1279998666}
@@ -11515,6 +11474,7 @@ MonoBehaviour:
   zoomFOV: 40
   normalFOV: 60
   transitionTime: 0.4
+  tempoRevelado: 30
 --- !u!82 &1385445669
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12022,7 +11982,6 @@ GameObject:
   - component: {fileID: 1468653154}
   - component: {fileID: 1468653153}
   - component: {fileID: 1468653152}
-  - component: {fileID: 1468653155}
   m_Layer: 3
   m_Name: Object (4)
   m_TagString: Temporal
@@ -12039,12 +11998,11 @@ Transform:
   m_GameObject: {fileID: 1468653150}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.48, y: 0, z: 0}
+  m_LocalPosition: {x: 3.45311, y: 0, z: -21.27227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2096402512}
-  m_Father: {fileID: 1500403481}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1468653152
 BoxCollider:
@@ -12123,60 +12081,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1468653150}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1468653155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468653150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  itemNome: Bateria
-  distancia: 3
-  texto: {fileID: 0}
-  player: {fileID: 0}
-  nomeDaCena: 
-  fade: {fileID: 0}
---- !u!1 &1500403480
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1500403481}
-  m_Layer: 0
-  m_Name: HiddenObjects
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1500403481
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500403480}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.02689, y: 0, z: -21.27227}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1796743312}
-  - {fileID: 568527107}
-  - {fileID: 1622137281}
-  - {fileID: 1468653151}
-  - {fileID: 188796634}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1523086862
 GameObject:
   m_ObjectHideFlags: 0
@@ -12325,7 +12229,6 @@ GameObject:
   - component: {fileID: 1622137284}
   - component: {fileID: 1622137283}
   - component: {fileID: 1622137282}
-  - component: {fileID: 1622137285}
   m_Layer: 3
   m_Name: Object (3)
   m_TagString: Temporal
@@ -12342,12 +12245,11 @@ Transform:
   m_GameObject: {fileID: 1622137280}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.22, y: 0, z: 0}
+  m_LocalPosition: {x: 2.19311, y: 0, z: -21.27227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1830085822}
-  m_Father: {fileID: 1500403481}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1622137282
 BoxCollider:
@@ -12426,24 +12328,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622137280}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1622137285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622137280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  itemNome: Bateria
-  distancia: 3
-  texto: {fileID: 0}
-  player: {fileID: 0}
-  nomeDaCena: 
-  fade: {fileID: 0}
 --- !u!1 &1666231383
 GameObject:
   m_ObjectHideFlags: 0
@@ -17274,11 +17158,11 @@ Transform:
   m_GameObject: {fileID: 1666231383}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 5.035, y: 0.51, z: -0.14}
+  m_LocalPosition: {x: 5.00811, y: 0.51, z: -21.41227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1796743312}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1673972301
 GameObject:
@@ -18018,7 +17902,6 @@ GameObject:
   - component: {fileID: 1796743315}
   - component: {fileID: 1796743314}
   - component: {fileID: 1796743313}
-  - component: {fileID: 1796743316}
   m_Layer: 3
   m_Name: Object (1)
   m_TagString: Temporal
@@ -18035,12 +17918,11 @@ Transform:
   m_GameObject: {fileID: 1796743311}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.02689, y: 0, z: -21.27227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1666231386}
-  m_Father: {fileID: 1500403481}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1796743313
 BoxCollider:
@@ -18119,24 +18001,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1796743311}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1796743316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1796743311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 691d5fe85a723a54caeda5c0d5553c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  itemNome: Bateria
-  distancia: 3
-  texto: {fileID: 0}
-  player: {fileID: 0}
-  nomeDaCena: 
-  fade: {fileID: 0}
 --- !u!1 &1830085821
 GameObject:
   m_ObjectHideFlags: 0
@@ -18164,11 +18028,11 @@ Transform:
   m_GameObject: {fileID: 1830085821}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.054999925, y: 0.51, z: -0.13999939}
+  m_LocalPosition: {x: 2.1381102, y: 0.51, z: -21.41227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1622137281}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!199 &1830085823
 ParticleSystemRenderer:
@@ -22997,8 +22861,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867731469}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.02671, y: 0, z: -27.81128}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 18.026733, y: 0, z: -27.811277}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23503,11 +23367,11 @@ Transform:
   m_GameObject: {fileID: 2096402511}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -2.725, y: 0.51, z: -0.13999939}
+  m_LocalPosition: {x: 0.72811013, y: 0.51, z: -21.41227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1468653151}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!199 &2096402513
 ParticleSystemRenderer:
@@ -28322,5 +28186,14 @@ SceneRoots:
   - {fileID: 1980261257}
   - {fileID: 460537734}
   - {fileID: 876928135}
-  - {fileID: 1500403481}
+  - {fileID: 1666231386}
+  - {fileID: 939613043}
+  - {fileID: 1830085822}
+  - {fileID: 2096402512}
+  - {fileID: 1197453078}
+  - {fileID: 1796743312}
+  - {fileID: 568527107}
+  - {fileID: 1622137281}
+  - {fileID: 1468653151}
+  - {fileID: 188796634}
   - {fileID: 1867731470}
