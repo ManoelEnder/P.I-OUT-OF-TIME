@@ -16,27 +16,27 @@ public class ControleJogador : MonoBehaviour
     public float distancia = 3f;
     public TMP_Text texto;
 
+    public GameObject painelDialogo; 
+
     private bool digitando = false;
     private bool falou = false;
 
-    private Coroutine rotinaTexto; 
+    private Coroutine rotinaTexto;
 
     void Update()
     {
-        
+        // Movimento
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 mover = transform.right * x + transform.forward * z;
         controller.Move(mover * velocidade * Time.deltaTime);
 
-        
         if (controller.isGrounded && velocidadeQueda.y < 0)
         {
             velocidadeQueda.y = -2f;
         }
 
-        
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
             velocidadeQueda.y = Mathf.Sqrt(pulo * -2f * gravidade);
@@ -45,7 +45,7 @@ public class ControleJogador : MonoBehaviour
         velocidadeQueda.y += gravidade * Time.deltaTime;
         controller.Move(velocidadeQueda * Time.deltaTime);
 
-      
+        // NPC
         if (npc != null && texto != null)
         {
             float dist = Vector3.Distance(transform.position, npc.position);
@@ -56,17 +56,41 @@ public class ControleJogador : MonoBehaviour
                 if (!digitando && !falou)
                     texto.text = "Aperte E para conversar";
 
-                if (Input.GetKeyDown(KeyCode.E) && !digitando && !falou)
+                if (Input.GetKeyDown(KeyCode.E))
                 {
+                    
+                    if (falou && !digitando)
+                    {
+                        texto.text = "Aperte E para conversar";
+                        painelDialogo.SetActive(false);
+                        falou = false;
+                        return;
+                    }
+
+                    
+                    if (digitando)
+                    {
+                        StopCoroutine(rotinaTexto);
+                        texto.text = "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis na empresa Kodak em 1975 por Steve Sasson deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. Encontre todas as peças e restaure a invenção. Após coletar a câmera você viajará para o passado... boa sorte, o futuro depende de você.";
+                        digitando = false;
+                        return;
+                    }
+
+                    
                     falou = true;
-                    rotinaTexto = StartCoroutine(DigitarTexto("Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis na empresa kodak em 1975 por Steve Sasson  deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem  uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. Encontre todas as peças e restaure a invenção.Apos coletar a camera voce viajara para o passado.. boa sorte o futuro depende de você."));
+                    painelDialogo.SetActive(true);
+
+                    rotinaTexto = StartCoroutine(DigitarTexto(
+                        "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis na empresa Kodak em 1975 por Steve Sasson deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. Encontre todas as peças e restaure a invenção. Após coletar a câmera você viajará para o passado... boa sorte, o futuro depende de você."
+                    ));
                 }
             }
             else
             {
-                
                 texto.text = "";
                 falou = false;
+
+                painelDialogo.SetActive(false); 
 
                 if (rotinaTexto != null)
                 {
