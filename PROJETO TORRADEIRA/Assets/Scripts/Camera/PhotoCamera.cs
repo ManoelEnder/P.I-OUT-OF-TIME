@@ -43,6 +43,7 @@ public class PhotoCamera : MonoBehaviour
 
     Coroutine transitionCoroutine;
 
+
     void Start()
     {
         rt = new RenderTexture(512, 512, 24);
