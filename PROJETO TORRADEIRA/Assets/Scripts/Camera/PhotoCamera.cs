@@ -198,35 +198,16 @@ public class PhotoCamera : MonoBehaviour
             revelados.Add(r);
 
         r.enabled = true;
-        StartCoroutine(FadeOut(r));
+        StartCoroutine(EsconderDepois(r));
     }
 
-    IEnumerator FadeOut(Renderer r)
+    IEnumerator EsconderDepois(Renderer r)
     {
-        Material mat = r.material;
-        Color corOriginal = mat.color;
-
-        float tempo = 0f;
-
-        while (tempo < tempoRevelado)
-        {
-            tempo += Time.deltaTime;
-
-            float alpha = Mathf.Lerp(1f, 0f, tempo / tempoRevelado);
-
-            Color novaCor = corOriginal;
-            novaCor.a = alpha;
-            mat.color = novaCor;
-
-            yield return null;
-        }
+        yield return new WaitForSeconds(tempoRevelado);
 
         revelados.Remove(r);
 
-        if (!cameraMode && r != null)
-            r.enabled = false;
-
-        mat.color = corOriginal;
+        AtualizarVisibilidade();
     }
 
     void AtualizarVisibilidade()
