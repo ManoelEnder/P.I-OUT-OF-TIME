@@ -1226,9 +1226,9 @@ GameObject:
   - component: {fileID: 939613043}
   - component: {fileID: 939613045}
   - component: {fileID: 939613044}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: TemporalHintParticles (1)
-  m_TagString: Untagged
+  m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6155,9 +6155,9 @@ GameObject:
   - component: {fileID: 1197453078}
   - component: {fileID: 1197453080}
   - component: {fileID: 1197453079}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: TemporalHintParticles (4)
-  m_TagString: Untagged
+  m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11772,7 +11772,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -12341,7 +12341,7 @@ GameObject:
   - component: {fileID: 1666231384}
   m_Layer: 0
   m_Name: TemporalHintParticles
-  m_TagString: Untagged
+  m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18012,9 +18012,9 @@ GameObject:
   - component: {fileID: 1830085822}
   - component: {fileID: 1830085824}
   - component: {fileID: 1830085823}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: TemporalHintParticles (2)
-  m_TagString: Untagged
+  m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23351,9 +23351,9 @@ GameObject:
   - component: {fileID: 2096402512}
   - component: {fileID: 2096402514}
   - component: {fileID: 2096402513}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: TemporalHintParticles (3)
-  m_TagString: Untagged
+  m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
