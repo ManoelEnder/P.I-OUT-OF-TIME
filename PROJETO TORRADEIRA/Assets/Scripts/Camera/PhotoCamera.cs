@@ -33,6 +33,8 @@ public class PhotoCamera : MonoBehaviour
 
     public MissionSystem missionSystem;
 
+    public CRTPostProcess crtEffect;
+
     RenderTexture rt;
     Texture2D photo;
 
@@ -100,6 +102,8 @@ public class PhotoCamera : MonoBehaviour
 
     void ToggleCameraMode()
     {
+        crtEffect.enabled = cameraMode;
+
         cameraMode = !cameraMode;
 
         if (crosshair != null)
@@ -207,10 +211,7 @@ public class PhotoCamera : MonoBehaviour
 
         yield return new WaitForSeconds(cooldown);
 
-        canShoot = true;
-
-        //if (missionSystem != null)
-            //missionSystem.AddFoto();    
+        canShoot = true; 
     }
 
     void RevelarPorTempo(Renderer r)
