@@ -31,6 +31,8 @@ public class PhotoCamera : MonoBehaviour
 
     public float tempoRevelado = 30f;
 
+    public MissionSystem missionSystem;
+
     RenderTexture rt;
     Texture2D photo;
 
@@ -155,8 +157,12 @@ public class PhotoCamera : MonoBehaviour
         canShoot = false;
 
         photoCount++;
+
         if (photoCounter != null)
             photoCounter.text = "Fotos: " + photoCount;
+
+        if (missionSystem != null)
+            missionSystem.AddFoto();
 
         transform.SetPositionAndRotation(
             playerCam.transform.position,
@@ -202,6 +208,9 @@ public class PhotoCamera : MonoBehaviour
         yield return new WaitForSeconds(cooldown);
 
         canShoot = true;
+
+        //if (missionSystem != null)
+            //missionSystem.AddFoto();    
     }
 
     void RevelarPorTempo(Renderer r)
@@ -213,6 +222,13 @@ public class PhotoCamera : MonoBehaviour
 
         r.enabled = true;
         StartCoroutine(EsconderDepois(r));
+
+        if (!missionSystem) return;
+
+        if (r.gameObject.name == "Object (1)")
+        {
+            missionSystem.DescobriuPeca();
+        }
     }
 
     IEnumerator EsconderDepois(Renderer r)
