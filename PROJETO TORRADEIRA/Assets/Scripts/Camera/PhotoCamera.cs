@@ -35,6 +35,14 @@ public class PhotoCamera : MonoBehaviour
 
     public MissionSystem missionSystem;
 
+    public int maxBattery = 10;
+    int currentBattery;
+
+    public Image[] batteryBars;
+
+    public float batteryDrainInterval = 3f;
+    float batteryTimer = 0f;
+
     RenderTexture rt;
     Texture2D photo;
 
@@ -58,6 +66,9 @@ public class PhotoCamera : MonoBehaviour
         photoCam.enabled = false;
 
         targetFOV = normalFOV;
+
+        currentBattery = maxBattery;
+        UpdateBatteryUI();
 
         List<Renderer> lista = new List<Renderer>();
         Renderer[] todos = FindObjectsOfType<Renderer>(true);
@@ -105,16 +116,33 @@ public class PhotoCamera : MonoBehaviour
 
             if (scroll != 0)
             {
-                targetFOV -= scroll * 1.5f;
+                targetFOV -= scroll * 0.2f;
                 targetFOV = Mathf.Clamp(targetFOV, minZoomFOV, maxZoomFOV);
             }
 
             playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, Time.deltaTime * 10f);
         }
+
+        if (cameraMode)
+        {
+            batteryTimer += Time.deltaTime;
+
+            if (batteryTimer >= batteryDrainInterval)
+            {
+                batteryTimer = 0f;
+                UseBattery(1);
+            }
+        }
+        else
+        {
+            batteryTimer = 0f;
+        }
     }
 
     void ToggleCameraMode()
     {
+        if (!cameraMode && currentBattery <= 0) return;
+
         cameraMode = !cameraMode;
 
         if (crosshair != null)
@@ -172,8 +200,11 @@ public class PhotoCamera : MonoBehaviour
     IEnumerator TakePhoto()
     {
         if (!canShoot) yield break;
+        if (currentBattery <= 0) yield break;
 
         canShoot = false;
+
+        UseBattery(1);
 
         photoCount++;
 
@@ -275,6 +306,28 @@ public class PhotoCamera : MonoBehaviour
             flashImage.color = c;
 
             flashImage.gameObject.SetActive(false);
+        }
+    }
+
+    void UseBattery(int amount)
+    {
+        currentBattery -= amount;
+        currentBattery = Mathf.Clamp(currentBattery, 0, maxBattery);
+        UpdateBatteryUI();
+    }
+
+    public void AddBattery(int amount)
+    {
+        currentBattery += amount;
+        currentBattery = Mathf.Clamp(currentBattery, 0, maxBattery);
+        UpdateBatteryUI();
+    }
+
+    void UpdateBatteryUI()
+    {
+        for (int i = 0; i < batteryBars.Length; i++)
+        {
+            batteryBars[i].enabled = i < currentBattery;
         }
     }
 }
