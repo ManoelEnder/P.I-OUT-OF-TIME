@@ -1188,7 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e76407810fcc81147b1a8ed23b104cbd, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -11451,7 +11451,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1385445665}
   - component: {fileID: 1385445668}
-  - component: {fileID: 1385445670}
   - component: {fileID: 1385445667}
   - component: {fileID: 1385445666}
   - component: {fileID: 1385445669}
@@ -11590,7 +11589,6 @@ MonoBehaviour:
   flashImage: {fileID: 1250877734}
   audioSource: {fileID: 1385445669}
   shutterSound: {fileID: 8300000, guid: 5a1031b833824a649905920e86b5fece, type: 3}
-  cooldownBar: {fileID: 1251883960}
   photoCounter: {fileID: 1686159201}
   crosshair: {fileID: 1279998666}
   cameraHUD: {fileID: 1673972301}
@@ -11602,7 +11600,9 @@ MonoBehaviour:
   transitionTime: 0.4
   tempoRevelado: 30
   missionSystem: {fileID: 1013388081}
-  crtEffect: {fileID: 1385445670}
+  zoomSpeed: 1000
+  minZoomFOV: 5
+  maxZoomFOV: 50
 --- !u!82 &1385445669
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11700,19 +11700,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1385445670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1385445664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb85b64447b4d934ea06d2c4cdf5dc8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CRTPostProcess
-  material: {fileID: 2100000, guid: 0367151e8e3966d40a5ddd5655bd1cc3, type: 2}
 --- !u!1 &1403582867
 GameObject:
   m_ObjectHideFlags: 0
@@ -11800,7 +11787,6 @@ GameObject:
   - component: {fileID: 1433970454}
   - component: {fileID: 1433970453}
   - component: {fileID: 1433970452}
-  - component: {fileID: 1433970455}
   m_Layer: 0
   m_Name: CameraPlayer
   m_TagString: Untagged
@@ -11926,19 +11912,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1433970455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433970450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb85b64447b4d934ea06d2c4cdf5dc8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CRTPostProcess
-  material: {fileID: 2100000, guid: e76407810fcc81147b1a8ed23b104cbd, type: 2}
 --- !u!1 &1441450640
 GameObject:
   m_ObjectHideFlags: 0
