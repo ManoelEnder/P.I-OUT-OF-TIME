@@ -1,30 +1,50 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
 
 public class MissionSystem : MonoBehaviour
 {
-    public TextMeshProUGUI tirarFotosText;
-    public TextMeshProUGUI descobrirPecaText;
+    public TextMeshProUGUI textoFotos;
+    public TextMeshProUGUI textoPeca;
 
-    int fotos = 0;
     public int fotosNecessarias = 5;
 
-    bool fotosCompletas = false;
+    int fotos = 0;
     bool pecaDescoberta = false;
+
+    public string nomeDaCena = "Final";
+
+    public Image fadeImage;
+    public float fadeTime = 1.5f;
+
+    void Start()
+    {
+        textoFotos.text = "[ ] Tirar 5 fotos";
+        textoPeca.text = "[ ] Descobrir peça";
+
+        textoFotos.color = Color.gray;
+        textoPeca.color = Color.gray;
+
+        if (fadeImage != null)
+        {
+            Color c = fadeImage.color;
+            c.a = 0f;
+            fadeImage.color = c;
+        }
+    }
 
     public void AddFoto()
     {
-        if (fotosCompletas) return;
-
         fotos++;
-
-        tirarFotosText.text = "[ ] Tirar " + fotosNecessarias + " fotos (" + fotos + "/" + fotosNecessarias + ")";
 
         if (fotos >= fotosNecessarias)
         {
-            fotosCompletas = true;
-            tirarFotosText.text = "[X] Tirar " + fotosNecessarias + " fotos";
-            tirarFotosText.color = Color.gray;
+            textoFotos.text = "[X] Tirar 5 fotos";
+            textoFotos.color = Color.white;
+
+            ChecarMissoes();
         }
     }
 
@@ -33,7 +53,38 @@ public class MissionSystem : MonoBehaviour
         if (pecaDescoberta) return;
 
         pecaDescoberta = true;
-        descobrirPecaText.text = "[X] Descobrir a primeira peça";
-        descobrirPecaText.color = Color.gray;
+
+        textoPeca.text = "[X] Descobrir peça";
+        textoPeca.color = Color.white;
+
+        ChecarMissoes();
+    }
+
+    void ChecarMissoes()
+    {
+        if (fotos >= fotosNecessarias && pecaDescoberta)
+        {
+            StartCoroutine(FadeAndLoad());
+        }
+    }
+
+    IEnumerator FadeAndLoad()
+    {
+        float t = 0f;
+
+        while (t < fadeTime)
+        {
+            t += Time.deltaTime;
+
+            float alpha = Mathf.Lerp(0f, 1f, t / fadeTime);
+
+            Color c = fadeImage.color;
+            c.a = alpha;
+            fadeImage.color = c;
+
+            yield return null;
+        }
+
+        SceneManager.LoadScene(nomeDaCena);
     }
 }
