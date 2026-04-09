@@ -6,15 +6,16 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float mouseSensitivity = 2f;
-    public float jumpForce = 5f;
+    public float gravity = -9.81f;
+    public float jumpForce = 2f;
 
     public Transform cameraTransform;
-    public Rigidbody rb;
+    public CharacterController controller;
 
     public TextMeshProUGUI textoInteracao;
 
     float xRotation = 0f;
-    bool isGrounded;
+    float yVelocity = 0f;
 
     private ItemColetavel itemPerto;
 
@@ -23,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        textoInteracao.gameObject.SetActive(false); 
+        textoInteracao.gameObject.SetActive(false);
     }
 
     void Update()
@@ -36,19 +37,27 @@ public class PlayerMovement : MonoBehaviour
         if (Keyboard.current.aKey.isPressed) moveInput.x -= 1;
 
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
-        transform.position += move * moveSpeed * Time.deltaTime;
+
+        if (controller.isGrounded && yVelocity < 0)
+            yVelocity = -2f;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && controller.isGrounded)
+            yVelocity = Mathf.Sqrt(jumpForce * -2f * gravity);
+
+        yVelocity += gravity * Time.deltaTime;
+
+        Vector3 velocity = move * moveSpeed;
+        velocity.y = yVelocity;
+
+        controller.Move(velocity * Time.deltaTime);
 
         Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity;
 
         xRotation -= mouseDelta.y;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseDelta.x);
-
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
 
         if (itemPerto != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
@@ -56,16 +65,6 @@ public class PlayerMovement : MonoBehaviour
             itemPerto = null;
             textoInteracao.gameObject.SetActive(false);
         }
-    }
-
-    void OnCollisionStay()
-    {
-        isGrounded = true;
-    }
-
-    void OnCollisionExit()
-    {
-        isGrounded = false;
     }
 
     private void OnTriggerEnter(Collider other)

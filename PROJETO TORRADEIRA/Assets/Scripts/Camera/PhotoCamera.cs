@@ -223,10 +223,20 @@ public class PhotoCamera : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        foreach (Renderer r in temporais)
+        Ray ray = playerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f))
         {
-            if (r != null)
-                RevelarPorTempo(r);
+            if (hit.collider.CompareTag("Temporal"))
+            {
+                Renderer r = hit.collider.GetComponent<Renderer>();
+
+                if (r != null)
+                {
+                    RevelarPorTempo(r);
+                }
+            }
         }
 
         AtualizarVisibilidade();
