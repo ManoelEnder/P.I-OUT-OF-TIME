@@ -116,7 +116,7 @@ public class PhotoCamera : MonoBehaviour
 
             if (scroll != 0)
             {
-                targetFOV -= scroll * 0.2f;
+                targetFOV -= scroll * 2.5f;
                 targetFOV = Mathf.Clamp(targetFOV, minZoomFOV, maxZoomFOV);
             }
 
