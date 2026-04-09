@@ -7,21 +7,22 @@ public class BatteryPickup : MonoBehaviour
     public int amount = 3;
     public float distance = 3f;
 
-    public TextMeshProUGUI interactText;
+    public static BatteryPickup currentTarget;
 
-    bool isLooking = false;
+    public TextMeshProUGUI interactText;
 
     void Update()
     {
         CheckLook();
 
-        if (isLooking && Keyboard.current.eKey.wasPressedThisFrame)
+        if (currentTarget == this && Keyboard.current.eKey.wasPressedThisFrame)
         {
             PhotoCamera player = FindObjectOfType<PhotoCamera>();
 
             if (player != null)
             {
                 player.AddBattery(amount);
+                interactText.gameObject.SetActive(false);
                 Destroy(gameObject);
             }
         }
@@ -36,18 +37,27 @@ public class BatteryPickup : MonoBehaviour
         {
             if (hit.collider.gameObject == gameObject)
             {
-                isLooking = true;
+                if (currentTarget != this)
+                {
+                    currentTarget = this;
 
-                if (interactText != null)
-                    interactText.gameObject.SetActive(true);
+                    if (interactText != null)
+                    {
+                        interactText.text = "[E] Pegar bateria";
+                        interactText.gameObject.SetActive(true);
+                    }
+                }
 
                 return;
             }
         }
 
-        isLooking = false;
+        if (currentTarget == this)
+        {
+            currentTarget = null;
 
-        if (interactText != null)
-            interactText.gameObject.SetActive(false);
+            if (interactText != null)
+                interactText.gameObject.SetActive(false);
+        }
     }
 }
