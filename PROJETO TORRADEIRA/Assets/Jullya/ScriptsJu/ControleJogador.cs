@@ -16,16 +16,23 @@ public class ControleJogador : MonoBehaviour
     public float distancia = 3f;
     public TMP_Text texto;
 
-    public GameObject painelDialogo; 
+    public GameObject painelDialogo;
 
     private bool digitando = false;
     private bool falou = false;
 
     private Coroutine rotinaTexto;
 
+    public TMP_Text textoObjetivo;
+
+    void Start()
+    {
+        if (textoObjetivo != null)
+            textoObjetivo.text = "Vá até o NPC para conversar e aperte E para interagir ";
+    }
+
     void Update()
     {
-        // Movimento
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -45,7 +52,6 @@ public class ControleJogador : MonoBehaviour
         velocidadeQueda.y += gravidade * Time.deltaTime;
         controller.Move(velocidadeQueda * Time.deltaTime);
 
-        // NPC
         if (npc != null && texto != null)
         {
             float dist = Vector3.Distance(transform.position, npc.position);
@@ -58,7 +64,6 @@ public class ControleJogador : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    
                     if (falou && !digitando)
                     {
                         texto.text = "Aperte E para conversar";
@@ -67,21 +72,22 @@ public class ControleJogador : MonoBehaviour
                         return;
                     }
 
-                    
                     if (digitando)
                     {
                         StopCoroutine(rotinaTexto);
-                        texto.text = "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis na empresa Kodak em 1975 por Steve Sasson deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. Encontre todas as peças e restaure a invenção. Após coletar a câmera você viajará para o passado... boa sorte, o futuro depende de você.";
+                        texto.text = "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. ";
                         digitando = false;
                         return;
                     }
 
-                    
                     falou = true;
                     painelDialogo.SetActive(true);
 
+                    if (textoObjetivo != null)
+                        textoObjetivo.text = "";
+
                     rotinaTexto = StartCoroutine(DigitarTexto(
-                        "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis na empresa Kodak em 1975 por Steve Sasson deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. Encontre todas as peças e restaure a invenção. Após coletar a câmera você viajará para o passado... boa sorte, o futuro depende de você."
+                        "Viajante, precisamos da sua ajuda... A linha do tempo foi alterada e a primeira câmera digital criada com objetos recicláveis deixou de existir. Sem ela, o futuro das fotos está instável. Você deve voltar ao passado e reconstruí-la. Nessa sala tem uma câmera especial para tirar fotos, ela revelará objetos essenciais para montar a câmera novamente. "
                     ));
                 }
             }
@@ -90,7 +96,7 @@ public class ControleJogador : MonoBehaviour
                 texto.text = "";
                 falou = false;
 
-                painelDialogo.SetActive(false); 
+                painelDialogo.SetActive(false);
 
                 if (rotinaTexto != null)
                 {

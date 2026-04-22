@@ -45,7 +45,7 @@ public class ItemColetavel : MonoBehaviour
 
         texto.text = "Item coletado!";
 
-        
+
         MeshRenderer render = GetComponent<MeshRenderer>();
         if (render != null) render.enabled = false;
 
@@ -57,7 +57,7 @@ public class ItemColetavel : MonoBehaviour
 
     IEnumerator MudarCena()
     {
-       
+
         if (fade != null)
         {
             yield return StartCoroutine(fade.FadeOut());
@@ -65,7 +65,7 @@ public class ItemColetavel : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        
+
         SceneManager.LoadScene(nomeDaCena);
     }
 }
