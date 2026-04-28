@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FadeController
   fadeImage: {fileID: 779957357}
-  velocidade: 0.1
+  velocidade: 0.4
 --- !u!222 &779957359
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2500,6 +2500,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1616258497192602942}
+    - target: {fileID: 2883681315305487046, guid: f9771ad1b8cc8c24ca92cffad3118ed6, type: 3}
+      propertyPath: distancia
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7046275607525251375, guid: f9771ad1b8cc8c24ca92cffad3118ed6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.9586248
