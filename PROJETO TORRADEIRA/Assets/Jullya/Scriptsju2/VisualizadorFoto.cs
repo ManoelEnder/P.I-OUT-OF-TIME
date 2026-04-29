@@ -1,14 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 
 public class VisualizadorFoto : MonoBehaviour
 {
     public GameObject painel;
     public Image imagemGrande;
+    public GameObject textoApagado;
+    public GameObject painelConfirmacao;
 
     private List<Sprite> fotos = new List<Sprite>();
     private List<Color> cores = new List<Color>();
+
     private int indexAtual = 0;
 
     private float zoom = 1f;
@@ -16,9 +20,26 @@ public class VisualizadorFoto : MonoBehaviour
     public float zoomMin = 0.5f;
     public float zoomMax = 3f;
 
+    private bool confirmando = false;
+
     void Update()
     {
         if (!painel.activeSelf) return;
+
+        if (confirmando)
+        {
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                ConfirmarExclusao();
+            }
+
+            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                CancelarExclusao();
+            }
+
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -33,6 +54,12 @@ public class VisualizadorFoto : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             Anterior();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            painelConfirmacao.SetActive(true);
+            confirmando = true;
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -64,7 +91,11 @@ public class VisualizadorFoto : MonoBehaviour
 
     void Mostrar()
     {
-        if (fotos == null || fotos.Count == 0) return;
+        if (fotos == null || fotos.Count == 0)
+        {
+            painel.SetActive(false);
+            return;
+        }
 
         imagemGrande.sprite = fotos[indexAtual];
 
@@ -74,7 +105,7 @@ public class VisualizadorFoto : MonoBehaviour
 
     void Proxima()
     {
-        if (fotos == null || fotos.Count == 0) return;
+        if (fotos.Count == 0) return;
 
         indexAtual++;
         if (indexAtual >= fotos.Count)
@@ -88,7 +119,7 @@ public class VisualizadorFoto : MonoBehaviour
 
     void Anterior()
     {
-        if (fotos == null || fotos.Count == 0) return;
+        if (fotos.Count == 0) return;
 
         indexAtual--;
         if (indexAtual < 0)
@@ -98,5 +129,38 @@ public class VisualizadorFoto : MonoBehaviour
         imagemGrande.rectTransform.localScale = Vector3.one;
 
         Mostrar();
+    }
+
+    void ConfirmarExclusao()
+    {
+        if (fotos.Count == 0) return;
+
+        fotos.RemoveAt(indexAtual);
+
+        if (cores != null && cores.Count > indexAtual)
+            cores.RemoveAt(indexAtual);
+
+        if (indexAtual >= fotos.Count)
+            indexAtual = fotos.Count - 1;
+
+        painelConfirmacao.SetActive(false);
+        confirmando = false;
+
+        StartCoroutine(MostrarMensagem());
+
+        Mostrar();
+    }
+
+    void CancelarExclusao()
+    {
+        painelConfirmacao.SetActive(false);
+        confirmando = false;
+    }
+
+    IEnumerator MostrarMensagem()
+    {
+        textoApagado.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        textoApagado.SetActive(false);
     }
 }
