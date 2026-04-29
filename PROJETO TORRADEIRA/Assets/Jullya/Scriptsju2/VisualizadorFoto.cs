@@ -8,7 +8,13 @@ public class VisualizadorFoto : MonoBehaviour
     public Image imagemGrande;
 
     private List<Sprite> fotos = new List<Sprite>();
+    private List<Color> cores = new List<Color>();
     private int indexAtual = 0;
+
+    private float zoom = 1f;
+    public float velocidadeZoom = 5f;
+    public float zoomMin = 0.5f;
+    public float zoomMax = 3f;
 
     void Update()
     {
@@ -16,28 +22,43 @@ public class VisualizadorFoto : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Fechar();
+            painel.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             Proxima();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             Anterior();
         }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll != 0f)
+        {
+            zoom += scroll * velocidadeZoom;
+            zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
+            imagemGrande.rectTransform.localScale = Vector3.one * zoom;
+        }
     }
 
-    public void Abrir(List<Sprite> lista, int index)
+    public void Abrir(List<Sprite> listaSprites, List<Color> listaCores, int index)
     {
-        if (lista == null || lista.Count == 0) return;
+        if (listaSprites == null || listaSprites.Count == 0) return;
 
-        fotos = lista;
+        fotos = listaSprites;
+        cores = listaCores;
+
         indexAtual = Mathf.Clamp(index, 0, fotos.Count - 1);
 
         painel.SetActive(true);
+
+        zoom = 1f;
+        imagemGrande.rectTransform.localScale = Vector3.one;
+
         Mostrar();
     }
 
@@ -46,35 +67,36 @@ public class VisualizadorFoto : MonoBehaviour
         if (fotos == null || fotos.Count == 0) return;
 
         imagemGrande.sprite = fotos[indexAtual];
-        imagemGrande.color = new Color(Random.value, Random.value, Random.value);
+
+        if (cores != null && cores.Count > indexAtual)
+            imagemGrande.color = cores[indexAtual];
     }
 
-    public void Proxima()
+    void Proxima()
     {
         if (fotos == null || fotos.Count == 0) return;
 
         indexAtual++;
-
         if (indexAtual >= fotos.Count)
             indexAtual = 0;
+
+        zoom = 1f;
+        imagemGrande.rectTransform.localScale = Vector3.one;
 
         Mostrar();
     }
 
-    public void Anterior()
+    void Anterior()
     {
         if (fotos == null || fotos.Count == 0) return;
 
         indexAtual--;
-
         if (indexAtual < 0)
             indexAtual = fotos.Count - 1;
 
-        Mostrar();
-    }
+        zoom = 1f;
+        imagemGrande.rectTransform.localScale = Vector3.one;
 
-    public void Fechar()
-    {
-        painel.SetActive(false);
+        Mostrar();
     }
 }
