@@ -32,8 +32,10 @@ public class VisualizadorFoto : MonoBehaviour
 
     public void Abrir(List<Sprite> lista, int index)
     {
+        if (lista == null || lista.Count == 0) return;
+
         fotos = lista;
-        indexAtual = index;
+        indexAtual = Mathf.Clamp(index, 0, fotos.Count - 1);
 
         painel.SetActive(true);
         Mostrar();
@@ -41,17 +43,18 @@ public class VisualizadorFoto : MonoBehaviour
 
     void Mostrar()
     {
-        if (fotos.Count > 0)
-        {
-            imagemGrande.sprite = fotos[indexAtual];
-        }
+        if (fotos == null || fotos.Count == 0) return;
+
+        imagemGrande.sprite = fotos[indexAtual];
+        imagemGrande.color = new Color(Random.value, Random.value, Random.value);
     }
 
     public void Proxima()
     {
-        if (fotos.Count == 0) return;
+        if (fotos == null || fotos.Count == 0) return;
 
         indexAtual++;
+
         if (indexAtual >= fotos.Count)
             indexAtual = 0;
 
@@ -60,9 +63,10 @@ public class VisualizadorFoto : MonoBehaviour
 
     public void Anterior()
     {
-        if (fotos.Count == 0) return;
+        if (fotos == null || fotos.Count == 0) return;
 
         indexAtual--;
+
         if (indexAtual < 0)
             indexAtual = fotos.Count - 1;
 
