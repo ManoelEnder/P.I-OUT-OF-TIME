@@ -30,7 +30,7 @@ public class AlbumFotos : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetMouseButtonDown(1))
         {
             painel.SetActive(!painel.activeSelf);
         }
