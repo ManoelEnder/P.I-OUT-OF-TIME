@@ -11,6 +11,8 @@ public class AlbumFotos : MonoBehaviour
 
     private List<Image> imagens = new List<Image>();
     private List<Color> cores = new List<Color>();
+    private List<Sprite> sprites = new List<Sprite>();
+
     private int indexSelecionado = -1;
 
     void Start()
@@ -24,14 +26,7 @@ public class AlbumFotos : MonoBehaviour
         {
             if (visualizador != null && imagens.Count > 0)
             {
-                List<Sprite> listaSprites = new List<Sprite>();
-
-                foreach (var img in imagens)
-                {
-                    listaSprites.Add(img.sprite);
-                }
-
-                visualizador.Abrir(listaSprites, cores, 0);
+                visualizador.Abrir(sprites, cores, 0);
             }
         }
 
@@ -40,42 +35,38 @@ public class AlbumFotos : MonoBehaviour
             painel.SetActive(!painel.activeSelf);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            AdicionarFoto();
-        }
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (indexSelecionado >= 0 && visualizador != null)
             {
-                List<Sprite> listaSprites = new List<Sprite>();
-
-                foreach (var img in imagens)
-                {
-                    listaSprites.Add(img.sprite);
-                }
-
-                visualizador.Abrir(listaSprites, cores, indexSelecionado);
+                visualizador.Abrir(sprites, cores, indexSelecionado);
             }
         }
     }
 
-    public void AdicionarFoto()
+    public void AdicionarFoto(Texture2D texture)
     {
+        Sprite novaSprite = Sprite.Create(
+            texture,
+            new Rect(0, 0, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f)
+        );
+
         GameObject novaFoto = Instantiate(fotoPrefab, container, false);
 
         Image img = novaFoto.GetComponent<Image>();
 
-        Color corAleatoria = new Color(Random.value, Random.value, Random.value, 1f);
-        img.color = corAleatoria;
+        img.sprite = novaSprite;
+        img.color = Color.white;
 
         imagens.Add(img);
-        cores.Add(corAleatoria);
+        sprites.Add(novaSprite);
+        cores.Add(Color.white);
 
         int index = imagens.Count - 1;
 
         Button botao = novaFoto.GetComponent<Button>();
+
         if (botao == null)
             botao = novaFoto.AddComponent<Button>();
 

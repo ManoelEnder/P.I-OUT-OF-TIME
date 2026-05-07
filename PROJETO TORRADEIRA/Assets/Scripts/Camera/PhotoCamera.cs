@@ -34,6 +34,7 @@ public class PhotoCamera : MonoBehaviour
     public float tempoRevelado = 30f;
 
     public MissionSystem missionSystem;
+    public AlbumFotos albumFotos;
 
     public int maxBattery = 10;
     int currentBattery;
@@ -253,6 +254,11 @@ public class PhotoCamera : MonoBehaviour
         photo.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         photo.Apply();
         RenderTexture.active = null;
+
+        if (albumFotos != null)
+        {
+            albumFotos.AdicionarFoto(photo);
+        }
 
         photoPreview.texture = photo;
         photoPreview.gameObject.SetActive(true);
