@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6430623964798915859
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.822
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.683
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.20583323
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9785871
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -156.243
+      objectReference: {fileID: 0}
+    - target: {fileID: 522182243882736906, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079205142357041325, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
+      propertyPath: m_Name
+      value: nature_deco_plant (1) Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d3c0e6495c2f91749a395d7c2e4062de, type: 3}
