@@ -815,6 +815,7 @@ GameObject:
   - component: {fileID: 281819723}
   - component: {fileID: 281819722}
   - component: {fileID: 281819721}
+  - component: {fileID: 281819725}
   - component: {fileID: 281819724}
   m_Layer: 0
   m_Name: Bateria (1)
@@ -930,6 +931,24 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &281819725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281819719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!4 &283544226 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2861103769859011548, guid: 7cb36e7e05524c04e903162e3048cba7, type: 3}
@@ -1716,6 +1735,7 @@ GameObject:
   - component: {fileID: 383142877}
   - component: {fileID: 383142876}
   - component: {fileID: 383142875}
+  - component: {fileID: 383142879}
   - component: {fileID: 383142878}
   m_Layer: 0
   m_Name: Bateria (3)
@@ -1831,6 +1851,24 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &383142879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383142873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!4 &404006605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9179541034502171395, guid: e276cfcb32c671644a65e3073bede73b, type: 3}
@@ -18695,6 +18733,7 @@ GameObject:
   - component: {fileID: 1588142263}
   - component: {fileID: 1588142262}
   - component: {fileID: 1588142261}
+  - component: {fileID: 1588142265}
   - component: {fileID: 1588142264}
   m_Layer: 0
   m_Name: Bateria (2)
@@ -18810,6 +18849,24 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &1588142265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588142259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1614445147
 GameObject:
   m_ObjectHideFlags: 0
@@ -25220,6 +25277,7 @@ GameObject:
   - component: {fileID: 1774597384}
   - component: {fileID: 1774597383}
   - component: {fileID: 1774597382}
+  - component: {fileID: 1774597386}
   - component: {fileID: 1774597385}
   m_Layer: 0
   m_Name: Bateria (4)
@@ -25335,6 +25393,24 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &1774597386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774597380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1796743311
 GameObject:
   m_ObjectHideFlags: 0
