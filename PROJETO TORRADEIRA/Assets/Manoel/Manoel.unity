@@ -815,7 +815,10 @@ GameObject:
   - component: {fileID: 281819723}
   - component: {fileID: 281819722}
   - component: {fileID: 281819721}
+  - component: {fileID: 281819726}
+  - component: {fileID: 281819725}
   - component: {fileID: 281819724}
+  - component: {fileID: 281819727}
   m_Layer: 0
   m_Name: Bateria (1)
   m_TagString: Untagged
@@ -853,7 +856,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -930,6 +933,89 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &281819725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281819719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 1
+  bakeKeys:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  bakeValues:
+  - data:
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+--- !u!114 &281819726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281819719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c84e816e90e4d40a8e3c911efdedf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineProximidade
+--- !u!54 &281819727
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281819719}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &283544226 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2861103769859011548, guid: 7cb36e7e05524c04e903162e3048cba7, type: 3}
@@ -1716,7 +1802,10 @@ GameObject:
   - component: {fileID: 383142877}
   - component: {fileID: 383142876}
   - component: {fileID: 383142875}
+  - component: {fileID: 383142879}
+  - component: {fileID: 383142880}
   - component: {fileID: 383142878}
+  - component: {fileID: 383142881}
   m_Layer: 0
   m_Name: Bateria (3)
   m_TagString: Untagged
@@ -1754,7 +1843,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1831,6 +1920,89 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &383142879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383142873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 1
+  bakeKeys:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  bakeValues:
+  - data:
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+--- !u!114 &383142880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383142873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c84e816e90e4d40a8e3c911efdedf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineProximidade
+--- !u!54 &383142881
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383142873}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &404006605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9179541034502171395, guid: e276cfcb32c671644a65e3073bede73b, type: 3}
@@ -11160,60 +11332,61 @@ PrefabInstance:
     - {fileID: 1128549180789901945, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
     - {fileID: 3884812045917586083, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
     - {fileID: 9207209756862950960, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
+    - {fileID: 3091140287572484603, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 2
+      insertIndex: 1
       addedObject: {fileID: 2125143162}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 3
+      insertIndex: 2
       addedObject: {fileID: 283544226}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 4
+      insertIndex: 3
       addedObject: {fileID: 306352671}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 7
+      insertIndex: 6
       addedObject: {fileID: 1898485665}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 8
+      insertIndex: 7
       addedObject: {fileID: 255961742}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 10
+      insertIndex: 9
       addedObject: {fileID: 853709109}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 23
+      insertIndex: 22
       addedObject: {fileID: 292618192}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 28
+      insertIndex: 27
       addedObject: {fileID: 22788320}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 30
+      insertIndex: 29
       addedObject: {fileID: 1197051589}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 32
+      insertIndex: 31
       addedObject: {fileID: 1939325666}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 50
+      insertIndex: 49
       addedObject: {fileID: 211701777}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 53
+      insertIndex: 52
       addedObject: {fileID: 404006605}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 55
+      insertIndex: 54
       addedObject: {fileID: 1147159488}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 59
+      insertIndex: 58
       addedObject: {fileID: 1175736651}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 68
+      insertIndex: 67
       addedObject: {fileID: 808219471}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 73
+      insertIndex: 72
       addedObject: {fileID: 1182705870}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 75
+      insertIndex: 74
       addedObject: {fileID: 1860138243}
     - targetCorrespondingSourceObject: {fileID: 1612620879265406699, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
-      insertIndex: 76
+      insertIndex: 75
       addedObject: {fileID: 1725301315}
     - targetCorrespondingSourceObject: {fileID: 2607377070952528910, guid: ce22d9d9161f22f44b917a7d3664377e, type: 3}
       insertIndex: -1
@@ -18694,7 +18867,10 @@ GameObject:
   - component: {fileID: 1588142263}
   - component: {fileID: 1588142262}
   - component: {fileID: 1588142261}
+  - component: {fileID: 1588142265}
+  - component: {fileID: 1588142266}
   - component: {fileID: 1588142264}
+  - component: {fileID: 1588142267}
   m_Layer: 0
   m_Name: Bateria (2)
   m_TagString: Untagged
@@ -18732,7 +18908,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -18809,6 +18985,89 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &1588142265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588142259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 1
+  bakeKeys:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  bakeValues:
+  - data:
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+--- !u!114 &1588142266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588142259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c84e816e90e4d40a8e3c911efdedf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineProximidade
+--- !u!54 &1588142267
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588142259}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1614445147
 GameObject:
   m_ObjectHideFlags: 0
@@ -25219,7 +25478,10 @@ GameObject:
   - component: {fileID: 1774597384}
   - component: {fileID: 1774597383}
   - component: {fileID: 1774597382}
+  - component: {fileID: 1774597386}
+  - component: {fileID: 1774597387}
   - component: {fileID: 1774597385}
+  - component: {fileID: 1774597388}
   m_Layer: 0
   m_Name: Bateria (4)
   m_TagString: Untagged
@@ -25257,7 +25519,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -25334,6 +25596,89 @@ MonoBehaviour:
   amount: 1
   distance: 3
   interactText: {fileID: 1523086864}
+--- !u!114 &1774597386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774597380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 1
+  bakeKeys:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  bakeValues:
+  - data:
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: -0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: -0.57735026}
+    - {x: 0.57735026, y: 0.57735026, z: 0.57735026}
+    - {x: 0.57735026, y: -0.57735026, z: 0.57735026}
+--- !u!114 &1774597387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774597380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c84e816e90e4d40a8e3c911efdedf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineProximidade
+--- !u!54 &1774597388
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774597380}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1796743311
 GameObject:
   m_ObjectHideFlags: 0
@@ -31117,7 +31462,7 @@ GameObject:
   - component: {fileID: 1980261255}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
