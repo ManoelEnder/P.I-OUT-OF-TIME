@@ -5904,6 +5904,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FadeController
   fadeImage: {fileID: 779957357}
   velocidade: 0.1
+  esperaAntesDoFade: 3
+  tempoTexto: 3
+  textoHistoria: {fileID: 0}
+  velocidadeDigitacao: 0.05
 --- !u!222 &779957359
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8288,6 +8292,8 @@ MonoBehaviour:
   npc: {fileID: 63496038}
   distancia: 2
   texto: {fileID: 1299842376}
+  painelDialogo: {fileID: 0}
+  textoObjetivo: {fileID: 0}
 --- !u!114 &1152051256
 MonoBehaviour:
   m_ObjectHideFlags: 0
