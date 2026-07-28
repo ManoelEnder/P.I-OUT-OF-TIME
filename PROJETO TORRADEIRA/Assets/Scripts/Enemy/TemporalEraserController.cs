@@ -69,13 +69,32 @@ public class TemporalEraserController : MonoBehaviour
             return;
         }
 
+        if (!agent.isOnNavMesh)
+        {
+            Debug.LogError(
+                $"{name}: NavMeshAgent is not placed on a NavMesh.",
+                this
+            );
+
+            enabled = false;
+            return;
+        }
+
         currentState = State.Roaming;
+
+        agent.speed = roamingSpeed;
+        agent.isStopped = false;
 
         SetRoamingDestination();
     }
 
     private void Update()
     {
+        if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
+
         switch (currentState)
         {
             case State.Roaming:

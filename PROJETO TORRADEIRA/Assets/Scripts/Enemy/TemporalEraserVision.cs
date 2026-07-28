@@ -50,7 +50,9 @@ public class TemporalEraserVision : MonoBehaviour
             QueryTriggerInteraction.Ignore))
         {
             return hit.transform == player ||
-                   hit.transform.IsChildOf(player);
+                   hit.transform.IsChildOf(player) ||
+                   hit.collider.transform == player ||
+                   hit.collider.transform.IsChildOf(player);
         }
 
         return false;
