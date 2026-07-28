@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8f1e7da4a026b9f4d89c9690fc553c66
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Scene/Demo.unity
+  uploadId: 746252

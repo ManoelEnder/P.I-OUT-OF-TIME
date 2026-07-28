@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 906696cd73b6ca04682b26beb11fdab7
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Documentation/ProceduralFenceGenerator_Documentation.pdf
+  uploadId: 746252

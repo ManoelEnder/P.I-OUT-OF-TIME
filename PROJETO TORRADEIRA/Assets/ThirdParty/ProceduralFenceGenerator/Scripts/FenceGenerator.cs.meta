@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1005ed061f5caf746a2f4faeeebbc73f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Scripts/FenceGenerator.cs
+  uploadId: 746252

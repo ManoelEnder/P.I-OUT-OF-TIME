@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7b90d1d3321863e43b04c8204f9d081f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Materials/Fence broken.mat
+  uploadId: 746252

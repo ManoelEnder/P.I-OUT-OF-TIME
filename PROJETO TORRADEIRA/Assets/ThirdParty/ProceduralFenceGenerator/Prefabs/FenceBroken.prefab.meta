@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bcbe81c432cfd50459800cf4a1f10fef
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Prefabs/FenceBroken.prefab
+  uploadId: 746252

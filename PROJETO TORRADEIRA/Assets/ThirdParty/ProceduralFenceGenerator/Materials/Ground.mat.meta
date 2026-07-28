@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b998ee75503a1b347aa4c5bca2cf4bb4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Materials/Ground.mat
+  uploadId: 746252

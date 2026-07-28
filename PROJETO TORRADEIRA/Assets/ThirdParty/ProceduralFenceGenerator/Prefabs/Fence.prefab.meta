@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6d490b77b2b5c0d4d8ae72bbd5bd0748
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316207
+  packageName: Procedural Fence generation
+  packageVersion: 1.0
+  assetPath: Assets/ProceduralFenceGenerator/Prefabs/Fence.prefab
+  uploadId: 746252
