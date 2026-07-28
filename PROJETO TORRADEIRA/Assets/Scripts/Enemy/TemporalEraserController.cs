@@ -251,6 +251,21 @@ public class TemporalEraserController : MonoBehaviour
 
     private bool HasReachedDestination()
     {
+        if (agent == null)
+        {
+            return false;
+        }
+
+        if (!agent.isActiveAndEnabled)
+        {
+            return false;
+        }
+
+        if (!agent.isOnNavMesh)
+        {
+            return false;
+        }
+
         if (agent.pathPending)
         {
             return false;
