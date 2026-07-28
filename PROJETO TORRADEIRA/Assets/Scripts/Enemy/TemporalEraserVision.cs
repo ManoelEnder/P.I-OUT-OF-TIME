@@ -8,7 +8,11 @@ public class TemporalEraserVision : MonoBehaviour
 
     [Header("Vision")]
     [SerializeField] private float detectionDistance = 10f;
-    [SerializeField] private float fieldOfView = 90f;
+    [SerializeField] private float fieldOfView = 120f;
+
+    [Header("Peripheral Vision")]
+    [SerializeField] private float peripheralDetectionDistance = 4f;
+    [SerializeField] private float peripheralFieldOfView = 240f;
 
     public bool CanSeePlayer()
     {
@@ -36,26 +40,20 @@ public class TemporalEraserVision : MonoBehaviour
             normalizedDirection
         );
 
-        if (angle > fieldOfView * 0.5f)
+        bool isInsideNormalVision =
+            angle <= fieldOfView * 0.5f;
+
+        bool isInsidePeripheralVision =
+            distanceToPlayer <= peripheralDetectionDistance &&
+            angle <= peripheralFieldOfView * 0.5f;
+
+        if (!isInsideNormalVision &&
+            !isInsidePeripheralVision)
         {
             return false;
         }
 
-        if (Physics.Raycast(
-            eyePoint.position,
-            normalizedDirection,
-            out RaycastHit hit,
-            detectionDistance,
-            ~0,
-            QueryTriggerInteraction.Ignore))
-        {
-            return hit.transform == player ||
-                   hit.transform.IsChildOf(player) ||
-                   hit.collider.transform == player ||
-                   hit.collider.transform.IsChildOf(player);
-        }
-
-        return false;
+        return true;
     }
 
     private void OnDrawGizmosSelected()
