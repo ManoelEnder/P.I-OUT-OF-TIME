@@ -280,6 +280,15 @@ public class PhotoCamera : MonoBehaviour
             revelados.Add(r);
 
         r.enabled = true;
+
+        TemporalObjectPickup pickup =
+            r.GetComponent<TemporalObjectPickup>();
+
+        if (pickup != null)
+        {
+            pickup.SetRevealed(true);
+        }
+
         StartCoroutine(EsconderDepois(r));
 
         if (missionSystem != null && r.gameObject.name == "Object (1)")
@@ -292,8 +301,21 @@ public class PhotoCamera : MonoBehaviour
 
         revelados.Remove(r);
 
-        if (!cameraMode && r != null)
+        if (r == null)
+            yield break;
+
+        TemporalObjectPickup pickup =
+            r.GetComponent<TemporalObjectPickup>();
+
+        if (pickup != null)
+        {
+            pickup.SetRevealed(false);
+        }
+
+        if (!cameraMode)
+        {
             r.enabled = false;
+        }
     }
 
     void AtualizarVisibilidade()
