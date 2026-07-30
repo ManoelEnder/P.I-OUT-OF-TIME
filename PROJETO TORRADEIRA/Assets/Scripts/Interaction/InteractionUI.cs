@@ -24,7 +24,6 @@ public class InteractionUI : MonoBehaviour
     {
         if (interactText == null)
         {
-            Debug.LogError("InteractionUI | TextMeshProUGUI não foi associado no Inspector.", this);
             return;
         }
 

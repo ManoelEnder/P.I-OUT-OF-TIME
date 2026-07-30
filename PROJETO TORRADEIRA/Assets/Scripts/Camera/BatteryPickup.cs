@@ -1,108 +1,62 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class BatteryPickup : MonoBehaviour
+public class BatteryPickup : MonoBehaviour, IInteractable
 {
     [Header("Battery")]
-    [SerializeField] private int amount = 3;
-    [SerializeField] private float distance = 3f;
+    [SerializeField] private int amount = 1;
 
     private PhotoCamera playerCamera;
-    private Camera mainCamera;
-
-    private bool canInteract = false;
 
     private void Start()
     {
-        mainCamera = Camera.main;
-
         playerCamera = FindObjectOfType<PhotoCamera>();
 
         if (playerCamera == null)
         {
             Debug.LogError(
-                $"{name} | PhotoCamera não foi encontrada na cena.",
+                $"{name} | PhotoCamera não encontrada na cena!",
                 this
             );
         }
     }
 
-    private void Update()
+    public bool CanInteract()
     {
-        CheckLook();
-
-        if (canInteract &&
-            Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
+        if (playerCamera == null)
         {
-            CollectBattery();
+            playerCamera = FindObjectOfType<PhotoCamera>();
         }
+
+        if (playerCamera == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 
-    private void CheckLook()
+    public string GetInteractionMessage()
     {
-        canInteract = false;
-
-        if (mainCamera == null)
+        if (playerCamera == null)
         {
-            mainCamera = Camera.main;
-
-            if (mainCamera == null)
-            {
-                HideInteraction();
-                return;
-            }
+            playerCamera = FindObjectOfType<PhotoCamera>();
         }
 
-        Ray ray = mainCamera.ViewportPointToRay(
-            new Vector3(0.5f, 0.5f, 0f)
-        );
-
-        if (Physics.Raycast(
-            ray,
-            out RaycastHit hit,
-            distance,
-            Physics.DefaultRaycastLayers,
-            QueryTriggerInteraction.Ignore))
+        if (playerCamera == null)
         {
-            BatteryPickup battery =
-                hit.collider.GetComponentInParent<BatteryPickup>();
-
-            if (battery == this)
-            {
-                canInteract = true;
-
-                if (playerCamera == null)
-                {
-                    playerCamera = FindObjectOfType<PhotoCamera>();
-                }
-
-                if (playerCamera != null)
-                {
-                    if (playerCamera.IsBatteryFull())
-                    {
-                        InteractionUI.Instance?.Show("Bateria cheia");
-                    }
-                    else
-                    {
-                        InteractionUI.Instance?.Show("E para coletar bateria");
-                    }
-                }
-
-                return;
-            }
+            return "";
         }
 
-        HideInteraction();
+        if (playerCamera.IsBatteryFull())
+        {
+            return "Bateria cheia";
+        }
+
+        return "E para coletar";
     }
 
-    private void CollectBattery()
+    public void Interact()
     {
-        if (!canInteract)
-        {
-            return;
-        }
-
         if (playerCamera == null)
         {
             playerCamera = FindObjectOfType<PhotoCamera>();
@@ -111,7 +65,7 @@ public class BatteryPickup : MonoBehaviour
         if (playerCamera == null)
         {
             Debug.LogError(
-                $"{name} | PhotoCamera não encontrada.",
+                $"{name} | Não foi possível encontrar a PhotoCamera!",
                 this
             );
 
@@ -120,7 +74,10 @@ public class BatteryPickup : MonoBehaviour
 
         if (playerCamera.IsBatteryFull())
         {
-            InteractionUI.Instance?.Show("Bateria cheia");
+            Debug.Log(
+                $"{name} | Bateria cheia. Não é possível coletar.",
+                this
+            );
 
             return;
         }
@@ -132,18 +89,11 @@ public class BatteryPickup : MonoBehaviour
             this
         );
 
-        canInteract = false;
-
-        InteractionUI.Instance?.Hide();
-
-        Destroy(gameObject);
-    }
-
-    private void HideInteraction()
-    {
         if (InteractionUI.Instance != null)
         {
             InteractionUI.Instance.Hide();
         }
+
+        Destroy(gameObject);
     }
 }

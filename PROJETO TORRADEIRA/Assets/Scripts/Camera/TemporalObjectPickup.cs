@@ -1,126 +1,67 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class TemporalObjectPickup : MonoBehaviour
+public class TemporalObjectPickup : MonoBehaviour, IInteractable
 {
     [Header("Interaction")]
-    [SerializeField] private float interactionDistance = 3f;
-
-    private Camera playerCamera;
+    [SerializeField] private bool canBeCollected = true;
 
     private bool isRevealed;
     private bool isCollected;
 
     private void Start()
     {
-        playerCamera = Camera.main;
-
-        if (playerCamera == null)
-        {
-            Debug.LogError(
-                $"{name}: Player Camera não encontrada.",
-                this
-            );
-        }
-    }
-
-    private void Update()
-    {
-        if (isCollected)
-        {
-            HideInteractionText();
-            return;
-        }
-
-        if (!isRevealed)
-        {
-            HideInteractionText();
-            return;
-        }
-
-        CheckInteraction();
-
-        if (Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame &&
-            CanInteract())
-        {
-            Collect();
-        }
+        isRevealed = false;
+        isCollected = false;
     }
 
     public void SetRevealed(bool revealed)
     {
+        if (isCollected)
+        {
+            return;
+        }
+
         isRevealed = revealed;
 
         Debug.Log(
             $"{name} | SetRevealed chamado: {revealed}",
             this
         );
-
-        if (!isRevealed)
-        {
-            HideInteractionText();
-        }
     }
 
-    private void CheckInteraction()
+    public bool CanInteract()
     {
-        if (CanInteract())
-        {
-            ShowInteractionText();
-        }
-        else
-        {
-            HideInteractionText();
-        }
-    }
-
-    private bool CanInteract()
-    {
-        if (playerCamera == null)
+        if (isCollected)
         {
             return false;
         }
 
-        Ray ray = playerCamera.ViewportPointToRay(
-            new Vector3(0.5f, 0.5f, 0f)
-        );
-
-        if (Physics.Raycast(
-            ray,
-            out RaycastHit hit,
-            interactionDistance,
-            ~0,
-            QueryTriggerInteraction.Ignore))
+        if (!isRevealed)
         {
-            if (hit.collider.transform == transform ||
-                hit.collider.transform.IsChildOf(transform))
-            {
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        if (!canBeCollected)
+        {
+            return false;
+        }
+
+        return true;
     }
 
-    private void ShowInteractionText()
+    public string GetInteractionMessage()
     {
-        if (InteractionUI.Instance == null)
+        return "E para coletar";
+    }
+
+    public void Interact()
+    {
+        if (!CanInteract())
         {
             return;
         }
 
-        InteractionUI.Instance.Show("E para coletar");
-    }
-
-    private void HideInteractionText()
-    {
-        if (InteractionUI.Instance == null)
-        {
-            return;
-        }
-
-        InteractionUI.Instance.Hide();
+        Collect();
     }
 
     private void Collect()
@@ -137,7 +78,10 @@ public class TemporalObjectPickup : MonoBehaviour
             this
         );
 
-        HideInteractionText();
+        if (InteractionUI.Instance != null)
+        {
+            InteractionUI.Instance.Hide();
+        }
 
         gameObject.SetActive(false);
     }
