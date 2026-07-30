@@ -108,8 +108,12 @@ public class PhotoCamera : MonoBehaviour
         if (Keyboard.current.cKey.wasPressedThisFrame)
             ToggleCameraMode();
 
-        if (cameraMode && Mouse.current.leftButton.wasPressedThisFrame && canShoot)
+        if (cameraMode &&
+            Mouse.current.leftButton.wasPressedThisFrame &&
+            canShoot)
+        {
             StartCoroutine(TakePhoto());
+        }
 
         if (cameraMode && !isTransitioning)
         {
@@ -118,10 +122,18 @@ public class PhotoCamera : MonoBehaviour
             if (scroll != 0)
             {
                 targetFOV -= scroll * 2.5f;
-                targetFOV = Mathf.Clamp(targetFOV, minZoomFOV, maxZoomFOV);
+                targetFOV = Mathf.Clamp(
+                    targetFOV,
+                    minZoomFOV,
+                    maxZoomFOV
+                );
             }
 
-            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, Time.deltaTime * 10f);
+            playerCam.fieldOfView = Mathf.Lerp(
+                playerCam.fieldOfView,
+                targetFOV,
+                Time.deltaTime * 10f
+            );
         }
 
         if (cameraMode)
@@ -142,7 +154,8 @@ public class PhotoCamera : MonoBehaviour
 
     void ToggleCameraMode()
     {
-        if (!cameraMode && currentBattery <= 0) return;
+        if (!cameraMode && currentBattery <= 0)
+            return;
 
         cameraMode = !cameraMode;
 
@@ -154,7 +167,9 @@ public class PhotoCamera : MonoBehaviour
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 
-        transitionCoroutine = StartCoroutine(CameraTransition(cameraMode));
+        transitionCoroutine = StartCoroutine(
+            CameraTransition(cameraMode)
+        );
     }
 
     IEnumerator CameraTransition(bool entering)
@@ -173,15 +188,29 @@ public class PhotoCamera : MonoBehaviour
         {
             t += Time.deltaTime;
 
-            float fov = Mathf.Lerp(startFOV, target, t / transitionTime);
+            float fov = Mathf.Lerp(
+                startFOV,
+                target,
+                t / transitionTime
+            );
+
             playerCam.fieldOfView = fov;
 
             if (fadeImage != null)
             {
                 Color c = fadeImage.color;
+
                 c.a = entering
-                    ? Mathf.Lerp(0f, 0.35f, t / transitionTime)
-                    : Mathf.Lerp(0.35f, 0f, t / transitionTime);
+                    ? Mathf.Lerp(
+                        0f,
+                        0.35f,
+                        t / transitionTime
+                    )
+                    : Mathf.Lerp(
+                        0.35f,
+                        0f,
+                        t / transitionTime
+                    );
 
                 fadeImage.color = c;
             }
@@ -200,8 +229,11 @@ public class PhotoCamera : MonoBehaviour
 
     IEnumerator TakePhoto()
     {
-        if (!canShoot) yield break;
-        if (currentBattery <= 0) yield break;
+        if (!canShoot)
+            yield break;
+
+        if (currentBattery <= 0)
+            yield break;
 
         canShoot = false;
 
@@ -224,14 +256,21 @@ public class PhotoCamera : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        Ray ray = playerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = playerCam.ViewportPointToRay(
+            new Vector3(0.5f, 0.5f, 0)
+        );
+
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(
+            ray,
+            out hit,
+            100f))
         {
             if (hit.collider.CompareTag("Temporal"))
             {
-                Renderer r = hit.collider.GetComponent<Renderer>();
+                Renderer r =
+                    hit.collider.GetComponent<Renderer>();
 
                 if (r != null)
                 {
@@ -244,15 +283,38 @@ public class PhotoCamera : MonoBehaviour
 
         photoCam.Render();
 
-        if (audioSource != null && shutterSound != null)
+        if (audioSource != null &&
+            shutterSound != null)
+        {
             audioSource.PlayOneShot(shutterSound);
+        }
 
-        yield return StartCoroutine(FlashCoroutine());
+        yield return StartCoroutine(
+            FlashCoroutine()
+        );
 
         RenderTexture.active = rt;
-        photo = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
-        photo.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+
+        photo = new Texture2D(
+            rt.width,
+            rt.height,
+            TextureFormat.RGB24,
+            false
+        );
+
+        photo.ReadPixels(
+            new Rect(
+                0,
+                0,
+                rt.width,
+                rt.height
+            ),
+            0,
+            0
+        );
+
         photo.Apply();
+
         RenderTexture.active = null;
 
         if (albumFotos != null)
@@ -274,7 +336,8 @@ public class PhotoCamera : MonoBehaviour
 
     void RevelarPorTempo(Renderer r)
     {
-        if (r == null) return;
+        if (r == null)
+            return;
 
         if (!revelados.Contains(r))
             revelados.Add(r);
@@ -289,15 +352,22 @@ public class PhotoCamera : MonoBehaviour
             pickup.SetRevealed(true);
         }
 
-        StartCoroutine(EsconderDepois(r));
+        StartCoroutine(
+            EsconderDepois(r)
+        );
 
-        if (missionSystem != null && r.gameObject.name == "Object (1)")
+        if (missionSystem != null &&
+            r.gameObject.name == "Object (1)")
+        {
             missionSystem.DescobriuPeca();
+        }
     }
 
     IEnumerator EsconderDepois(Renderer r)
     {
-        yield return new WaitForSeconds(tempoRevelado);
+        yield return new WaitForSeconds(
+            tempoRevelado
+        );
 
         revelados.Remove(r);
 
@@ -322,9 +392,12 @@ public class PhotoCamera : MonoBehaviour
     {
         foreach (Renderer r in temporais)
         {
-            if (r == null) continue;
+            if (r == null)
+                continue;
 
-            r.enabled = cameraMode || revelados.Contains(r);
+            r.enabled =
+                cameraMode ||
+                revelados.Contains(r);
         }
     }
 
@@ -338,7 +411,9 @@ public class PhotoCamera : MonoBehaviour
             c.a = 1f;
             flashImage.color = c;
 
-            yield return new WaitForSeconds(flashDuration);
+            yield return new WaitForSeconds(
+                flashDuration
+            );
 
             c.a = 0f;
             flashImage.color = c;
@@ -350,22 +425,45 @@ public class PhotoCamera : MonoBehaviour
     void UseBattery(int amount)
     {
         currentBattery -= amount;
-        currentBattery = Mathf.Clamp(currentBattery, 0, maxBattery);
+
+        currentBattery = Mathf.Clamp(
+            currentBattery,
+            0,
+            maxBattery
+        );
+
         UpdateBatteryUI();
     }
 
     public void AddBattery(int amount)
     {
         currentBattery += amount;
-        currentBattery = Mathf.Clamp(currentBattery, 0, maxBattery);
+
+        currentBattery = Mathf.Clamp(
+            currentBattery,
+            0,
+            maxBattery
+        );
+
         UpdateBatteryUI();
+    }
+
+
+
+    // NOVO MÉTODO
+    // Usado pelo BatteryPickup para verificar
+    // se a câmera ainda possui espaço para baterias.
+    public bool CanReceiveBattery()
+    {
+        return currentBattery < maxBattery;
     }
 
     void UpdateBatteryUI()
     {
         for (int i = 0; i < batteryBars.Length; i++)
         {
-            batteryBars[i].enabled = i < currentBattery;
+            batteryBars[i].enabled =
+                i < currentBattery;
         }
     }
 }

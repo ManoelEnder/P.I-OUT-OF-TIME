@@ -1,50 +1,91 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class BatteryPickup : MonoBehaviour
 {
-    public int amount = 3;
-    public float distance = 3f;
+    [Header("Battery")]
+    [SerializeField] private int amount = 3;
+    [SerializeField] private float distance = 3f;
 
-    public static BatteryPickup currentTarget;
+    private PhotoCamera playerCamera;
+    private Camera mainCamera;
 
-    public TextMeshProUGUI interactText;
+    private bool canInteract = false;
 
-    void Update()
+    private void Start()
     {
-        CheckLook();
+        mainCamera = Camera.main;
 
-        if (currentTarget == this && Keyboard.current.eKey.wasPressedThisFrame)
+        playerCamera = FindObjectOfType<PhotoCamera>();
+
+        if (playerCamera == null)
         {
-            PhotoCamera player = FindObjectOfType<PhotoCamera>();
-
-            if (player != null)
-            {
-                player.AddBattery(amount);
-                interactText.gameObject.SetActive(false);
-                Destroy(gameObject);
-            }
+            Debug.LogError(
+                $"{name} | PhotoCamera não foi encontrada na cena.",
+                this
+            );
         }
     }
 
-    void CheckLook()
+    private void Update()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
+        CheckLook();
 
-        if (Physics.Raycast(ray, out hit, distance))
+        if (canInteract &&
+            Keyboard.current != null &&
+            Keyboard.current.eKey.wasPressedThisFrame)
         {
-            if (hit.collider.gameObject == gameObject)
-            {
-                if (currentTarget != this)
-                {
-                    currentTarget = this;
+            CollectBattery();
+        }
+    }
 
-                    if (interactText != null)
+    private void CheckLook()
+    {
+        canInteract = false;
+
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+
+            if (mainCamera == null)
+            {
+                HideInteraction();
+                return;
+            }
+        }
+
+        Ray ray = mainCamera.ViewportPointToRay(
+            new Vector3(0.5f, 0.5f, 0f)
+        );
+
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            distance,
+            Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction.Ignore))
+        {
+            BatteryPickup battery =
+                hit.collider.GetComponentInParent<BatteryPickup>();
+
+            if (battery == this)
+            {
+                canInteract = true;
+
+                if (playerCamera == null)
+                {
+                    playerCamera = FindObjectOfType<PhotoCamera>();
+                }
+
+                if (playerCamera != null)
+                {
+                    if (playerCamera.IsBatteryFull())
                     {
-                        interactText.text = "[E] Pegar bateria";
-                        interactText.gameObject.SetActive(true);
+                        InteractionUI.Instance?.Show("Bateria cheia");
+                    }
+                    else
+                    {
+                        InteractionUI.Instance?.Show("E para coletar bateria");
                     }
                 }
 
@@ -52,12 +93,57 @@ public class BatteryPickup : MonoBehaviour
             }
         }
 
-        if (currentTarget == this)
-        {
-            currentTarget = null;
+        HideInteraction();
+    }
 
-            if (interactText != null)
-                interactText.gameObject.SetActive(false);
+    private void CollectBattery()
+    {
+        if (!canInteract)
+        {
+            return;
+        }
+
+        if (playerCamera == null)
+        {
+            playerCamera = FindObjectOfType<PhotoCamera>();
+        }
+
+        if (playerCamera == null)
+        {
+            Debug.LogError(
+                $"{name} | PhotoCamera não encontrada.",
+                this
+            );
+
+            return;
+        }
+
+        if (playerCamera.IsBatteryFull())
+        {
+            InteractionUI.Instance?.Show("Bateria cheia");
+
+            return;
+        }
+
+        playerCamera.AddBattery(amount);
+
+        Debug.Log(
+            $"{name} | Bateria coletada! Quantidade adicionada: {amount}",
+            this
+        );
+
+        canInteract = false;
+
+        InteractionUI.Instance?.Hide();
+
+        Destroy(gameObject);
+    }
+
+    private void HideInteraction()
+    {
+        if (InteractionUI.Instance != null)
+        {
+            InteractionUI.Instance.Hide();
         }
     }
 }

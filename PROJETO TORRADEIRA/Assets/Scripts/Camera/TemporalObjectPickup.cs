@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class TemporalObjectPickup : MonoBehaviour
 {
     [Header("Interaction")]
     [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private TextMeshProUGUI interactText;
 
     private Camera playerCamera;
+
     private bool isRevealed;
     private bool isCollected;
 
@@ -16,15 +15,24 @@ public class TemporalObjectPickup : MonoBehaviour
     {
         playerCamera = Camera.main;
 
-        if (interactText != null)
+        if (playerCamera == null)
         {
-            interactText.gameObject.SetActive(false);
+            Debug.LogError(
+                $"{name}: Player Camera não encontrada.",
+                this
+            );
         }
     }
 
     private void Update()
     {
-        if (isCollected || !isRevealed)
+        if (isCollected)
+        {
+            HideInteractionText();
+            return;
+        }
+
+        if (!isRevealed)
         {
             HideInteractionText();
             return;
@@ -43,6 +51,11 @@ public class TemporalObjectPickup : MonoBehaviour
     public void SetRevealed(bool revealed)
     {
         isRevealed = revealed;
+
+        Debug.Log(
+            $"{name} | SetRevealed chamado: {revealed}",
+            this
+        );
 
         if (!isRevealed)
         {
@@ -80,8 +93,11 @@ public class TemporalObjectPickup : MonoBehaviour
             ~0,
             QueryTriggerInteraction.Ignore))
         {
-            return hit.collider.transform == transform ||
-                   hit.collider.transform.IsChildOf(transform);
+            if (hit.collider.transform == transform ||
+                hit.collider.transform.IsChildOf(transform))
+            {
+                return true;
+            }
         }
 
         return false;
@@ -89,26 +105,37 @@ public class TemporalObjectPickup : MonoBehaviour
 
     private void ShowInteractionText()
     {
-        if (interactText == null)
+        if (InteractionUI.Instance == null)
         {
             return;
         }
 
-        interactText.text = "E para coletar";
-        interactText.gameObject.SetActive(true);
+        InteractionUI.Instance.Show("E para coletar");
     }
 
     private void HideInteractionText()
     {
-        if (interactText != null)
+        if (InteractionUI.Instance == null)
         {
-            interactText.gameObject.SetActive(false);
+            return;
         }
+
+        InteractionUI.Instance.Hide();
     }
 
     private void Collect()
     {
+        if (isCollected)
+        {
+            return;
+        }
+
         isCollected = true;
+
+        Debug.Log(
+            $"{name} | Objeto coletado!",
+            this
+        );
 
         HideInteractionText();
 
