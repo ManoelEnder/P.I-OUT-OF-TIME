@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ee4b519cf77dc5e4d805575fd5f418d8
+guid: 8452ced58b4943649b2ba55266305b6f
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -40,7 +40,10 @@ ScriptedImporter:
   _generateMipMaps: 1
   _useSceneNameIdentifier: 1
   _textureCompression: -50
-  _gltfAsset: '<b>Version: </b>2.0
+  _gltfAsset: '<b>Generator: </b>Khronos glTF Blender I/O v3.6.27
+
+    <b>Version:
+    </b>2.0
 
     
 
@@ -51,16 +54,47 @@ ScriptedImporter:
   materials:
   - {instanceID: 0}
   - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
   textures:
-  - {fileID: 2800000, guid: 523c07426fac4fa47ae8d762b5a486fc, type: 3}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
   hasSceneData: 1
-  hasAnimationData: 0
+  hasAnimationData: 1
   hasMaterialData: 1
   hasTextureData: 1
-  animations: []
+  animations:
+  - name: Take 001
   _extensions: []
   _textures:
-  - texture: {fileID: 2800000, guid: 523c07426fac4fa47ae8d762b5a486fc, type: 3}
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {instanceID: 0}
     shouldBeLinear: 0
     shouldBeNormalMap: 0
   _mainAssetIdentifier: scenes/Scene
