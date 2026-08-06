@@ -1373,7 +1373,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: beaa1a95a2aa0d6439c904630500921a, type: 2}
     - target: {fileID: 8128668236925612103, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
       propertyPath: m_Name
-      value: isometric_office(3)
+      value: Office
       objectReference: {fileID: 0}
     - target: {fileID: 8897093224900880590, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
       propertyPath: m_LocalScale.x
