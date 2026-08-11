@@ -272,6 +272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSave
   saveSystem: {fileID: 1341871716}
   characterController: {fileID: 0}
+  intervaloAutoSave: 180
 --- !u!1 &618537625
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,40 +8,54 @@ public class PlayerSave : MonoBehaviour
     [Header("Opcional")]
     [SerializeField] private CharacterController characterController;
 
+    [Header("Auto Save")]
+    [SerializeField] private float intervaloAutoSave = 180f; // 3 minutos
+
+    private float contadorAutoSave;
+
     private string mensagem = "";
     private float tempoMensagem = 0f;
 
     private void Awake()
     {
-        // Se você esquecer de arrastar o SaveSystem,
-        // ele tenta encontrar automaticamente.
         if (saveSystem == null)
         {
             saveSystem = FindFirstObjectByType<SaveSystem>();
         }
 
-        // Procura CharacterController automaticamente
         if (characterController == null)
         {
             characterController = GetComponent<CharacterController>();
         }
+
+        contadorAutoSave = intervaloAutoSave;
     }
 
     private void Update()
     {
-        // F5 = SALVAR
+        // AUTO SAVE A CADA 3 MINUTOS
+        contadorAutoSave -= Time.deltaTime;
+
+        if (contadorAutoSave <= 0f)
+        {
+            SalvarJogo();
+
+            contadorAutoSave = intervaloAutoSave;
+        }
+
+        // Opcional: F5 para salvar manualmente
         if (Input.GetKeyDown(KeyCode.F5))
         {
             SalvarJogo();
         }
 
-        // F9 = CARREGAR
+        // Opcional: F9 para carregar
         if (Input.GetKeyDown(KeyCode.F9))
         {
             CarregarJogo();
         }
 
-        if (tempoMensagem > 0)
+        if (tempoMensagem > 0f)
         {
             tempoMensagem -= Time.deltaTime;
         }
@@ -51,19 +65,16 @@ public class PlayerSave : MonoBehaviour
     {
         if (saveSystem == null)
         {
-            MostrarMensagem("ERRO: SaveSystem não encontrado!");
             Debug.LogError("SaveSystem não encontrado!");
             return;
         }
 
         SaveData dados = new SaveData();
 
-        // POSIÇÃO
         dados.posX = transform.position.x;
         dados.posY = transform.position.y;
         dados.posZ = transform.position.z;
 
-        // ROTAÇÃO
         dados.rotX = transform.eulerAngles.x;
         dados.rotY = transform.eulerAngles.y;
         dados.rotZ = transform.eulerAngles.z;
@@ -74,17 +85,12 @@ public class PlayerSave : MonoBehaviour
         {
             MostrarMensagem("JOGO SALVO!");
         }
-        else
-        {
-            MostrarMensagem("ERRO AO SALVAR!");
-        }
     }
 
     public void CarregarJogo()
     {
         if (saveSystem == null)
         {
-            MostrarMensagem("ERRO: SaveSystem não encontrado!");
             Debug.LogError("SaveSystem não encontrado!");
             return;
         }
@@ -107,8 +113,6 @@ public class PlayerSave : MonoBehaviour
             dados.rotZ
         );
 
-        // CharacterController pode impedir teleporte.
-        // Por isso desligamos temporariamente.
         if (characterController != null)
         {
             characterController.enabled = false;
@@ -123,8 +127,21 @@ public class PlayerSave : MonoBehaviour
         }
 
         MostrarMensagem("JOGO CARREGADO!");
+    }
 
-        Debug.Log("Player carregado na posição: " + novaPosicao);
+    private void OnApplicationQuit()
+    {
+        SalvarJogo();
+
+        Debug.Log("Jogo salvo antes de fechar!");
+    }
+
+    private void OnApplicationPause(bool pausado)
+    {
+        if (pausado)
+        {
+            SalvarJogo();
+        }
     }
 
     private void MostrarMensagem(string texto)
@@ -137,7 +154,7 @@ public class PlayerSave : MonoBehaviour
 
     private void OnGUI()
     {
-        if (tempoMensagem <= 0)
+        if (tempoMensagem <= 0f)
             return;
 
         GUIStyle estilo = new GUIStyle(GUI.skin.label);
