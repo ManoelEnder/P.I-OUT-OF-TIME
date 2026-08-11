@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class CRTController : MonoBehaviour
@@ -10,20 +9,9 @@ public class CRTController : MonoBehaviour
 
     private void Awake()
     {
-        FindCRTFeature();
-
-        SetCRT(false);
-    }
-
-    private void FindCRTFeature()
-    {
         if (rendererData == null)
         {
-            Debug.LogError(
-                "CRTController: Renderer Data não foi associado.",
-                this
-            );
-
+            Debug.LogError("CRT: Renderer Data não está associado.", this);
             return;
         }
 
@@ -38,18 +26,25 @@ public class CRTController : MonoBehaviour
 
         if (crtFeature == null)
         {
-            Debug.LogError(
-                "CRTController: Full Screen Pass Renderer Feature não encontrada.",
-                this
-            );
+            Debug.LogError("CRT: Full Screen Pass Renderer Feature não encontrada.", this);
+            return;
         }
+
+        Debug.Log("CRT: Full Screen Pass encontrado.", this);
+
+        SetCRT(false);
     }
 
     public void SetCRT(bool enabled)
     {
         if (crtFeature == null)
+        {
+            Debug.LogError("CRT: Feature nula.", this);
             return;
+        }
 
         crtFeature.SetActive(enabled);
+
+        Debug.Log("CRT: " + (enabled ? "ATIVADO" : "DESATIVADO"), this);
     }
 }
