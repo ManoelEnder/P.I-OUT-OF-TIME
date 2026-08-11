@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: CRT
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
   m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
-  requirements: 0
-  passMaterial: {fileID: 2100000, guid: 78a08787ca30045abb69f6f7dd878e09, type: 2}
+  requirements: 4
+  passMaterial: {fileID: 2100000, guid: f230cb47f224a6b4da06e137a77229fd, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1

@@ -11522,7 +11522,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &985603508
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17265,6 +17265,51 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.591524, y: 0.47950053, z: 0.5497923}
   m_Center: {x: 0.030851964, y: 0.07937666, z: -0.001522139}
+--- !u!1 &1207399466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207399467}
+  - component: {fileID: 1207399468}
+  m_Layer: 0
+  m_Name: CRT_Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1207399467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207399466}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1385445665}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1207399468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207399466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e41858a08127b4f89619478adb3aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CRTController
+  rendererData: {fileID: 11400000, guid: f23040d970766b94c9df8d7d5d4e9179, type: 2}
 --- !u!1 &1211632210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8128668236925612103, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
@@ -18329,7 +18374,8 @@ Transform:
   m_LocalPosition: {x: 0.047, y: 1.971, z: -0.114}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1207399467}
   m_Father: {fileID: 2137393036}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1385445666
@@ -18460,13 +18506,13 @@ MonoBehaviour:
   missionSystem: {fileID: 1013388081}
   albumFotos: {fileID: 43299877}
   maxBattery: 4
-  currentBattery: 0
   batteryBars:
   - {fileID: 1215972177}
   - {fileID: 1043615360}
   - {fileID: 1369618110}
   - {fileID: 355872932}
   batteryDrainInterval: 60
+  crtController: {fileID: 1207399468}
 --- !u!82 &1385445669
 AudioSource:
   m_ObjectHideFlags: 0
@@ -37600,70 +37646,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5902572, y: 0.72, z: 0.7497389}
   m_Center: {x: 0.004982292, y: -0.07749997, z: -0.086140744}
---- !u!1 &2124005282
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2124005284}
-  - component: {fileID: 2124005283}
-  m_Layer: 0
-  m_Name: Navigation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2124005283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124005282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
-  m_SerializedVersion: 0
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 1
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 77a5e8e99f11cd94ba27dcbf44ad0a2d, type: 2}
-  m_BuildHeightMesh: 0
---- !u!4 &2124005284
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124005282}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 92.36, y: 0.01, z: -88.09}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2137393033
 GameObject:
   m_ObjectHideFlags: 0
@@ -37800,6 +37782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSave
   saveSystem: {fileID: 11782723}
   characterController: {fileID: 0}
+  intervaloAutoSave: 180
 --- !u!1 &2142050210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4457112154164042178, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
@@ -37858,7 +37841,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 876928135}
   - {fileID: 1764488259}
-  - {fileID: 2124005284}
   - {fileID: 1013388082}
   - {fileID: 1058271367}
   - {fileID: 2137393036}
