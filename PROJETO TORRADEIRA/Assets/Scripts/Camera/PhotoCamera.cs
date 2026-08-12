@@ -37,29 +37,26 @@ public class PhotoCamera : MonoBehaviour
     public AlbumFotos albumFotos;
 
     public int maxBattery = 10;
-    int currentBattery;
+    private int currentBattery;
 
     public Image[] batteryBars;
 
     public float batteryDrainInterval = 3f;
-    float batteryTimer = 0f;
+    private float batteryTimer;
 
-    [SerializeField] private CRTController crtController;
+    private RenderTexture rt;
+    private Texture2D photo;
 
-    RenderTexture rt;
-    Texture2D photo;
+    private bool canShoot = true;
+    private int photoCount;
+    private bool cameraMode;
+    private float targetFOV;
+    private bool isTransitioning;
 
-    bool canShoot = true;
-    int photoCount = 0;
-    bool cameraMode = false;
+    private Renderer[] temporais;
+    private readonly List<Renderer> revelados = new List<Renderer>();
 
-    float targetFOV;
-    bool isTransitioning = false;
-
-    Renderer[] temporais;
-    List<Renderer> revelados = new List<Renderer>();
-
-    Coroutine transitionCoroutine;
+    private Coroutine transitionCoroutine;
 
     void Start()
     {
@@ -87,7 +84,8 @@ public class PhotoCamera : MonoBehaviour
 
         temporais = lista.ToArray();
 
-        photoPreview.gameObject.SetActive(false);
+        if (photoPreview != null)
+            photoPreview.gameObject.SetActive(false);
 
         if (cameraHUD != null)
             cameraHUD.SetActive(false);
@@ -103,9 +101,6 @@ public class PhotoCamera : MonoBehaviour
             photoCounter.text = "Fotos: 0";
 
         AtualizarVisibilidade();
-
-        if (crtController != null)
-            crtController.SetCRT(false);
     }
 
     void Update()
@@ -171,9 +166,6 @@ public class PhotoCamera : MonoBehaviour
 
         cameraMode = !cameraMode;
 
-        if (crtController != null)
-            crtController.SetCRT(cameraMode);
-
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
 
@@ -202,15 +194,13 @@ public class PhotoCamera : MonoBehaviour
         {
             t += Time.deltaTime;
 
-            float progress = t / transitionTime;
+            float progress = Mathf.Clamp01(t / transitionTime);
 
-            float fov = Mathf.Lerp(
+            playerCam.fieldOfView = Mathf.Lerp(
                 startFOV,
                 target,
                 progress
             );
-
-            playerCam.fieldOfView = fov;
 
             if (fadeImage != null)
             {
@@ -237,10 +227,7 @@ public class PhotoCamera : MonoBehaviour
 
     IEnumerator TakePhoto()
     {
-        if (!canShoot)
-            yield break;
-
-        if (currentBattery <= 0)
+        if (!canShoot || currentBattery <= 0)
             yield break;
 
         canShoot = false;
@@ -255,7 +242,7 @@ public class PhotoCamera : MonoBehaviour
         if (missionSystem != null)
             missionSystem.AddFoto();
 
-        transform.SetPositionAndRotation(
+        photoCam.transform.SetPositionAndRotation(
             playerCam.transform.position,
             playerCam.transform.rotation
         );
@@ -265,17 +252,14 @@ public class PhotoCamera : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         Ray ray = playerCam.ViewportPointToRay(
-            new Vector3(0.5f, 0.5f, 0)
+            new Vector3(0.5f, 0.5f, 0f)
         );
 
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             if (hit.collider.CompareTag("Temporal"))
             {
-                Renderer r =
-                    hit.collider.GetComponent<Renderer>();
+                Renderer r = hit.collider.GetComponent<Renderer>();
 
                 if (r != null)
                     RevelarPorTempo(r);
@@ -286,15 +270,15 @@ public class PhotoCamera : MonoBehaviour
 
         photoCam.Render();
 
-        if (audioSource != null &&
-            shutterSound != null)
-        {
+        if (audioSource != null && shutterSound != null)
             audioSource.PlayOneShot(shutterSound);
-        }
 
         yield return StartCoroutine(FlashCoroutine());
 
         RenderTexture.active = rt;
+
+        if (photo != null)
+            Destroy(photo);
 
         photo = new Texture2D(
             rt.width,
@@ -304,12 +288,7 @@ public class PhotoCamera : MonoBehaviour
         );
 
         photo.ReadPixels(
-            new Rect(
-                0,
-                0,
-                rt.width,
-                rt.height
-            ),
+            new Rect(0, 0, rt.width, rt.height),
             0,
             0
         );
@@ -321,12 +300,15 @@ public class PhotoCamera : MonoBehaviour
         if (albumFotos != null)
             albumFotos.AdicionarFoto(photo);
 
-        photoPreview.texture = photo;
-        photoPreview.gameObject.SetActive(true);
+        if (photoPreview != null)
+        {
+            photoPreview.texture = photo;
+            photoPreview.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(1.3f);
+            yield return new WaitForSeconds(1.3f);
 
-        photoPreview.gameObject.SetActive(false);
+            photoPreview.gameObject.SetActive(false);
+        }
 
         yield return new WaitForSeconds(cooldown);
 
@@ -379,6 +361,9 @@ public class PhotoCamera : MonoBehaviour
 
     void AtualizarVisibilidade()
     {
+        if (temporais == null)
+            return;
+
         foreach (Renderer r in temporais)
         {
             if (r == null)
@@ -392,21 +377,21 @@ public class PhotoCamera : MonoBehaviour
 
     IEnumerator FlashCoroutine()
     {
-        if (flashImage != null)
-        {
-            flashImage.gameObject.SetActive(true);
+        if (flashImage == null)
+            yield break;
 
-            Color c = flashImage.color;
-            c.a = 1f;
-            flashImage.color = c;
+        flashImage.gameObject.SetActive(true);
 
-            yield return new WaitForSeconds(flashDuration);
+        Color c = flashImage.color;
+        c.a = 1f;
+        flashImage.color = c;
 
-            c.a = 0f;
-            flashImage.color = c;
+        yield return new WaitForSeconds(flashDuration);
 
-            flashImage.gameObject.SetActive(false);
-        }
+        c.a = 0f;
+        flashImage.color = c;
+
+        flashImage.gameObject.SetActive(false);
     }
 
     void UseBattery(int amount)
@@ -435,17 +420,25 @@ public class PhotoCamera : MonoBehaviour
         UpdateBatteryUI();
     }
 
-    void UpdateBatteryUI()
+    public bool CanReceiveBattery()
     {
-        for (int i = 0; i < batteryBars.Length; i++)
-        {
-            batteryBars[i].enabled =
-                i < currentBattery;
-        }
+        return currentBattery < maxBattery;
     }
 
     public bool IsBatteryFull()
     {
         return currentBattery >= maxBattery;
+    }
+
+    void UpdateBatteryUI()
+    {
+        if (batteryBars == null)
+            return;
+
+        for (int i = 0; i < batteryBars.Length; i++)
+        {
+            if (batteryBars[i] != null)
+                batteryBars[i].enabled = i < currentBattery;
+        }
     }
 }
