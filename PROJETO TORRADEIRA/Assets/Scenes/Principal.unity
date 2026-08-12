@@ -6054,8 +6054,8 @@ MonoBehaviour:
     pe\xE7a por pe\xE7a.\nMas cuidado: um guardi\xE3o protege este lugar, e ele n\xE3o
     vai deixar sua miss\xE3o ser f\xE1cil."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
+  m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
