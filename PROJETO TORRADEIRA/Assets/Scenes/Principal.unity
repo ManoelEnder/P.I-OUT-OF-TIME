@@ -37851,6 +37851,7 @@ GameObject:
   - component: {fileID: 2137393038}
   - component: {fileID: 2137393037}
   - component: {fileID: 2137393039}
+  - component: {fileID: 2137393040}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -37974,6 +37975,19 @@ MonoBehaviour:
   saveSystem: {fileID: 11782723}
   characterController: {fileID: 0}
   intervaloAutoSave: 180
+--- !u!114 &2137393040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137393033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98330d9098850fe48910390db57c3126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArmToggle
+  arm: {fileID: 1339636112}
 --- !u!1 &2142050210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4457112154164042178, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
