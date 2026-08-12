@@ -6,14 +6,11 @@ using UnityEngine.SceneManagement;
 public class ItemColetavel : MonoBehaviour
 {
     public string itemNome;
-
     public float distancia = 3f;
     public TMP_Text texto;
     public Transform player;
-
     public string nomeDaCena;
     public FadeController fade;
-
     private bool coletado = false;
 
     void Update()
@@ -42,9 +39,7 @@ public class ItemColetavel : MonoBehaviour
     public void Coletar()
     {
         coletado = true;
-
         texto.text = "Item coletado!";
-
 
         MeshRenderer render = GetComponent<MeshRenderer>();
         if (render != null) render.enabled = false;
@@ -57,15 +52,11 @@ public class ItemColetavel : MonoBehaviour
 
     IEnumerator MudarCena()
     {
-
         if (fade != null)
         {
-            yield return StartCoroutine(fade.FadeOut());
+            fade.MostrarPainel();
         }
-
         yield return new WaitForSeconds(1f);
-
-
         SceneManager.LoadScene(nomeDaCena);
     }
 }
