@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -9,6 +10,7 @@ public class VisualizadorFoto : MonoBehaviour
     public Image imagemGrande;
     public GameObject textoApagado;
     public GameObject painelConfirmacao;
+    public AlbumFotos albumFotos;
 
     private List<Sprite> fotos = new List<Sprite>();
     private List<Color> cores = new List<Color>();
@@ -39,11 +41,6 @@ public class VisualizadorFoto : MonoBehaviour
             }
 
             return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            painel.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
@@ -108,6 +105,7 @@ public class VisualizadorFoto : MonoBehaviour
         if (fotos.Count == 0) return;
 
         indexAtual++;
+
         if (indexAtual >= fotos.Count)
             indexAtual = 0;
 
@@ -122,6 +120,7 @@ public class VisualizadorFoto : MonoBehaviour
         if (fotos.Count == 0) return;
 
         indexAtual--;
+
         if (indexAtual < 0)
             indexAtual = fotos.Count - 1;
 
@@ -135,18 +134,32 @@ public class VisualizadorFoto : MonoBehaviour
     {
         if (fotos.Count == 0) return;
 
-        fotos.RemoveAt(indexAtual);
+        int indiceExcluido = indexAtual;
 
-        if (cores != null && cores.Count > indexAtual)
-            cores.RemoveAt(indexAtual);
+        if (albumFotos != null)
+        {
+            albumFotos.RemoverFoto(indiceExcluido);
 
-        if (indexAtual >= fotos.Count)
-            indexAtual = fotos.Count - 1;
+            fotos = albumFotos.ObterSprites();
+            cores = albumFotos.ObterCores();
+        }
 
         painelConfirmacao.SetActive(false);
         confirmando = false;
 
         StartCoroutine(MostrarMensagem());
+
+        if (fotos.Count == 0)
+        {
+            painel.SetActive(false);
+            return;
+        }
+
+        if (indexAtual >= fotos.Count)
+            indexAtual = fotos.Count - 1;
+
+        zoom = 1f;
+        imagemGrande.rectTransform.localScale = Vector3.one;
 
         Mostrar();
     }
@@ -160,7 +173,9 @@ public class VisualizadorFoto : MonoBehaviour
     IEnumerator MostrarMensagem()
     {
         textoApagado.SetActive(true);
+
         yield return new WaitForSeconds(2f);
+
         textoApagado.SetActive(false);
     }
 }

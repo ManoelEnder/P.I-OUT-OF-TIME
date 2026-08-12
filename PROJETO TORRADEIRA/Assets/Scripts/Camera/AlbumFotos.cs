@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -26,7 +27,14 @@ public class AlbumFotos : MonoBehaviour
         {
             if (visualizador != null && imagens.Count > 0)
             {
-                visualizador.Abrir(sprites, cores, 0);
+                if (visualizador.painel.activeSelf)
+                {
+                    visualizador.painel.SetActive(false);
+                }
+                else
+                {
+                    visualizador.Abrir(sprites, cores, 0);
+                }
             }
         }
 
@@ -79,4 +87,34 @@ public class AlbumFotos : MonoBehaviour
         indexSelecionado = index;
         Debug.Log("Selecionou: " + index);
     }
+
+    public void RemoverFoto(int index)
+    {
+        if (index < 0 || index >= imagens.Count)
+            return;
+
+        GameObject objetoFoto = imagens[index].gameObject;
+
+        imagens.RemoveAt(index);
+        sprites.RemoveAt(index);
+        cores.RemoveAt(index);
+
+        Destroy(objetoFoto);
+
+        if (indexSelecionado == index)
+            indexSelecionado = -1;
+        else if (indexSelecionado > index)
+            indexSelecionado--;
+    }
+
+    public List<Sprite> ObterSprites()
+    {
+        return sprites;
+    }
+
+    public List<Color> ObterCores()
+    {
+        return cores;
+    }
 }
+
