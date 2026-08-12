@@ -45,7 +45,7 @@ public class PhotoCamera : MonoBehaviour
     private float batteryTimer;
 
     private RenderTexture rt;
-    private Texture2D photo;
+
 
     private bool canShoot = true;
     private int photoCount;
@@ -277,32 +277,30 @@ public class PhotoCamera : MonoBehaviour
 
         RenderTexture.active = rt;
 
-        if (photo != null)
-            Destroy(photo);
-
-        photo = new Texture2D(
+    
+        Texture2D novaFoto = new Texture2D(
             rt.width,
             rt.height,
             TextureFormat.RGB24,
             false
         );
 
-        photo.ReadPixels(
+        novaFoto.ReadPixels(
             new Rect(0, 0, rt.width, rt.height),
             0,
             0
         );
 
-        photo.Apply();
+        novaFoto.Apply();
 
         RenderTexture.active = null;
 
         if (albumFotos != null)
-            albumFotos.AdicionarFoto(photo);
+            albumFotos.AdicionarFoto(novaFoto);
 
         if (photoPreview != null)
         {
-            photoPreview.texture = photo;
+            photoPreview.texture = novaFoto;
             photoPreview.gameObject.SetActive(true);
 
             yield return new WaitForSeconds(1.3f);

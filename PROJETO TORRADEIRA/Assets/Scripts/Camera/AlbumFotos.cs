@@ -1,8 +1,6 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
 public class AlbumFotos : MonoBehaviour
 {
     public GameObject painel;
@@ -95,11 +93,23 @@ public class AlbumFotos : MonoBehaviour
 
         GameObject objetoFoto = imagens[index].gameObject;
 
+   
+        Sprite spriteRemovido = sprites[index];
+        Texture2D texturaRemovida = spriteRemovido != null
+            ? spriteRemovido.texture
+            : null;
+
         imagens.RemoveAt(index);
         sprites.RemoveAt(index);
         cores.RemoveAt(index);
 
         Destroy(objetoFoto);
+
+        if (spriteRemovido != null)
+            Destroy(spriteRemovido);
+
+        if (texturaRemovida != null)
+            Destroy(texturaRemovida);
 
         if (indexSelecionado == index)
             indexSelecionado = -1;
@@ -117,4 +127,3 @@ public class AlbumFotos : MonoBehaviour
         return cores;
     }
 }
-
