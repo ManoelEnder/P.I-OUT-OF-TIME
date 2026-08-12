@@ -660,8 +660,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Pressione qualquer bot\xE3o"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 272974be0d426ca48aa5660a18d0a34e, type: 2}
-  m_sharedMaterial: {fileID: 5798985291346640199, guid: 272974be0d426ca48aa5660a18d0a34e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 38edba4af1aa6374bbc91e99f5da727b, type: 2}
+  m_sharedMaterial: {fileID: -8414069091058783474, guid: 38edba4af1aa6374bbc91e99f5da727b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -685,7 +685,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27.4
+  m_fontSize: 28.75
   m_fontSizeBase: 26.28
   m_fontWeight: 400
   m_enableAutoSizing: 1
