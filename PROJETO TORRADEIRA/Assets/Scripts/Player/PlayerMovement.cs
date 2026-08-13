@@ -5,6 +5,7 @@ using TMPro;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 3.5f;
+    public float sprintSpeed = 6f;
     public float mouseSensitivity = 2f;
     public float gravity = -9.81f;
     public float jumpForce = 2f;
@@ -15,7 +16,11 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI textoInteracao;
 
     public float headBobSpeed = 7f;
-    public float headBobAmount = 0.035f;
+    public float headBobAmount = 0.15f;
+
+    public float sprintHeadBobSpeed = 11f;
+    public float sprintHeadBobAmount = 0.19f;
+
     public float headBobSmooth = 8f;
 
     float xRotation = 0f;
@@ -32,24 +37,32 @@ public class PlayerMovement : MonoBehaviour
 
         textoInteracao.gameObject.SetActive(false);
 
-        cameraStartPosition = cameraTransform.localPosition;
+        cameraStartPosition =
+            cameraTransform.localPosition;
     }
 
     void Update()
     {
         Vector2 moveInput = Vector2.zero;
 
-        if (Keyboard.current.wKey.isPressed) moveInput.y += 1;
-        if (Keyboard.current.sKey.isPressed) moveInput.y -= 1;
-        if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
-        if (Keyboard.current.aKey.isPressed) moveInput.x -= 1;
+        if (Keyboard.current.wKey.isPressed)
+            moveInput.y += 1;
+
+        if (Keyboard.current.sKey.isPressed)
+            moveInput.y -= 1;
+
+        if (Keyboard.current.dKey.isPressed)
+            moveInput.x += 1;
+
+        if (Keyboard.current.aKey.isPressed)
+            moveInput.x -= 1;
+
+        if (moveInput.sqrMagnitude > 1f)
+            moveInput.Normalize();
 
         Vector3 move =
             transform.right * moveInput.x +
             transform.forward * moveInput.y;
-
-        if (moveInput.sqrMagnitude > 1f)
-            move.Normalize();
 
         if (controller.isGrounded && yVelocity < 0)
             yVelocity = -2f;
@@ -65,14 +78,29 @@ public class PlayerMovement : MonoBehaviour
 
         yVelocity += gravity * Time.deltaTime;
 
-        Vector3 velocity = move * moveSpeed;
+        bool isSprinting =
+            Keyboard.current.leftShiftKey.isPressed &&
+            moveInput.sqrMagnitude > 0.01f &&
+            controller.isGrounded;
+
+        float currentSpeed =
+            isSprinting
+                ? sprintSpeed
+                : moveSpeed;
+
+        Vector3 velocity =
+            move * currentSpeed;
+
         velocity.y = yVelocity;
 
         controller.Move(
             velocity * Time.deltaTime
         );
 
-        HandleHeadBob(moveInput);
+        HandleHeadBob(
+            moveInput,
+            isSprinting
+        );
 
         Vector2 mouseDelta =
             Mouse.current.delta.ReadValue() *
@@ -109,7 +137,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void HandleHeadBob(Vector2 moveInput)
+    void HandleHeadBob(
+        Vector2 moveInput,
+        bool isSprinting
+    )
     {
         bool isMoving =
             moveInput.sqrMagnitude > 0.01f &&
@@ -117,28 +148,40 @@ public class PlayerMovement : MonoBehaviour
 
         if (isMoving)
         {
-            headBobTimer +=
-                Time.deltaTime * headBobSpeed;
+            float currentBobSpeed =
+                isSprinting
+                    ? sprintHeadBobSpeed
+                    : headBobSpeed;
 
-            float bob =
-                Mathf.Sin(headBobTimer) *
-                headBobAmount;
+            float currentBobAmount =
+                isSprinting
+                    ? sprintHeadBobAmount
+                    : headBobAmount;
+
+            headBobTimer +=
+                Time.deltaTime * currentBobSpeed;
 
             float verticalBob =
+                Mathf.Sin(headBobTimer) *
+                currentBobAmount;
+
+            float horizontalBob =
                 Mathf.Sin(headBobTimer * 2f) *
-                headBobAmount * 0.25f;
+                currentBobAmount *
+                0.25f;
 
             Vector3 targetPosition =
                 cameraStartPosition;
 
-            targetPosition.y += bob;
-            targetPosition.x += verticalBob;
+            targetPosition.y += verticalBob;
+            targetPosition.x += horizontalBob;
 
             cameraTransform.localPosition =
                 Vector3.Lerp(
                     cameraTransform.localPosition,
                     targetPosition,
-                    Time.deltaTime * headBobSmooth
+                    Time.deltaTime *
+                    headBobSmooth
                 );
         }
         else
@@ -149,7 +192,8 @@ public class PlayerMovement : MonoBehaviour
                 Vector3.Lerp(
                     cameraTransform.localPosition,
                     cameraStartPosition,
-                    Time.deltaTime * headBobSmooth
+                    Time.deltaTime *
+                    headBobSmooth
                 );
         }
     }
