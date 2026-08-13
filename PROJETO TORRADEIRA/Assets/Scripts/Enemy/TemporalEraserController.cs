@@ -114,12 +114,6 @@ public class TemporalEraserController : MonoBehaviour
     private void UpdateRoaming()
     {
         bool canSeePlayer = vision.CanSeePlayer();
-
-        Debug.Log(
-            $"{name} | Can See Player: {canSeePlayer}",
-            this
-        );
-
         if (canSeePlayer)
         {
             StartChasing();

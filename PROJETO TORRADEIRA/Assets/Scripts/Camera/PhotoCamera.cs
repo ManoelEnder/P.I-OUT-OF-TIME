@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,97 +9,99 @@ public class PhotoCamera : MonoBehaviour
     public Camera photoCam;
     public Camera playerCam;
 
-    public RawImage photoPreview;
-    public Image flashImage;
-
-    public AudioSource audioSource;
-    public AudioClip shutterSound;
-
-    public TextMeshProUGUI photoCounter;
     public GameObject crosshair;
     public GameObject cameraHUD;
     public Image fadeImage;
-
-    public float cooldown = 2f;
-    public float flashDuration = 0.07f;
+    public Image flashImage;
 
     public float zoomFOV = 40f;
     public float normalFOV = 60f;
-    public float transitionTime = 0.4f;
 
     public float minZoomFOV = 25f;
     public float maxZoomFOV = 60f;
 
-    public float tempoRevelado = 30f;
+    public float enterTransitionTime = 0.4f;
+    public float exitTransitionTime = 0.12f;
 
-    public MissionSystem missionSystem;
-    public AlbumFotos albumFotos;
+    public float flashDuration = 0.07f;
 
     public int maxBattery = 10;
-    private int currentBattery;
-
     public Image[] batteryBars;
 
     public float batteryDrainInterval = 3f;
+
+    public float tempoRevelado = 30f;
+
+    [SerializeField] private CRTController crtController;
+
+    [SerializeField] private CameraPhotoData photoData;
+
+    private RenderTexture renderTexture;
+
+    private int currentBattery;
     private float batteryTimer;
 
-    private RenderTexture rt;
-
-
-    private bool canShoot = true;
-    private int photoCount;
     private bool cameraMode;
-    private float targetFOV;
+    private bool canShoot = true;
     private bool isTransitioning;
 
+    private float targetFOV;
+
     private Renderer[] temporais;
-    private readonly List<Renderer> revelados = new List<Renderer>();
+
+    private readonly List<Renderer> revelados =
+        new List<Renderer>();
 
     private Coroutine transitionCoroutine;
 
+    public bool IsCameraMode => cameraMode;
+
     void Start()
     {
-        rt = new RenderTexture(512, 512, 24);
+        renderTexture =
+            new RenderTexture(512, 512, 24);
 
-        photoCam.targetTexture = rt;
+        photoCam.targetTexture =
+            renderTexture;
+
         photoCam.enabled = false;
 
         targetFOV = normalFOV;
 
         currentBattery = maxBattery;
+
         UpdateBatteryUI();
 
-        List<Renderer> lista = new List<Renderer>();
-        Renderer[] todos = FindObjectsOfType<Renderer>(true);
-
-        foreach (Renderer r in todos)
-        {
-            if (r.CompareTag("Temporal"))
-            {
-                lista.Add(r);
-                r.enabled = false;
-            }
-        }
-
-        temporais = lista.ToArray();
-
-        if (photoPreview != null)
-            photoPreview.gameObject.SetActive(false);
+        FindTemporalObjects();
 
         if (cameraHUD != null)
             cameraHUD.SetActive(false);
 
+        if (crosshair != null)
+            crosshair.SetActive(true);
+
         if (fadeImage != null)
         {
-            Color c = fadeImage.color;
-            c.a = 0f;
-            fadeImage.color = c;
+            Color color = fadeImage.color;
+            color.a = 0f;
+            fadeImage.color = color;
         }
 
-        if (photoCounter != null)
-            photoCounter.text = "Fotos: 0";
+        if (flashImage != null)
+        {
+            Color color = flashImage.color;
+            color.a = 0f;
+            flashImage.color = color;
+            flashImage.gameObject.SetActive(false);
+        }
 
-        AtualizarVisibilidade();
+        if (photoData != null)
+            photoData.Initialize();
+
+        UpdateTemporalVisibility();
+
+        if (crtController != null)
+            crtController.SetCRT(false);
     }
 
     void Update()
@@ -111,106 +112,151 @@ public class PhotoCamera : MonoBehaviour
             ToggleCameraMode();
         }
 
-        if (cameraMode &&
-            Mouse.current != null &&
+        if (!cameraMode)
+            return;
+
+        if (Mouse.current != null &&
             Mouse.current.leftButton.wasPressedThisFrame &&
-            canShoot)
+            canShoot &&
+            !isTransitioning)
         {
             StartCoroutine(TakePhoto());
         }
 
-        if (cameraMode && !isTransitioning)
+        if (!isTransitioning)
+            HandleZoom();
+
+        HandleBattery();
+    }
+
+    void HandleZoom()
+    {
+        if (Mouse.current == null)
+            return;
+
+        float scroll =
+            Mouse.current.scroll.ReadValue().y;
+
+        if (scroll != 0f)
         {
-            if (Mouse.current != null)
-            {
-                float scroll = Mouse.current.scroll.ReadValue().y;
+            targetFOV -= scroll * 2.5f;
 
-                if (scroll != 0)
-                {
-                    targetFOV -= scroll * 2.5f;
-                    targetFOV = Mathf.Clamp(
-                        targetFOV,
-                        minZoomFOV,
-                        maxZoomFOV
-                    );
-                }
-            }
+            targetFOV = Mathf.Clamp(
+                targetFOV,
+                minZoomFOV,
+                maxZoomFOV
+            );
+        }
 
-            playerCam.fieldOfView = Mathf.Lerp(
+        playerCam.fieldOfView =
+            Mathf.Lerp(
                 playerCam.fieldOfView,
                 targetFOV,
                 Time.deltaTime * 10f
             );
-        }
+    }
 
-        if (cameraMode)
-        {
-            batteryTimer += Time.deltaTime;
+    void HandleBattery()
+    {
+        batteryTimer += Time.deltaTime;
 
-            if (batteryTimer >= batteryDrainInterval)
-            {
-                batteryTimer = 0f;
-                UseBattery(1);
-            }
-        }
-        else
+        if (batteryTimer >= batteryDrainInterval)
         {
             batteryTimer = 0f;
+            UseBattery(1);
+
+            if (currentBattery <= 0)
+                ToggleCameraMode();
         }
     }
 
     void ToggleCameraMode()
     {
-        if (!cameraMode && currentBattery <= 0)
+        if (!cameraMode &&
+            currentBattery <= 0)
+        {
             return;
+        }
 
         cameraMode = !cameraMode;
+
+        if (crtController != null)
+            crtController.SetCRT(cameraMode);
 
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
 
-        AtualizarVisibilidade();
+        UpdateTemporalVisibility();
 
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 
         transitionCoroutine =
-            StartCoroutine(CameraTransition(cameraMode));
+            StartCoroutine(
+                CameraTransition(cameraMode)
+            );
     }
 
     IEnumerator CameraTransition(bool entering)
     {
         isTransitioning = true;
 
-        float startFOV = playerCam.fieldOfView;
-        float target = entering ? zoomFOV : normalFOV;
+        float startFOV =
+            playerCam.fieldOfView;
 
-        float t = 0f;
+        float target =
+            entering
+                ? zoomFOV
+                : normalFOV;
 
-        if (cameraHUD != null)
-            cameraHUD.SetActive(true);
+        float duration =
+            entering
+                ? enterTransitionTime
+                : exitTransitionTime;
 
-        while (t < transitionTime)
+        float time = 0f;
+
+        if (entering)
         {
-            t += Time.deltaTime;
+            if (cameraHUD != null)
+                cameraHUD.SetActive(true);
+        }
 
-            float progress = Mathf.Clamp01(t / transitionTime);
+        while (time < duration)
+        {
+            time += Time.deltaTime;
 
-            playerCam.fieldOfView = Mathf.Lerp(
-                startFOV,
-                target,
-                progress
-            );
+            float progress =
+                Mathf.Clamp01(
+                    time / duration
+                );
+
+            playerCam.fieldOfView =
+                Mathf.Lerp(
+                    startFOV,
+                    target,
+                    progress
+                );
 
             if (fadeImage != null)
             {
-                Color c = fadeImage.color;
+                Color color =
+                    fadeImage.color;
 
-                c.a = entering
-                    ? Mathf.Lerp(0f, 0.35f, progress)
-                    : Mathf.Lerp(0.35f, 0f, progress);
+                color.a =
+                    entering
+                        ? Mathf.Lerp(
+                            0f,
+                            0.35f,
+                            progress
+                        )
+                        : Mathf.Lerp(
+                            0.35f,
+                            0f,
+                            progress
+                        );
 
-                fadeImage.color = c;
+                fadeImage.color = color;
             }
 
             yield return null;
@@ -219,157 +265,220 @@ public class PhotoCamera : MonoBehaviour
         playerCam.fieldOfView = target;
         targetFOV = target;
 
-        if (!entering && cameraHUD != null)
+        if (!entering &&
+            cameraHUD != null)
+        {
             cameraHUD.SetActive(false);
+        }
 
         isTransitioning = false;
     }
 
     IEnumerator TakePhoto()
     {
-        if (!canShoot || currentBattery <= 0)
+        if (!canShoot ||
+            currentBattery <= 0)
+        {
             yield break;
+        }
 
         canShoot = false;
 
         UseBattery(1);
-
-        photoCount++;
-
-        if (photoCounter != null)
-            photoCounter.text = "Fotos: " + photoCount;
-
-        if (missionSystem != null)
-            missionSystem.AddFoto();
 
         photoCam.transform.SetPositionAndRotation(
             playerCam.transform.position,
             playerCam.transform.rotation
         );
 
-        photoCam.fieldOfView = playerCam.fieldOfView;
+        photoCam.fieldOfView =
+            playerCam.fieldOfView;
 
         yield return new WaitForEndOfFrame();
 
-        Ray ray = playerCam.ViewportPointToRay(
-            new Vector3(0.5f, 0.5f, 0f)
-        );
+        DetectTemporalObject();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-        {
-            if (hit.collider.CompareTag("Temporal"))
-            {
-                Renderer r = hit.collider.GetComponent<Renderer>();
-
-                if (r != null)
-                    RevelarPorTempo(r);
-            }
-        }
-
-        AtualizarVisibilidade();
+        UpdateTemporalVisibility();
 
         photoCam.Render();
 
-        if (audioSource != null && shutterSound != null)
-            audioSource.PlayOneShot(shutterSound);
+        Texture2D photo =
+            CreatePhoto();
 
-        yield return StartCoroutine(FlashCoroutine());
+        if (photoData != null)
+            photoData.ProcessPhoto(photo);
 
-        RenderTexture.active = rt;
-
-    
-        Texture2D novaFoto = new Texture2D(
-            rt.width,
-            rt.height,
-            TextureFormat.RGB24,
-            false
+        yield return StartCoroutine(
+            FlashCoroutine()
         );
 
-        novaFoto.ReadPixels(
-            new Rect(0, 0, rt.width, rt.height),
-            0,
-            0
+        yield return new WaitForSeconds(
+            photoData != null
+                ? photoData.previewDuration
+                : 0f
         );
 
-        novaFoto.Apply();
-
-        RenderTexture.active = null;
-
-        if (albumFotos != null)
-            albumFotos.AdicionarFoto(novaFoto);
-
-        if (photoPreview != null)
-        {
-            photoPreview.texture = novaFoto;
-            photoPreview.gameObject.SetActive(true);
-
-            yield return new WaitForSeconds(1.3f);
-
-            photoPreview.gameObject.SetActive(false);
-        }
-
-        yield return new WaitForSeconds(cooldown);
+        yield return new WaitForSeconds(
+            photoData != null
+                ? photoData.cooldown
+                : 2f
+        );
 
         canShoot = true;
     }
 
-    void RevelarPorTempo(Renderer r)
+    Texture2D CreatePhoto()
     {
-        if (r == null)
+        RenderTexture.active =
+            renderTexture;
+
+        Texture2D photo =
+            new Texture2D(
+                renderTexture.width,
+                renderTexture.height,
+                TextureFormat.RGB24,
+                false
+            );
+
+        photo.ReadPixels(
+            new Rect(
+                0,
+                0,
+                renderTexture.width,
+                renderTexture.height
+            ),
+            0,
+            0
+        );
+
+        photo.Apply();
+
+        RenderTexture.active = null;
+
+        return photo;
+    }
+
+    void DetectTemporalObject()
+    {
+        Ray ray =
+            playerCam.ViewportPointToRay(
+                new Vector3(
+                    0.5f,
+                    0.5f,
+                    0f
+                )
+            );
+
+        if (!Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            100f
+        ))
+        {
+            return;
+        }
+
+        if (!hit.collider.CompareTag(
+            "Temporal"
+        ))
+        {
+            return;
+        }
+
+        Renderer renderer =
+            hit.collider.GetComponent<Renderer>();
+
+        if (renderer != null)
+            RevealTemporalObject(renderer);
+    }
+
+    void RevealTemporalObject(
+        Renderer renderer
+    )
+    {
+        if (renderer == null)
             return;
 
-        if (!revelados.Contains(r))
-            revelados.Add(r);
+        if (!revelados.Contains(renderer))
+            revelados.Add(renderer);
 
-        r.enabled = true;
+        renderer.enabled = true;
 
         TemporalObjectPickup pickup =
-            r.GetComponent<TemporalObjectPickup>();
+            renderer.GetComponent<
+                TemporalObjectPickup
+            >();
 
         if (pickup != null)
             pickup.SetRevealed(true);
 
-        StartCoroutine(EsconderDepois(r));
-
-        if (missionSystem != null &&
-            r.gameObject.name == "Object (1)")
-        {
-            missionSystem.DescobriuPeca();
-        }
+        StartCoroutine(
+            HideTemporalObject(renderer)
+        );
     }
 
-    IEnumerator EsconderDepois(Renderer r)
+    IEnumerator HideTemporalObject(
+        Renderer renderer
+    )
     {
-        yield return new WaitForSeconds(tempoRevelado);
+        yield return new WaitForSeconds(
+            tempoRevelado
+        );
 
-        revelados.Remove(r);
+        revelados.Remove(renderer);
 
-        if (r == null)
+        if (renderer == null)
             yield break;
 
         TemporalObjectPickup pickup =
-            r.GetComponent<TemporalObjectPickup>();
+            renderer.GetComponent<
+                TemporalObjectPickup
+            >();
 
         if (pickup != null)
             pickup.SetRevealed(false);
 
         if (!cameraMode)
-            r.enabled = false;
+            renderer.enabled = false;
     }
 
-    void AtualizarVisibilidade()
+    void FindTemporalObjects()
+    {
+        List<Renderer> lista =
+            new List<Renderer>();
+
+        Renderer[] todos =
+            FindObjectsOfType<Renderer>(true);
+
+        foreach (Renderer renderer in todos)
+        {
+            if (!renderer.CompareTag(
+                "Temporal"
+            ))
+            {
+                continue;
+            }
+
+            lista.Add(renderer);
+            renderer.enabled = false;
+        }
+
+        temporais = lista.ToArray();
+    }
+
+    void UpdateTemporalVisibility()
     {
         if (temporais == null)
             return;
 
-        foreach (Renderer r in temporais)
+        foreach (Renderer renderer in temporais)
         {
-            if (r == null)
+            if (renderer == null)
                 continue;
 
-            r.enabled =
+            renderer.enabled =
                 cameraMode ||
-                revelados.Contains(r);
+                revelados.Contains(renderer);
         }
     }
 
@@ -380,14 +489,20 @@ public class PhotoCamera : MonoBehaviour
 
         flashImage.gameObject.SetActive(true);
 
-        Color c = flashImage.color;
-        c.a = 1f;
-        flashImage.color = c;
+        Color color =
+            flashImage.color;
 
-        yield return new WaitForSeconds(flashDuration);
+        color.a = 1f;
 
-        c.a = 0f;
-        flashImage.color = c;
+        flashImage.color = color;
+
+        yield return new WaitForSeconds(
+            flashDuration
+        );
+
+        color.a = 0f;
+
+        flashImage.color = color;
 
         flashImage.gameObject.SetActive(false);
     }
@@ -396,11 +511,12 @@ public class PhotoCamera : MonoBehaviour
     {
         currentBattery -= amount;
 
-        currentBattery = Mathf.Clamp(
-            currentBattery,
-            0,
-            maxBattery
-        );
+        currentBattery =
+            Mathf.Clamp(
+                currentBattery,
+                0,
+                maxBattery
+            );
 
         UpdateBatteryUI();
     }
@@ -409,11 +525,12 @@ public class PhotoCamera : MonoBehaviour
     {
         currentBattery += amount;
 
-        currentBattery = Mathf.Clamp(
-            currentBattery,
-            0,
-            maxBattery
-        );
+        currentBattery =
+            Mathf.Clamp(
+                currentBattery,
+                0,
+                maxBattery
+            );
 
         UpdateBatteryUI();
     }
@@ -433,10 +550,15 @@ public class PhotoCamera : MonoBehaviour
         if (batteryBars == null)
             return;
 
-        for (int i = 0; i < batteryBars.Length; i++)
+        for (int i = 0;
+            i < batteryBars.Length;
+            i++)
         {
             if (batteryBars[i] != null)
-                batteryBars[i].enabled = i < currentBattery;
+            {
+                batteryBars[i].enabled =
+                    i < currentBattery;
+            }
         }
     }
 }
