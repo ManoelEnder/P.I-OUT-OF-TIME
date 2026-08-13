@@ -1,61 +1,56 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerSave : MonoBehaviour
 {
     [Header("Sistema de Save")]
     [SerializeField] private SaveSystem saveSystem;
 
-    [Header("Opcional")]
-    [SerializeField] private CharacterController characterController;
-
     [Header("Auto Save")]
-    [SerializeField] private float intervaloAutoSave = 180f; // 3 minutos
+    [SerializeField] private float intervaloAutoSave = 180f;
 
     private float contadorAutoSave;
 
+    private CharacterController characterController;
+
     private string mensagem = "";
-    private float tempoMensagem = 0f;
+    private float tempoMensagem;
 
     private void Awake()
     {
-        if (saveSystem == null)
-        {
-            saveSystem = FindFirstObjectByType<SaveSystem>();
-        }
+        saveSystem = FindFirstObjectByType<SaveSystem>();
 
-        if (characterController == null)
-        {
-            characterController = GetComponent<CharacterController>();
-        }
+        characterController =
+            GetComponent<CharacterController>();
 
         contadorAutoSave = intervaloAutoSave;
     }
 
     private void Update()
     {
-        // AUTO SAVE A CADA 3 MINUTOS
+        
+
         contadorAutoSave -= Time.deltaTime;
 
-        if (contadorAutoSave <= 0f)
+        if (contadorAutoSave <= 0)
         {
             SalvarJogo();
 
             contadorAutoSave = intervaloAutoSave;
         }
 
-        // Opcional: F5 para salvar manualmente
+      
         if (Input.GetKeyDown(KeyCode.F5))
         {
             SalvarJogo();
         }
 
-        // Opcional: F9 para carregar
         if (Input.GetKeyDown(KeyCode.F9))
         {
             CarregarJogo();
         }
 
-        if (tempoMensagem > 0f)
+        if (tempoMensagem > 0)
         {
             tempoMensagem -= Time.deltaTime;
         }
@@ -71,17 +66,34 @@ public class PlayerSave : MonoBehaviour
 
         SaveData dados = new SaveData();
 
-        dados.posX = transform.position.x;
-        dados.posY = transform.position.y;
-        dados.posZ = transform.position.z;
+    
 
-        dados.rotX = transform.eulerAngles.x;
-        dados.rotY = transform.eulerAngles.y;
-        dados.rotZ = transform.eulerAngles.z;
+        dados.playerX = transform.position.x;
+        dados.playerY = transform.position.y;
+        dados.playerZ = transform.position.z;
 
-        bool salvou = saveSystem.Salvar(dados);
+        dados.playerRotX = transform.eulerAngles.x;
+        dados.playerRotY = transform.eulerAngles.y;
+        dados.playerRotZ = transform.eulerAngles.z;
 
-        if (salvou)
+        SaveableObject[] objetos =
+            FindObjectsByType<SaveableObject>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        foreach (SaveableObject objeto in objetos)
+        {
+            
+            if (objeto.gameObject == gameObject)
+                continue;
+
+            dados.objetos.Add(
+                objeto.CriarDados()
+            );
+        }
+
+        if (saveSystem.Salvar(dados))
         {
             MostrarMensagem("JOGO SALVO!");
         }
@@ -97,33 +109,53 @@ public class PlayerSave : MonoBehaviour
 
         if (!saveSystem.Carregar(out SaveData dados))
         {
-            MostrarMensagem("NENHUM SAVE ENCONTRADO!");
+            MostrarMensagem("NENHUM SAVE!");
             return;
         }
 
-        Vector3 novaPosicao = new Vector3(
-            dados.posX,
-            dados.posY,
-            dados.posZ
+        Vector3 posicaoPlayer = new Vector3(
+            dados.playerX,
+            dados.playerY,
+            dados.playerZ
         );
 
-        Quaternion novaRotacao = Quaternion.Euler(
-            dados.rotX,
-            dados.rotY,
-            dados.rotZ
-        );
+        Quaternion rotacaoPlayer =
+            Quaternion.Euler(
+                dados.playerRotX,
+                dados.playerRotY,
+                dados.playerRotZ
+            );
 
         if (characterController != null)
         {
             characterController.enabled = false;
         }
 
-        transform.position = novaPosicao;
-        transform.rotation = novaRotacao;
+        transform.position = posicaoPlayer;
+        transform.rotation = rotacaoPlayer;
 
         if (characterController != null)
         {
             characterController.enabled = true;
+        }
+
+        
+        SaveableObject[] objetos =
+            FindObjectsByType<SaveableObject>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        foreach (SaveableObject objeto in objetos)
+        {
+            foreach (ObjectSaveData dadosObjeto in dados.objetos)
+            {
+                if (objeto.ID == dadosObjeto.id)
+                {
+                    objeto.AplicarDados(dadosObjeto);
+                    break;
+                }
+            }
         }
 
         MostrarMensagem("JOGO CARREGADO!");
@@ -132,8 +164,6 @@ public class PlayerSave : MonoBehaviour
     private void OnApplicationQuit()
     {
         SalvarJogo();
-
-        Debug.Log("Jogo salvo antes de fechar!");
     }
 
     private void OnApplicationPause(bool pausado)
@@ -154,14 +184,15 @@ public class PlayerSave : MonoBehaviour
 
     private void OnGUI()
     {
-        if (tempoMensagem <= 0f)
+        if (tempoMensagem <= 0)
             return;
 
-        GUIStyle estilo = new GUIStyle(GUI.skin.label);
+        GUIStyle estilo =
+            new GUIStyle(GUI.skin.label);
 
         estilo.fontSize = 30;
-        estilo.alignment = TextAnchor.MiddleCenter;
         estilo.fontStyle = FontStyle.Bold;
+        estilo.alignment = TextAnchor.MiddleCenter;
 
         GUI.Box(
             new Rect(

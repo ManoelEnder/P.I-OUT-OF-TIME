@@ -12,7 +12,7 @@ public class SaveSystem : MonoBehaviour
             "save.json"
         );
 
-        Debug.Log("Caminho do Save: " + caminhoSave);
+        Debug.Log("Save em: " + caminhoSave);
     }
 
     public bool Salvar(SaveData dados)
@@ -24,13 +24,14 @@ public class SaveSystem : MonoBehaviour
             File.WriteAllText(caminhoSave, json);
 
             Debug.Log("JOGO SALVO!");
-            Debug.Log(json);
-
             return true;
         }
         catch (System.Exception erro)
         {
-            Debug.LogError("ERRO AO SALVAR: " + erro.Message);
+            Debug.LogError(
+                "Erro ao salvar: " + erro.Message
+            );
+
             return false;
         }
     }
@@ -41,7 +42,7 @@ public class SaveSystem : MonoBehaviour
 
         if (!File.Exists(caminhoSave))
         {
-            Debug.LogWarning("Nenhum save encontrado!");
+            Debug.LogWarning("Nenhum save encontrado.");
             return false;
         }
 
@@ -52,13 +53,15 @@ public class SaveSystem : MonoBehaviour
             dados = JsonUtility.FromJson<SaveData>(json);
 
             Debug.Log("JOGO CARREGADO!");
-            Debug.Log(json);
 
             return true;
         }
         catch (System.Exception erro)
         {
-            Debug.LogError("ERRO AO CARREGAR: " + erro.Message);
+            Debug.LogError(
+                "Erro ao carregar: " + erro.Message
+            );
+
             return false;
         }
     }

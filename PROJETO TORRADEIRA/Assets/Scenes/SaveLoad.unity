@@ -247,8 +247,8 @@ Transform:
   m_GameObject: {fileID: 282251543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 119.4, y: -0, z: -142.5}
-  m_LocalScale: {x: 1.230673, y: 1, z: 2.1848602}
+  m_LocalPosition: {x: 115.5637, y: -0, z: -142.5}
+  m_LocalScale: {x: 1.9979975, y: 1, z: 2.1848602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -271,7 +271,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSave
   saveSystem: {fileID: 1341871716}
-  characterController: {fileID: 0}
   intervaloAutoSave: 180
 --- !u!1 &618537625
 GameObject:
@@ -523,7 +522,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -142.04073
+      value: -133.81
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalRotation.w
