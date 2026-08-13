@@ -4780,51 +4780,6 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.086, y: -0.07700001, z: 0}
   m_TimeToStationary: 0.5
---- !u!1 &484840751
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 484840753}
-  - component: {fileID: 484840752}
-  m_Layer: 0
-  m_Name: CameraHUDTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &484840752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 484840751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fd98ef4ccc14774a828335524a40afe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraHUDTest
-  cameraHUD: {fileID: 1673972301}
---- !u!4 &484840753
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 484840751}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 792.1575, y: 0, z: -3258.6372}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &494477078 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 773216892659527025, guid: 3be7ffa8e61c4a946840959c827cf79c, type: 3}
@@ -6213,7 +6168,7 @@ GameObject:
   - component: {fileID: 674923693}
   - component: {fileID: 674923692}
   m_Layer: 0
-  m_Name: SomAmbiente
+  m_Name: AmbientSound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19470,6 +19425,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1385445665}
   - component: {fileID: 1385445668}
+  - component: {fileID: 1385445670}
   - component: {fileID: 1385445667}
   - component: {fileID: 1385445666}
   - component: {fileID: 1385445669}
@@ -19605,31 +19561,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PhotoCamera
   photoCam: {fileID: 1385445667}
   playerCam: {fileID: 1433970454}
-  photoPreview: {fileID: 0}
-  flashImage: {fileID: 1250877734}
-  audioSource: {fileID: 1385445669}
-  shutterSound: {fileID: 8300000, guid: 5a1031b833824a649905920e86b5fece, type: 3}
-  photoCounter: {fileID: 1686159201}
   crosshair: {fileID: 857517283}
   cameraHUD: {fileID: 1673972301}
   fadeImage: {fileID: 1933174960}
-  cooldown: 1
-  flashDuration: 0.07
+  flashImage: {fileID: 1250877734}
   zoomFOV: 40
   normalFOV: 50
-  transitionTime: 0.4
   minZoomFOV: 5
   maxZoomFOV: 50
-  tempoRevelado: 30
-  missionSystem: {fileID: 1013388081}
-  albumFotos: {fileID: 43299877}
+  enterTransitionTime: 0.4
+  exitTransitionTime: 0.12
+  flashDuration: 0.07
   maxBattery: 4
   batteryBars:
   - {fileID: 1215972177}
   - {fileID: 1043615360}
   - {fileID: 1369618110}
   - {fileID: 355872932}
-  batteryDrainInterval: 60
+  batteryDrainInterval: 25
+  tempoRevelado: 30
+  crtController: {fileID: 0}
+  photoData: {fileID: 1385445670}
 --- !u!82 &1385445669
 AudioSource:
   m_ObjectHideFlags: 0
@@ -19727,6 +19679,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1385445670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47eae6a23db781648b76af57512a3d24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraPhotoData
+  photoPreview: {fileID: 0}
+  audioSource: {fileID: 1385445669}
+  shutterSound: {fileID: 0}
+  photoCounter: {fileID: 1686159201}
+  missionSystem: {fileID: 1013388081}
+  albumFotos: {fileID: 43299877}
+  cooldown: 1
+  previewDuration: 1.3
 --- !u!1 &1387715563 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2399687905210629563, guid: aa4bc348612f7c6458a0ad201a4c6937, type: 3}
@@ -38776,13 +38748,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f62bae2ec66f14aa2b14963de864d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
+  moveSpeed: 3
+  sprintSpeed: 6
   mouseSensitivity: 0.1
   gravity: -9.81
   jumpForce: 1
   cameraTransform: {fileID: 1433970451}
   controller: {fileID: 2137393035}
   textoInteracao: {fileID: 1523086864}
+  headBobSpeed: 7
+  headBobAmount: 0.15
+  sprintHeadBobSpeed: 11
+  sprintHeadBobAmount: 0.19
+  headBobSmooth: 10
 --- !u!143 &2137393035
 CharacterController:
   m_ObjectHideFlags: 0
@@ -38878,7 +38856,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSave
   saveSystem: {fileID: 11782723}
-  characterController: {fileID: 0}
   intervaloAutoSave: 180
 --- !u!114 &2137393040
 MonoBehaviour:
@@ -39000,4 +38977,3 @@ SceneRoots:
   - {fileID: 156771718}
   - {fileID: 1459033325}
   - {fileID: 674923693}
-  - {fileID: 484840753}
