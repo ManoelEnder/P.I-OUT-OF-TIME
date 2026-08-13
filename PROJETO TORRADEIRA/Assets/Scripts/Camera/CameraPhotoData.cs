@@ -12,7 +12,7 @@ public class CameraPhotoData : MonoBehaviour
     public TextMeshProUGUI photoCounter;
 
     public MissionSystem missionSystem;
-    public AlbumFotos albumFotos;
+    public AlbumController albumController;
 
     public float cooldown = 2f;
     public float previewDuration = 1.3f;
@@ -49,8 +49,8 @@ public class CameraPhotoData : MonoBehaviour
         if (missionSystem != null)
             missionSystem.AddFoto();
 
-        if (albumFotos != null)
-            albumFotos.AdicionarFoto(photo);
+        if (albumController != null)
+            albumController.AddPhoto(photo);
 
         if (photoPreview != null)
         {

@@ -32,8 +32,6 @@ public class PhotoCamera : MonoBehaviour
 
     public float tempoRevelado = 30f;
 
-    [SerializeField] private CRTController crtController;
-
     [SerializeField] private CameraPhotoData photoData;
 
     private RenderTexture renderTexture;
@@ -99,9 +97,6 @@ public class PhotoCamera : MonoBehaviour
             photoData.Initialize();
 
         UpdateTemporalVisibility();
-
-        if (crtController != null)
-            crtController.SetCRT(false);
     }
 
     void Update()
@@ -179,9 +174,6 @@ public class PhotoCamera : MonoBehaviour
         }
 
         cameraMode = !cameraMode;
-
-        if (crtController != null)
-            crtController.SetCRT(cameraMode);
 
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
