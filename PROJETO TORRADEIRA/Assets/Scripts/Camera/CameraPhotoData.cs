@@ -18,9 +18,6 @@ public class CameraPhotoData : MonoBehaviour
     public MissionSystem missionSystem;
     public AlbumController albumController;
 
-    [Header("Photo Camera Volume")]
-    public GameObject photoCameraVolume;
-
     [Header("Photo Settings")]
     public float cooldown = 2f;
     public float previewDuration = 1.3f;
@@ -33,9 +30,6 @@ public class CameraPhotoData : MonoBehaviour
 
         if (photoPreview != null)
             photoPreview.gameObject.SetActive(false);
-
-        if (photoCameraVolume != null)
-            photoCameraVolume.SetActive(false);
 
         UpdatePhotoCounter();
     }
