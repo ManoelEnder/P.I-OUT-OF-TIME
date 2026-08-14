@@ -12,6 +12,10 @@ public class AlbumController : MonoBehaviour
     [Header("Viewer")]
     [SerializeField] private PhotoViewer photoViewer;
 
+    [Header("Input Lock")]
+    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PhotoCamera photoCamera;
+
     private readonly List<AlbumPhoto> photos =
         new List<AlbumPhoto>();
 
@@ -29,6 +33,8 @@ public class AlbumController : MonoBehaviour
     {
         if (albumPanel != null)
             albumPanel.SetActive(false);
+
+        SetGameInputLocked(false);
     }
 
     void Update()
@@ -58,9 +64,31 @@ public class AlbumController : MonoBehaviour
         if (albumPanel == null)
             return;
 
-        albumPanel.SetActive(
-            !albumPanel.activeSelf
-        );
+        bool abrir = !albumPanel.activeSelf;
+
+        albumPanel.SetActive(abrir);
+
+        SetGameInputLocked(abrir);
+    }
+
+    void SetGameInputLocked(bool locked)
+    {
+        if (playerMovement != null)
+            playerMovement.enabled = !locked;
+
+        if (photoCamera != null)
+            photoCamera.enabled = !locked;
+
+        if (locked)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     public void ToggleViewer()
@@ -95,7 +123,10 @@ public class AlbumController : MonoBehaviour
 
         photos.Add(photo);
 
-        CreateSlot(photo, photos.Count - 1);
+        CreateSlot(
+            photo,
+            photos.Count - 1
+        );
 
         selectedIndex =
             photos.Count - 1;
@@ -120,15 +151,13 @@ public class AlbumController : MonoBehaviour
             );
 
         AlbumPhotoSlot slot =
-            slotObject.GetComponent<
-                AlbumPhotoSlot
-            >();
+            slotObject.GetComponent<AlbumPhotoSlot>();
 
         if (slot == null)
+        {
             slot =
-                slotObject.AddComponent<
-                    AlbumPhotoSlot
-                >();
+                slotObject.AddComponent<AlbumPhotoSlot>();
+        }
 
         slot.Initialize(
             photo,

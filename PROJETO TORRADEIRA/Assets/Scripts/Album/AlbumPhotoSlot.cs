@@ -2,10 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class AlbumPhotoSlot : MonoBehaviour,
-    IPointerClickHandler,
-    IPointerEnterHandler,
-    IPointerExitHandler
+public class AlbumPhotoSlot : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private Image image;
 
@@ -26,31 +23,27 @@ public class AlbumPhotoSlot : MonoBehaviour,
         if (image == null)
             image = GetComponent<Image>();
 
-        if (image != null && photo != null)
-        {
-            image.sprite = photo.Sprite;
-            image.color = photo.Color;
-        }
+        if (image == null)
+            return;
+
+        image.sprite = photo.Sprite;
+        image.color = photo.Color;
+
+        image.type = Image.Type.Simple;
+        image.preserveAspect = true;
+
+        RectTransform rect = image.rectTransform;
+
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        rect.localScale = Vector3.one;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (album == null)
-            return;
-
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (album != null)
             album.SelectPhoto(index);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (album != null)
-            album.SetHoveredPhoto(index);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (album != null)
-            album.ClearHoveredPhoto(index);
     }
 }

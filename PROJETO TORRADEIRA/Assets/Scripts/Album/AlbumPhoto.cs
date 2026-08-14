@@ -17,24 +17,12 @@ public class AlbumPhoto
         Color = Color.white;
     }
 
-    public AlbumPhoto(Sprite sprite, Color color)
-    {
-        Sprite = sprite;
-        Color = color;
-    }
-
     public void Destroy()
     {
         if (Sprite != null)
         {
-            Texture2D texture = Sprite.texture;
-
             Object.Destroy(Sprite);
-
-            if (texture != null)
-                Object.Destroy(texture);
+            Sprite = null;
         }
-
-        Sprite = null;
     }
 }
