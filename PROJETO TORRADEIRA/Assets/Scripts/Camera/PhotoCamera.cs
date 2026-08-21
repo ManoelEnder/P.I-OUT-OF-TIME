@@ -189,9 +189,6 @@ public class PhotoCamera : MonoBehaviour
 
         cameraMode = !cameraMode;
 
-        if (photoData != null)
-            photoData.SetCameraVolume(cameraMode);
-
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
 
@@ -211,7 +208,9 @@ public class PhotoCamera : MonoBehaviour
         isTransitioning = true;
 
         float startFOV =
-            playerCam.fieldOfView;
+            playerCam != null
+                ? playerCam.fieldOfView
+                : normalFOV;
 
         float target =
             entering
