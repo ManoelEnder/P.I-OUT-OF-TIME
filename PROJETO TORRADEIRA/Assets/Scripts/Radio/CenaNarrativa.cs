@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 public class CenaNarrativa : MonoBehaviour
 {
     public AudioSource audioNarracao;
+    public AudioSource audioRadio;
+
     public MonoBehaviour controleDoJogador;
     public GameObject painelNarrativa;
     public GameObject botaoPular;
@@ -22,7 +24,15 @@ public class CenaNarrativa : MonoBehaviour
         if (botaoPular != null)
             botaoPular.SetActive(false);
 
-        Invoke("IniciarNarracao", 5f);
+        // Começa o som do rádio imediatamente
+        if (audioRadio != null)
+        {
+            audioRadio.loop = true;
+            audioRadio.Play();
+        }
+
+        // Espera 4 segundos antes de começar a dublagem
+        Invoke("IniciarNarracao", 4f);
     }
 
     void Update()
@@ -60,6 +70,9 @@ public class CenaNarrativa : MonoBehaviour
 
         if (audioNarracao != null)
             audioNarracao.Stop();
+
+        if (audioRadio != null)
+            audioRadio.Stop();
 
         SceneManager.LoadScene(cenaDoJogo);
     }
