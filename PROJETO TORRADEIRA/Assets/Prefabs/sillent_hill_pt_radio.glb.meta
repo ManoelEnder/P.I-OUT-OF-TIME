@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 39ba80f78e5fe3e4ca673b7ce69d3027
+guid: 09f140b54a718d645bace540dfefca44
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -40,7 +40,7 @@ ScriptedImporter:
   _generateMipMaps: 1
   _useSceneNameIdentifier: 1
   _textureCompression: -50
-  _gltfAsset: '<b>Generator: </b>Sketchfab-13.74.0
+  _gltfAsset: '<b>Generator: </b>Sketchfab-12.67.0
 
     <b>Version: </b>2.0
 
@@ -52,12 +52,6 @@ ScriptedImporter:
 '
   optimizeGameObjects: 0
   materials:
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
   - {instanceID: 0}
   textures:
   - {instanceID: 0}
@@ -74,7 +68,7 @@ ScriptedImporter:
     shouldBeLinear: 0
     shouldBeNormalMap: 0
   - texture: {instanceID: 0}
-    shouldBeLinear: 0
+    shouldBeLinear: 1
     shouldBeNormalMap: 0
   - texture: {instanceID: 0}
     shouldBeLinear: 0
