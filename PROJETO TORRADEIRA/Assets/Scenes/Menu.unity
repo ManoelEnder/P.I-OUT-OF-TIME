@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 983645760}
   - component: {fileID: 983645759}
   m_Layer: 0
-  m_Name: MudarCena
+  m_Name: ChanceScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,7 +197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069b2bf85c75fae448149e74fd20be45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeScene
-  sceneName: Radio
 --- !u!4 &983645760
 Transform:
   m_ObjectHideFlags: 0
@@ -225,7 +224,7 @@ GameObject:
   - component: {fileID: 1041155170}
   - component: {fileID: 1041155169}
   m_Layer: 5
-  m_Name: TituloMenu
+  m_Name: Main Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -619,7 +618,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1183455181501918803, guid: 84982015eeef13744ad21148f090925d, type: 3}
       propertyPath: m_Name
-      value: Sala 1
+      value: Room
       objectReference: {fileID: 0}
     - target: {fileID: 1408799613490370873, guid: 84982015eeef13744ad21148f090925d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -661,6 +660,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2981207782874696111, guid: 84982015eeef13744ad21148f090925d, type: 3}
+      propertyPath: m_Name
+      value: Room
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -680,7 +683,7 @@ GameObject:
   - component: {fileID: 1542450714}
   - component: {fileID: 1542450711}
   m_Layer: 5
-  m_Name: Jogar
+  m_Name: Play
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -703,8 +706,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.279769, y: 104.57895}
-  m_SizeDelta: {x: 239.621, y: 93.158}
+  m_AnchoredPosition: {x: 18.30765, y: 130.6457}
+  m_SizeDelta: {x: 441.4998, y: 155.6732}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1542450711
 MonoBehaviour:
@@ -753,13 +756,13 @@ MonoBehaviour:
       - m_Target: {fileID: 983645759}
         m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
         m_MethodName: LoadScene
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Principal
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1542450712
@@ -828,7 +831,7 @@ GameObject:
   - component: {fileID: 1549712330}
   - component: {fileID: 1549712327}
   m_Layer: 5
-  m_Name: Sair
+  m_Name: Leave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -851,8 +854,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.015038, y: -69.59399}
-  m_SizeDelta: {x: 220.15, y: 105.1879}
+  m_AnchoredPosition: {x: 19.954136, y: -160.40863}
+  m_SizeDelta: {x: 405.6246, y: 175.7759}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1549712327
 MonoBehaviour:
@@ -898,13 +901,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 983645759}
+        m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -974,7 +977,7 @@ GameObject:
   - component: {fileID: 1575810994}
   - component: {fileID: 1575810993}
   m_Layer: 5
-  m_Name: text
+  m_Name: TXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1019,7 +1022,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Creditos
+  m_text: 'CREDITS
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
@@ -1046,12 +1051,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1225,51 +1230,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1741183360
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1741183362}
-  - component: {fileID: 1741183361}
-  m_Layer: 0
-  m_Name: MudarCena (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1741183361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1741183360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 069b2bf85c75fae448149e74fd20be45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChangeScene
-  sceneName: Creditos
---- !u!4 &1741183362
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1741183360}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 286.01364, y: 0, z: 1257.1152}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1874671810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,7 +1242,7 @@ GameObject:
   - component: {fileID: 1874671813}
   - component: {fileID: 1874671812}
   m_Layer: 5
-  m_Name: Sair
+  m_Name: TXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1327,7 +1287,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sair
+  m_text: 'LEAVE
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
@@ -1354,12 +1316,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1418,7 +1380,7 @@ GameObject:
   - component: {fileID: 1925636894}
   - component: {fileID: 1925636893}
   m_Layer: 5
-  m_Name: text
+  m_Name: TXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1463,7 +1425,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Jogar
+  m_text: PLAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
@@ -1490,12 +1452,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1556,7 +1518,7 @@ GameObject:
   - component: {fileID: 1958456939}
   - component: {fileID: 1958456936}
   m_Layer: 5
-  m_Name: Creditos
+  m_Name: Credits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1579,8 +1541,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.015038, y: 24.53683}
-  m_SizeDelta: {x: 220.15, y: 104.1263}
+  m_AnchoredPosition: {x: 19.954136, y: -3.1098785}
+  m_SizeDelta: {x: 405.6246, y: 174.0019}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1958456936
 MonoBehaviour:
@@ -1626,16 +1588,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1741183361}
+      - m_Target: {fileID: 983645759}
         m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
         m_MethodName: LoadScene
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Credits
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1958456937
@@ -1700,7 +1662,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2049598059}
   - component: {fileID: 2049598062}
-  - component: {fileID: 2049598061}
   - component: {fileID: 2049598060}
   - component: {fileID: 2049598063}
   m_Layer: 0
@@ -1769,14 +1730,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!81 &2049598061
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049598058}
-  m_Enabled: 1
 --- !u!20 &2049598062
 Camera:
   m_ObjectHideFlags: 0
@@ -1853,11 +1806,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1190498149}
+  - {fileID: 983645760}
   - {fileID: 1667066349}
   - {fileID: 2049598059}
   - {fileID: 1251769420}
   - {fileID: 1071111320}
-  - {fileID: 983645760}
-  - {fileID: 1741183362}
   - {fileID: 1413449900}
   - {fileID: 549014063}
