@@ -671,8 +671,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Pressione qualquer bot\xE3o"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 38edba4af1aa6374bbc91e99f5da727b, type: 2}
-  m_sharedMaterial: {fileID: -8414069091058783474, guid: 38edba4af1aa6374bbc91e99f5da727b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
+  m_sharedMaterial: {fileID: -6359862289805101674, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.75
+  m_fontSize: 37.9
   m_fontSizeBase: 26.28
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1914,8 +1914,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -12.4696}
-  m_SizeDelta: {x: 0, y: -24.9393}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_SizeDelta: {x: 2227.5776, y: 1112.7827}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1911993726
 MonoBehaviour:
@@ -1937,7 +1937,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d96ecdd7bcedc784bb41509004d99273, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 39d30b73dd8f0bc42893627716d5b00b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
