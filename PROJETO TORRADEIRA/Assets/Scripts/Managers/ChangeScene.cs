@@ -3,9 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-    public string sceneName; 
-
-    public void LoadScene()
+    public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }

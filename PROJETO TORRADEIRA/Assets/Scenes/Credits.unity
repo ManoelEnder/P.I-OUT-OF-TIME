@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 280183294}
   - component: {fileID: 280183293}
   m_Layer: 5
-  m_Name: botaoVoltar
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,13 +416,13 @@ MonoBehaviour:
       - m_Target: {fileID: 1113449563}
         m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
         m_MethodName: LoadScene
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Menu
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &280183294
@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 1113449564}
   - component: {fileID: 1113449563}
   m_Layer: 0
-  m_Name: TrocarCena
+  m_Name: ChanceScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -846,7 +846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069b2bf85c75fae448149e74fd20be45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeScene
-  sceneName: Menu
 --- !u!4 &1113449564
 Transform:
   m_ObjectHideFlags: 0
@@ -957,8 +956,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 195558278}
-  - {fileID: 991492083}
   - {fileID: 280183292}
+  - {fileID: 991492083}
   - {fileID: 369937594}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
