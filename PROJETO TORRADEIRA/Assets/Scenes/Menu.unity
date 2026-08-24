@@ -677,6 +677,7 @@ GameObject:
   - component: {fileID: 1542450710}
   - component: {fileID: 1542450713}
   - component: {fileID: 1542450712}
+  - component: {fileID: 1542450714}
   - component: {fileID: 1542450711}
   m_Layer: 5
   m_Name: Jogar
@@ -702,8 +703,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.015038, y: 104.57895}
-  m_SizeDelta: {x: 220.1504, y: 93.158}
+  m_AnchoredPosition: {x: -6.279769, y: 104.57895}
+  m_SizeDelta: {x: 239.621, y: 93.158}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1542450711
 MonoBehaviour:
@@ -799,6 +800,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1542450709}
   m_CullTransparentMesh: 1
+--- !u!114 &1542450714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542450709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d239a8b936ccbb64d9cedf254477ab30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverEffect
+  hoverScale: 1.08
+  animationSpeed: 10
 --- !u!1 &1549712325
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,6 +825,7 @@ GameObject:
   - component: {fileID: 1549712326}
   - component: {fileID: 1549712329}
   - component: {fileID: 1549712328}
+  - component: {fileID: 1549712330}
   - component: {fileID: 1549712327}
   m_Layer: 5
   m_Name: Sair
@@ -932,6 +948,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549712325}
   m_CullTransparentMesh: 1
+--- !u!114 &1549712330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549712325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d239a8b936ccbb64d9cedf254477ab30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverEffect
+  hoverScale: 1.08
+  animationSpeed: 10
 --- !u!1 &1575810991
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,8 +996,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 9.735269, y: 0}
+  m_SizeDelta: {x: 19.4705, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1575810993
 MonoBehaviour:
@@ -991,8 +1021,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Creditos
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
-  m_sharedMaterial: {fileID: -6359862289805101674, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
+  m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1274,8 +1304,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 9.735269, y: 0}
+  m_SizeDelta: {x: 19.4705, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874671812
 MonoBehaviour:
@@ -1299,8 +1329,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sair
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
-  m_sharedMaterial: {fileID: -6359862289805101674, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
+  m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1435,8 +1465,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Jogar
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
-  m_sharedMaterial: {fileID: -6359862289805101674, guid: 5a1553015973bdb49869ab0e753135c7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
+  m_sharedMaterial: {fileID: 6757015151918995122, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1523,6 +1553,7 @@ GameObject:
   - component: {fileID: 1958456935}
   - component: {fileID: 1958456938}
   - component: {fileID: 1958456937}
+  - component: {fileID: 1958456939}
   - component: {fileID: 1958456936}
   m_Layer: 5
   m_Name: Creditos
@@ -1645,6 +1676,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1958456934}
   m_CullTransparentMesh: 1
+--- !u!114 &1958456939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958456934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d239a8b936ccbb64d9cedf254477ab30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverEffect
+  hoverScale: 1.08
+  animationSpeed: 10
 --- !u!1 &2049598058
 GameObject:
   m_ObjectHideFlags: 0
