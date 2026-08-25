@@ -1,17 +1,31 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class CenaNarrativa : MonoBehaviour
 {
     public AudioSource audioNarracao;
     public AudioSource audioRadio;
 
+    [Header("Áudios da narrativa")]
+    public AudioClip[] audios;
+
+    [Header("Legendas")]
+    [TextArea(2, 5)]
+    public string[] legendas;
+
+    public TextMeshProUGUI textoLegenda;
+    public Button botaoProximo;
+
     public MonoBehaviour controleDoJogador;
     public GameObject painelNarrativa;
     public GameObject botaoPular;
     public string cenaDoJogo;
 
+    private int falaAtual = 0;
     private bool narrativaTerminou = false;
+    private bool audioTerminou = false;
 
     void Start()
     {
@@ -24,36 +38,105 @@ public class CenaNarrativa : MonoBehaviour
         if (botaoPular != null)
             botaoPular.SetActive(false);
 
-        // Começa o som do rádio imediatamente
         if (audioRadio != null)
         {
             audioRadio.loop = true;
             audioRadio.Play();
         }
 
-        // Espera 4 segundos antes de começar a dublagem
+        if (botaoProximo != null)
+        {
+            botaoProximo.onClick.RemoveAllListeners();
+            botaoProximo.onClick.AddListener(ProximaFala);
+
+            
+            botaoProximo.gameObject.SetActive(false);
+            botaoProximo.interactable = false;
+        }
+
+        if (textoLegenda != null)
+            textoLegenda.text = "";
+
         Invoke("IniciarNarracao", 4f);
     }
 
     void Update()
     {
-        if (!narrativaTerminou &&
+        if (narrativaTerminou)
+            return;
+
+       
+        if (!audioTerminou &&
             audioNarracao != null &&
             audioNarracao.clip != null &&
-            !audioNarracao.isPlaying &&
-            audioNarracao.time > 0f)
+            !audioNarracao.isPlaying)
         {
-            IniciarJogo();
+            audioTerminou = true;
+
+            
+            if (botaoProximo != null)
+                botaoProximo.interactable = true;
         }
     }
 
     void IniciarNarracao()
     {
-        if (audioNarracao != null)
-            audioNarracao.Play();
+        falaAtual = 0;
+        TocarFala();
+    }
+
+    void TocarFala()
+    {
+        if (falaAtual >= audios.Length)
+        {
+            IniciarJogo();
+            return;
+        }
+
+        audioTerminou = false;
+
+       
+        audioNarracao.clip = audios[falaAtual];
+
+       
+        audioNarracao.Play();
+
+        
+        if (textoLegenda != null)
+        {
+            if (falaAtual < legendas.Length)
+                textoLegenda.text = legendas[falaAtual];
+            else
+                textoLegenda.text = "";
+        }
+
+      
+        if (botaoProximo != null)
+        {
+            botaoProximo.gameObject.SetActive(true);
+            botaoProximo.interactable = false;
+        }
 
         if (botaoPular != null)
             botaoPular.SetActive(true);
+    }
+
+    public void ProximaFala()
+    {
+       
+        if (!audioTerminou)
+            return;
+
+        falaAtual++;
+
+        if (falaAtual >= audios.Length)
+        {
+            IniciarJogo();
+        }
+        else
+        {
+            TocarFala();
+        }
     }
 
     public void PularNarrativa()
@@ -73,6 +156,12 @@ public class CenaNarrativa : MonoBehaviour
 
         if (audioRadio != null)
             audioRadio.Stop();
+
+        if (textoLegenda != null)
+            textoLegenda.text = "";
+
+        if (botaoProximo != null)
+            botaoProximo.gameObject.SetActive(false);
 
         SceneManager.LoadScene(cenaDoJogo);
     }
