@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class CenaNarrativa : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class CenaNarrativa : MonoBehaviour
     public GameObject botaoPular;
     public string cenaDoJogo;
 
+    public float tempoFadeRadio = 3f;
+
     private int falaAtual = 0;
     private bool narrativaTerminou = false;
     private bool audioTerminou = false;
@@ -41,15 +44,15 @@ public class CenaNarrativa : MonoBehaviour
         if (audioRadio != null)
         {
             audioRadio.loop = true;
+            audioRadio.volume = 0f;
             audioRadio.Play();
+            StartCoroutine(FadeInRadio());
         }
 
         if (botaoProximo != null)
         {
             botaoProximo.onClick.RemoveAllListeners();
             botaoProximo.onClick.AddListener(ProximaFala);
-
-            
             botaoProximo.gameObject.SetActive(false);
             botaoProximo.interactable = false;
         }
@@ -60,12 +63,25 @@ public class CenaNarrativa : MonoBehaviour
         Invoke("IniciarNarracao", 4f);
     }
 
+    IEnumerator FadeInRadio()
+    {
+        float tempo = 0f;
+
+        while (tempo < tempoFadeRadio)
+        {
+            tempo += Time.deltaTime;
+            audioRadio.volume = Mathf.Lerp(0f, 1f, tempo / tempoFadeRadio);
+            yield return null;
+        }
+
+        audioRadio.volume = 1f;
+    }
+
     void Update()
     {
         if (narrativaTerminou)
             return;
 
-       
         if (!audioTerminou &&
             audioNarracao != null &&
             audioNarracao.clip != null &&
@@ -73,7 +89,6 @@ public class CenaNarrativa : MonoBehaviour
         {
             audioTerminou = true;
 
-            
             if (botaoProximo != null)
                 botaoProximo.interactable = true;
         }
@@ -95,13 +110,9 @@ public class CenaNarrativa : MonoBehaviour
 
         audioTerminou = false;
 
-       
         audioNarracao.clip = audios[falaAtual];
-
-       
         audioNarracao.Play();
 
-        
         if (textoLegenda != null)
         {
             if (falaAtual < legendas.Length)
@@ -110,7 +121,6 @@ public class CenaNarrativa : MonoBehaviour
                 textoLegenda.text = "";
         }
 
-      
         if (botaoProximo != null)
         {
             botaoProximo.gameObject.SetActive(true);
@@ -123,20 +133,15 @@ public class CenaNarrativa : MonoBehaviour
 
     public void ProximaFala()
     {
-       
         if (!audioTerminou)
             return;
 
         falaAtual++;
 
         if (falaAtual >= audios.Length)
-        {
             IniciarJogo();
-        }
         else
-        {
             TocarFala();
-        }
     }
 
     public void PularNarrativa()
