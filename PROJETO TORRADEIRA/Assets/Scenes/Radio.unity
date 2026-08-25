@@ -1363,7 +1363,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f38f971b4bb0b004387813fb529a4efb, type: 3}
   - {fileID: 8300000, guid: 30342e7b38cdf8e42967adb0f5c424d6, type: 3}
   - {fileID: 8300000, guid: c2b7e94299cd10448b04d227f14502f5, type: 3}
-  - {fileID: 8300000, guid: 0f7aaff62bc16e54684e19931350155f, type: 3}
   legendas:
   - "Tem algu\xE9m escutando a\xED?\n...Se estiver... n\xE3o desligue.\nEu n\xE3o
     sei exatamente quem voc\xEA \xE9, nem quanto tempo essa mensagem ira permanecer
@@ -1375,14 +1374,13 @@ MonoBehaviour:
     que normalmente n\xE3o pode ser visto."
   - "Use a c\xE2mera para achar obejtos escondidos... pe\xE7as esquecidas... coisas
     que pertencem \xE0quela \xE9poca."
-  - "E tome cuidado...\nPorque talvez voc\xEA n\xE3o seja a \xFAnica pessoa procurando
-    por ela"
   textoLegenda: {fileID: 387784310}
   botaoProximo: {fileID: 1291069033}
   controleDoJogador: {fileID: 0}
   painelNarrativa: {fileID: 798770366}
   botaoPular: {fileID: 0}
   cenaDoJogo: Principal
+  tempoFadeRadio: 3
 --- !u!1 &1988008241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,7 +1567,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7238361314521312334, guid: 84982015eeef13744ad21148f090925d, type: 3}
+    - {fileID: 163063578294745426, guid: 84982015eeef13744ad21148f090925d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84982015eeef13744ad21148f090925d, type: 3}
