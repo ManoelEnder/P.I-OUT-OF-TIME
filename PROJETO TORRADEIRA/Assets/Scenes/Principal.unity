@@ -682,6 +682,12 @@ MonoBehaviour:
   minInterval: 5
   maxInterval: 15
   volume: 0.6
+  volumeVariation: 0.15
+  minDistance: 10
+  maxDistance: 35
+  reverbZoneMix: 1
+  minPitch: 0.95
+  maxPitch: 1.05
 --- !u!1 &12674825 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 521389915149535324, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -18091,7 +18097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: af73eb7bd7a92ba4aaec262c83bffb0f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.02
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: af73eb7bd7a92ba4aaec262c83bffb0f, type: 3}
       propertyPath: m_LocalScale.y
@@ -31948,6 +31954,62 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8953126122014109404, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
+--- !u!1 &644955987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 644955988}
+  - component: {fileID: 644955989}
+  m_Layer: 0
+  m_Name: Audio Reverb Zone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &644955988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644955987}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1917844993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!167 &644955989
+AudioReverbZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644955987}
+  m_Enabled: 1
+  m_MinDistance: 10
+  m_MaxDistance: 100
+  m_ReverbPreset: 11
+  m_Room: -1000
+  m_RoomHF: -1000
+  m_DecayTime: 10.05
+  m_DecayHFRatio: 0.23
+  m_Reflections: -602
+  m_ReflectionsDelay: 0.02
+  m_Reverb: 198
+  m_ReverbDelay: 0.03
+  m_HFReference: 5000
+  m_Diffusion: 100
+  m_Density: 100
+  m_LFReference: 250
+  m_RoomLF: 0
 --- !u!1 &645235170 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -73105,11 +73167,11 @@ Transform:
   m_GameObject: {fileID: 1307267456}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 36.42327, y: 0, z: -118.6}
+  m_LocalPosition: {x: 64.52883, y: -1.06179, z: 38.730965}
   m_LocalScale: {x: 4.2639, y: 1, z: 6.1186}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1917844993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1307675351 stripped
 GameObject:
@@ -79222,7 +79284,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -113158,6 +113220,39 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2951713739483980821, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
+--- !u!1 &1917844992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1917844993}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1917844993
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917844992}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -28.10556, y: 1.06179, z: -157.33096}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 644955988}
+  - {fileID: 1307267458}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1918795280 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8389800772676825349, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -128919,9 +129014,9 @@ GameObject:
   - component: {fileID: 2137393035}
   - component: {fileID: 2137393034}
   - component: {fileID: 2137393038}
-  - component: {fileID: 2137393037}
-  - component: {fileID: 2137393039}
   - component: {fileID: 2137393040}
+  - component: {fileID: 2137393039}
+  - component: {fileID: 2137393037}
   - component: {fileID: 2137393041}
   m_Layer: 0
   m_Name: Player
@@ -129580,6 +129675,7 @@ SceneRoots:
   - {fileID: 876928135}
   - {fileID: 1062670064}
   - {fileID: 11782724}
+  - {fileID: 1917844993}
   - {fileID: 1058271367}
   - {fileID: 1110013036}
   - {fileID: 1013388082}
@@ -129592,6 +129688,5 @@ SceneRoots:
   - {fileID: 1468653151}
   - {fileID: 188796634}
   - {fileID: 826274444}
-  - {fileID: 1307267458}
   - {fileID: 1459033325}
   - {fileID: 820647745}
