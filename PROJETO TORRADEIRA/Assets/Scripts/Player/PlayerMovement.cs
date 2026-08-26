@@ -23,9 +23,15 @@ public class PlayerMovement : MonoBehaviour
 
     public float headBobSmooth = 8f;
 
+    public AudioSource audioPassos;
+    public AudioClip[] sonsPassos;
+    public float intervaloPasso = 0.5f;
+    public float intervaloPassoCorrendo = 0.3f;
+
     float xRotation = 0f;
     float yVelocity = 0f;
     float headBobTimer = 0f;
+    float contadorPasso = 0f;
 
     private Vector3 cameraStartPosition;
     private ItemColetavel itemPerto;
@@ -98,6 +104,11 @@ public class PlayerMovement : MonoBehaviour
         );
 
         HandleHeadBob(
+            moveInput,
+            isSprinting
+        );
+
+        HandleFootsteps(
             moveInput,
             isSprinting
         );
@@ -195,6 +206,49 @@ public class PlayerMovement : MonoBehaviour
                     Time.deltaTime *
                     headBobSmooth
                 );
+        }
+    }
+
+    void HandleFootsteps(
+        Vector2 moveInput,
+        bool isSprinting
+    )
+    {
+        bool isMoving =
+            moveInput.sqrMagnitude > 0.01f &&
+            controller.isGrounded;
+
+        if (isMoving)
+        {
+            contadorPasso -= Time.deltaTime;
+
+            if (contadorPasso <= 0f)
+            {
+                if (sonsPassos.Length > 0)
+                {
+                    int passo =
+                        Random.Range(
+                            0,
+                            sonsPassos.Length
+                        );
+
+                    audioPassos.PlayOneShot(
+                        sonsPassos[passo]
+                    );
+                }
+
+                contadorPasso =
+                    isSprinting
+                        ? intervaloPassoCorrendo
+                        : intervaloPasso;
+            }
+        }
+        else
+        {
+            contadorPasso = 0f;
+
+            if (audioPassos.isPlaying)
+                audioPassos.Stop();
         }
     }
 
