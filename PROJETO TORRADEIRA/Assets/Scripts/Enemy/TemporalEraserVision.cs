@@ -14,12 +14,13 @@ public class TemporalEraserVision : MonoBehaviour
     [SerializeField] private float peripheralDetectionDistance = 4f;
     [SerializeField] private float peripheralFieldOfView = 240f;
 
+    [Header("Obstacles")]
+    [SerializeField] private LayerMask obstacleMask;
+
     public bool CanSeePlayer()
     {
         if (player == null || eyePoint == null)
-        {
             return false;
-        }
 
         Vector3 directionToPlayer =
             player.position - eyePoint.position;
@@ -28,17 +29,16 @@ public class TemporalEraserVision : MonoBehaviour
             directionToPlayer.magnitude;
 
         if (distanceToPlayer > detectionDistance)
-        {
             return false;
-        }
 
         Vector3 normalizedDirection =
             directionToPlayer.normalized;
 
-        float angle = Vector3.Angle(
-            eyePoint.forward,
-            normalizedDirection
-        );
+        float angle =
+            Vector3.Angle(
+                eyePoint.forward,
+                normalizedDirection
+            );
 
         bool isInsideNormalVision =
             angle <= fieldOfView * 0.5f;
@@ -53,15 +53,28 @@ public class TemporalEraserVision : MonoBehaviour
             return false;
         }
 
+        if (Physics.Raycast(
+            eyePoint.position,
+            normalizedDirection,
+            out RaycastHit hit,
+            distanceToPlayer,
+            obstacleMask,
+            QueryTriggerInteraction.Ignore))
+        {
+            if (!hit.transform.IsChildOf(player) &&
+                hit.transform != player)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
     private void OnDrawGizmosSelected()
     {
         if (eyePoint == null)
-        {
             return;
-        }
 
         Gizmos.color = Color.yellow;
 

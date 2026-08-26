@@ -7,6 +7,11 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     [SerializeField] private float hoverScale = 1.08f;
     [SerializeField] private float animationSpeed = 10f;
 
+    [Header("Hover Sound")]
+    [SerializeField] private AudioClip hoverSound;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField, Range(0f, 1f)] private float hoverVolume = 1f;
+
     private Vector3 originalScale;
     private Vector3 targetScale;
 
@@ -28,10 +33,20 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void OnPointerEnter(PointerEventData eventData)
     {
         targetScale = originalScale * hoverScale;
+
+        PlayHoverSound();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         targetScale = originalScale;
+    }
+
+    private void PlayHoverSound()
+    {
+        if (hoverSound == null || audioSource == null)
+            return;
+
+        audioSource.PlayOneShot(hoverSound, hoverVolume);
     }
 }

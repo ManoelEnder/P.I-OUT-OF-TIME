@@ -27,7 +27,6 @@ public class TemporalEraserController : MonoBehaviour
     [SerializeField] private int searchAttempts = 3;
 
     private NavMeshAgent agent;
-
     private State currentState;
 
     private Vector3 lastKnownPlayerPosition;
@@ -40,9 +39,7 @@ public class TemporalEraserController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
         if (vision == null)
-        {
             vision = GetComponent<TemporalEraserVision>();
-        }
     }
 
     private void Start()
@@ -90,7 +87,8 @@ public class TemporalEraserController : MonoBehaviour
 
     private void Update()
     {
-        if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
+        if (!agent.isActiveAndEnabled ||
+            !agent.isOnNavMesh)
         {
             return;
         }
@@ -113,8 +111,7 @@ public class TemporalEraserController : MonoBehaviour
 
     private void UpdateRoaming()
     {
-        bool canSeePlayer = vision.CanSeePlayer();
-        if (canSeePlayer)
+        if (vision.CanSeePlayer())
         {
             StartChasing();
             return;
@@ -195,7 +192,9 @@ public class TemporalEraserController : MonoBehaviour
         agent.speed = roamingSpeed;
         agent.isStopped = false;
 
-        SetSearchDestination();
+        agent.SetDestination(
+            lastKnownPlayerPosition
+        );
     }
 
     private void ReturnToRoaming()
@@ -242,7 +241,9 @@ public class TemporalEraserController : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             Vector3 randomPosition =
-                center + Random.insideUnitSphere * radius;
+                center +
+                Random.insideUnitSphere *
+                radius;
 
             if (NavMesh.SamplePosition(
                 randomPosition,
@@ -250,53 +251,43 @@ public class TemporalEraserController : MonoBehaviour
                 2f,
                 NavMesh.AllAreas))
             {
-                NavMeshPath path = new NavMeshPath();
+                NavMeshPath path =
+                    new NavMeshPath();
 
                 if (agent.CalculatePath(
                     hit.position,
                     path) &&
-                    path.status == NavMeshPathStatus.PathComplete)
+                    path.status ==
+                    NavMeshPathStatus.PathComplete)
                 {
                     result = hit.position;
-
                     return true;
                 }
             }
         }
 
         result = Vector3.zero;
-
         return false;
     }
 
     private bool HasReachedDestination()
     {
-        if (agent == null)
+        if (agent == null ||
+            !agent.isActiveAndEnabled ||
+            !agent.isOnNavMesh ||
+            agent.pathPending)
         {
             return false;
         }
 
-        if (!agent.isActiveAndEnabled)
+        if (agent.remainingDistance ==
+            Mathf.Infinity)
         {
             return false;
         }
 
-        if (!agent.isOnNavMesh)
-        {
-            return false;
-        }
-
-        if (agent.pathPending)
-        {
-            return false;
-        }
-
-        if (agent.remainingDistance == Mathf.Infinity)
-        {
-            return false;
-        }
-
-        return agent.remainingDistance <= destinationTolerance;
+        return agent.remainingDistance <=
+               destinationTolerance;
     }
 
     private void OnDrawGizmosSelected()
