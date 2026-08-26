@@ -1,36 +1,73 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class CenaNarrativa : MonoBehaviour
 {
-    public AudioSource audioNarracao;
-    public AudioSource audioRadio;
+    [Header("Áudio da Narrativa")]
+    [SerializeField] private AudioSource audioNarracao;
+    [SerializeField] private AudioClip[] audios;
 
-    [Header("Áudios da narrativa")]
-    public AudioClip[] audios;
+    [Header("Rádio")]
+    [SerializeField] private AudioSource audioRadio;
+    [SerializeField] private float tempoFadeRadio = 3f;
 
     [Header("Legendas")]
     [TextArea(2, 5)]
-    public string[] legendas;
+    [SerializeField] private string[] legendas;
 
-    public TextMeshProUGUI textoLegenda;
-    public Button botaoProximo;
+    [SerializeField] private TextMeshProUGUI textoLegenda;
 
-    public MonoBehaviour controleDoJogador;
-    public GameObject painelNarrativa;
-    public GameObject botaoPular;
-    public string cenaDoJogo;
+    [Header("UI")]
+    [SerializeField] private GameObject painelNarrativa;
 
-    public float tempoFadeRadio = 3f;
+    [Header("Jogador")]
+    [SerializeField] private MonoBehaviour controleDoJogador;
 
-    private int falaAtual = 0;
-    private bool narrativaTerminou = false;
-    private bool audioTerminou = false;
+    [Header("Cena")]
+    [SerializeField] private string cenaDoJogo;
 
-    void Start()
+    [Header("Texto")]
+    [SerializeField] private float velocidadeTexto = 0.035f;
+
+    [Header("Transição")]
+    [SerializeField] private float intervaloEntreFalas = 0.25f;
+
+    [Header("Música")]
+    [SerializeField] private float tempoFadeOutMusica = 2.5f;
+
+    private int falaAtual;
+    private bool narrativaTerminou;
+    private bool textoTerminou;
+    private bool aguardandoProximaFala;
+
+    private Coroutine textoCoroutine;
+    private Coroutine narrativaCoroutine;
+
+    private void Start()
+    {
+        PrepararCena();
+
+        if (MusicManager.instance != null)
+            MusicManager.instance.FadeOut(tempoFadeOutMusica);
+
+        ConfigurarRadio();
+
+        narrativaCoroutine = StartCoroutine(IniciarNarrativa());
+    }
+
+    private void Update()
+    {
+        if (narrativaTerminou)
+            return;
+
+        HandleMouseInput();
+        VerificarFimDoAudio();
+    }
+
+    private void PrepararCena()
     {
         if (controleDoJogador != null)
             controleDoJogador.enabled = false;
@@ -38,123 +75,257 @@ public class CenaNarrativa : MonoBehaviour
         if (painelNarrativa != null)
             painelNarrativa.SetActive(true);
 
-        if (botaoPular != null)
-            botaoPular.SetActive(false);
-
-        if (audioRadio != null)
-        {
-            audioRadio.loop = true;
-            audioRadio.volume = 0f;
-            audioRadio.Play();
-            StartCoroutine(FadeInRadio());
-        }
-
-        if (botaoProximo != null)
-        {
-            botaoProximo.onClick.RemoveAllListeners();
-            botaoProximo.onClick.AddListener(ProximaFala);
-            botaoProximo.gameObject.SetActive(false);
-            botaoProximo.interactable = false;
-        }
-
         if (textoLegenda != null)
-            textoLegenda.text = "";
-
-        Invoke("IniciarNarracao", 4f);
+            textoLegenda.text = string.Empty;
     }
 
-    IEnumerator FadeInRadio()
+    private void ConfigurarRadio()
+    {
+        if (audioRadio == null)
+            return;
+
+        audioRadio.loop = true;
+        audioRadio.volume = 0f;
+        audioRadio.Play();
+
+        StartCoroutine(FadeInRadio());
+    }
+
+    private IEnumerator FadeInRadio()
     {
         float tempo = 0f;
 
         while (tempo < tempoFadeRadio)
         {
-            tempo += Time.deltaTime;
-            audioRadio.volume = Mathf.Lerp(0f, 1f, tempo / tempoFadeRadio);
+            tempo += Time.unscaledDeltaTime;
+
+            float progresso = tempo / tempoFadeRadio;
+            audioRadio.volume = Mathf.Lerp(0f, 1f, progresso);
+
             yield return null;
         }
 
         audioRadio.volume = 1f;
     }
 
-    void Update()
+    private IEnumerator IniciarNarrativa()
     {
-        if (narrativaTerminou)
-            return;
+        yield return new WaitForSecondsRealtime(4f);
 
-        if (!audioTerminou &&
-            audioNarracao != null &&
-            audioNarracao.clip != null &&
-            !audioNarracao.isPlaying)
-        {
-            audioTerminou = true;
-
-            if (botaoProximo != null)
-                botaoProximo.interactable = true;
-        }
-    }
-
-    void IniciarNarracao()
-    {
         falaAtual = 0;
         TocarFala();
     }
 
-    void TocarFala()
+    private void TocarFala()
     {
+        if (narrativaTerminou)
+            return;
+
         if (falaAtual >= audios.Length)
         {
             IniciarJogo();
             return;
         }
 
-        audioTerminou = false;
+        aguardandoProximaFala = false;
+        textoTerminou = false;
 
-        audioNarracao.clip = audios[falaAtual];
-        audioNarracao.Play();
-
-        if (textoLegenda != null)
-        {
-            if (falaAtual < legendas.Length)
-                textoLegenda.text = legendas[falaAtual];
-            else
-                textoLegenda.text = "";
-        }
-
-        if (botaoProximo != null)
-        {
-            botaoProximo.gameObject.SetActive(true);
-            botaoProximo.interactable = false;
-        }
-
-        if (botaoPular != null)
-            botaoPular.SetActive(true);
+        TocarAudio();
+        IniciarTexto();
     }
 
-    public void ProximaFala()
+    private void TocarAudio()
     {
-        if (!audioTerminou)
+        if (audioNarracao == null)
             return;
+
+        if (falaAtual >= audios.Length)
+            return;
+
+        AudioClip audioAtual = audios[falaAtual];
+
+        if (audioAtual == null)
+            return;
+
+        audioNarracao.clip = audioAtual;
+        audioNarracao.Play();
+    }
+
+    private void IniciarTexto()
+    {
+        if (textoLegenda == null)
+            return;
+
+        if (textoCoroutine != null)
+            StopCoroutine(textoCoroutine);
+
+        string legendaAtual = falaAtual < legendas.Length
+            ? legendas[falaAtual]
+            : string.Empty;
+
+        textoCoroutine = StartCoroutine(EfeitoTexto(legendaAtual));
+    }
+
+    private IEnumerator EfeitoTexto(string texto)
+    {
+        textoLegenda.text = string.Empty;
+
+        foreach (char caractere in texto)
+        {
+            textoLegenda.text += caractere;
+
+            yield return new WaitForSecondsRealtime(
+                velocidadeTexto
+            );
+        }
+
+        textoCoroutine = null;
+        textoTerminou = true;
+
+        VerificarProximaFala();
+    }
+
+    private void VerificarFimDoAudio()
+    {
+        if (audioNarracao == null)
+            return;
+
+        if (audioNarracao.isPlaying)
+            return;
+
+        if (audioNarracao.clip == null)
+            return;
+
+        if (!textoTerminou)
+            return;
+
+        if (aguardandoProximaFala)
+            return;
+
+        aguardandoProximaFala = true;
+
+        StartCoroutine(IniciarProximaFala());
+    }
+
+    private void VerificarProximaFala()
+    {
+        if (audioNarracao == null)
+            return;
+
+        if (audioNarracao.isPlaying)
+            return;
+
+        if (aguardandoProximaFala)
+            return;
+
+        aguardandoProximaFala = true;
+
+        StartCoroutine(IniciarProximaFala());
+    }
+
+    private IEnumerator IniciarProximaFala()
+    {
+        yield return new WaitForSecondsRealtime(
+            intervaloEntreFalas
+        );
+
+        if (narrativaTerminou)
+            yield break;
 
         falaAtual++;
 
         if (falaAtual >= audios.Length)
+        {
             IniciarJogo();
-        else
-            TocarFala();
+            yield break;
+        }
+
+        TocarFala();
     }
 
-    public void PularNarrativa()
+    private void HandleMouseInput()
     {
-        IniciarJogo();
+        if (Mouse.current == null)
+            return;
+
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        AvancarNarrativa();
     }
 
-    void IniciarJogo()
+    private void AvancarNarrativa()
+    {
+        if (narrativaTerminou)
+            return;
+
+        if (!textoTerminou)
+        {
+            TerminarTextoInstantaneamente();
+            return;
+        }
+
+        if (aguardandoProximaFala)
+            return;
+
+        if (textoCoroutine != null)
+        {
+            StopCoroutine(textoCoroutine);
+            textoCoroutine = null;
+        }
+
+        if (audioNarracao != null)
+            audioNarracao.Stop();
+
+        aguardandoProximaFala = true;
+
+        falaAtual++;
+
+        if (falaAtual >= audios.Length)
+        {
+            IniciarJogo();
+            return;
+        }
+
+        TocarFala();
+    }
+
+    private void TerminarTextoInstantaneamente()
+    {
+        if (textoCoroutine != null)
+        {
+            StopCoroutine(textoCoroutine);
+            textoCoroutine = null;
+        }
+
+        if (textoLegenda == null)
+            return;
+
+        textoLegenda.text = falaAtual < legendas.Length
+            ? legendas[falaAtual]
+            : string.Empty;
+
+        textoTerminou = true;
+    }
+
+    private void IniciarJogo()
     {
         if (narrativaTerminou)
             return;
 
         narrativaTerminou = true;
+
+        if (textoCoroutine != null)
+        {
+            StopCoroutine(textoCoroutine);
+            textoCoroutine = null;
+        }
+
+        if (narrativaCoroutine != null)
+        {
+            StopCoroutine(narrativaCoroutine);
+            narrativaCoroutine = null;
+        }
 
         if (audioNarracao != null)
             audioNarracao.Stop();
@@ -163,10 +334,13 @@ public class CenaNarrativa : MonoBehaviour
             audioRadio.Stop();
 
         if (textoLegenda != null)
-            textoLegenda.text = "";
+            textoLegenda.text = string.Empty;
 
-        if (botaoProximo != null)
-            botaoProximo.gameObject.SetActive(false);
+        if (controleDoJogador != null)
+            controleDoJogador.enabled = true;
+
+        if (painelNarrativa != null)
+            painelNarrativa.SetActive(false);
 
         SceneManager.LoadScene(cenaDoJogo);
     }
