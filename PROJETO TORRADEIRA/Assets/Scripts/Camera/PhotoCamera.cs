@@ -13,49 +13,31 @@ public class PhotoCamera : MonoBehaviour
     [Header("HUD")]
     public GameObject crosshair;
     public GameObject cameraHUD;
-    public Image fadeImage;
-    public Image flashImage;
 
     [Header("Zoom")]
-    public float zoomFOV = 40f;
     public float normalFOV = 60f;
+    public float zoomFOV = 40f;
     public float minZoomFOV = 25f;
     public float maxZoomFOV = 60f;
     public float zoomSpeed = 2.5f;
 
-    [Header("HUD Zoom")]
-    public RectTransform cameraHUDContent;
-    public RectTransform[] cameraCorners;
+    [Header("Battery")]
+    public int maxBattery = 10;
     public Image[] batteryBars;
+    public float batteryDrainInterval = 3f;
 
-    public float normalHUDScale = 1f;
-    public float maxZoomHUDScale = 0.72f;
-    public float hudZoomSmoothness = 10f;
-
-    [Header("Black Zoom Borders")]
-    public Image blackBorderTop;
-    public Image blackBorderBottom;
-    public Image blackBorderLeft;
-    public Image blackBorderRight;
-
-    public float maxBlackBorderSize = 140f;
-
-    [Header("Camera Blink")]
-    public Image blinkTop;
-    public Image blinkBottom;
-    public float blinkDuration = 0.5f;
-    public float blinkClosedSize = 600f;
+    [Header("Flash")]
+    public Image flashImage;
+    public float flashDuration = 0.07f;
 
     [Header("Transition")]
     public float enterTransitionTime = 0.4f;
     public float exitTransitionTime = 0.12f;
 
-    [Header("Flash")]
-    public float flashDuration = 0.07f;
-
-    [Header("Battery")]
-    public int maxBattery = 10;
-    public float batteryDrainInterval = 3f;
+    [Header("Camera Effects")]
+    [SerializeField] private CameraBlink cameraBlink;
+    [SerializeField] private CameraBlackBorders blackBorders;
+    [SerializeField] private CameraHUDZoom cameraHUDZoom;
 
     [Header("Temporal Objects")]
     public float tempoRevelado = 30f;
@@ -80,7 +62,6 @@ public class PhotoCamera : MonoBehaviour
         new List<Renderer>();
 
     private Coroutine transitionCoroutine;
-    private Coroutine blinkCoroutine;
 
     public bool IsCameraMode => cameraMode;
 
@@ -116,14 +97,14 @@ public class PhotoCamera : MonoBehaviour
         if (crosshair != null)
             crosshair.SetActive(true);
 
-        SetupTransparentImage(fadeImage);
-        SetupTransparentImage(flashImage);
+        if (blackBorders != null)
+        {
+            blackBorders.ResetBorders();
+            blackBorders.SetActive(false);
+        }
 
-        PrepareBlackBorders();
-        PrepareBlink();
-
-        SetBlackBorders(0f);
-        SetHUDScale(1f);
+        if (cameraHUDZoom != null)
+            cameraHUDZoom.ResetHUD();
 
         if (photoData != null)
             photoData.Initialize();
@@ -208,340 +189,18 @@ public class PhotoCamera : MonoBehaviour
         zoomAmount =
             Mathf.Clamp01(zoomAmount);
 
-        float targetScale =
-            Mathf.Lerp(
-                normalHUDScale,
-                maxZoomHUDScale,
-                zoomAmount
-            );
-
-        SetHUDScale(targetScale);
-
-        float borderSize =
-            Mathf.Lerp(
-                0f,
-                maxBlackBorderSize,
-                zoomAmount
-            );
-
-        SetBlackBorders(borderSize);
-    }
-
-    private void SetHUDScale(float scale)
-    {
-        if (cameraHUDContent != null)
-        {
-            cameraHUDContent.localScale =
-                Vector3.Lerp(
-                    cameraHUDContent.localScale,
-                    Vector3.one * scale,
-                    Time.deltaTime * hudZoomSmoothness
-                );
-        }
-
-        if (cameraCorners != null)
-        {
-            foreach (RectTransform corner in cameraCorners)
-            {
-                if (corner == null)
-                    continue;
-
-                corner.localScale =
-                    Vector3.Lerp(
-                        corner.localScale,
-                        Vector3.one * scale,
-                        Time.deltaTime * hudZoomSmoothness
-                    );
-            }
-        }
-
-        if (batteryBars != null)
-        {
-            foreach (Image battery in batteryBars)
-            {
-                if (battery == null)
-                    continue;
-
-                battery.rectTransform.localScale =
-                    Vector3.Lerp(
-                        battery.rectTransform.localScale,
-                        Vector3.one * scale,
-                        Time.deltaTime * hudZoomSmoothness
-                    );
-            }
-        }
-    }
-
-    private void SetBlackBorders(float size)
-    {
-        SetTopBorder(size);
-        SetBottomBorder(size);
-        SetLeftBorder(size);
-        SetRightBorder(size);
-    }
-
-    private void SetTopBorder(float size)
-    {
-        if (blackBorderTop == null)
-            return;
-
-        RectTransform rect =
-            blackBorderTop.rectTransform;
-
-        rect.anchorMin =
-            new Vector2(0f, 1f);
-
-        rect.anchorMax =
-            new Vector2(1f, 1f);
-
-        rect.pivot =
-            new Vector2(0.5f, 1f);
-
-        rect.offsetMin =
-            new Vector2(0f, -size);
-
-        rect.offsetMax =
-            Vector2.zero;
-    }
-
-    private void SetBottomBorder(float size)
-    {
-        if (blackBorderBottom == null)
-            return;
-
-        RectTransform rect =
-            blackBorderBottom.rectTransform;
-
-        rect.anchorMin =
-            new Vector2(0f, 0f);
-
-        rect.anchorMax =
-            new Vector2(1f, 0f);
-
-        rect.pivot =
-            new Vector2(0.5f, 0f);
-
-        rect.offsetMin =
-            Vector2.zero;
-
-        rect.offsetMax =
-            new Vector2(0f, size);
-    }
-
-    private void SetLeftBorder(float size)
-    {
-        if (blackBorderLeft == null)
-            return;
-
-        RectTransform rect =
-            blackBorderLeft.rectTransform;
-
-        rect.anchorMin =
-            new Vector2(0f, 0f);
-
-        rect.anchorMax =
-            new Vector2(0f, 1f);
-
-        rect.pivot =
-            new Vector2(0f, 0.5f);
-
-        rect.offsetMin =
-            Vector2.zero;
-
-        rect.offsetMax =
-            new Vector2(size, 0f);
-    }
-
-    private void SetRightBorder(float size)
-    {
-        if (blackBorderRight == null)
-            return;
-
-        RectTransform rect =
-            blackBorderRight.rectTransform;
-
-        rect.anchorMin =
-            new Vector2(1f, 0f);
-
-        rect.anchorMax =
-            new Vector2(1f, 1f);
-
-        rect.pivot =
-            new Vector2(1f, 0.5f);
-
-        rect.offsetMin =
-            new Vector2(-size, 0f);
-
-        rect.offsetMax =
-            Vector2.zero;
-    }
-
-    private void PrepareBlackBorders()
-    {
-        PrepareBlackBorder(blackBorderTop);
-        PrepareBlackBorder(blackBorderBottom);
-        PrepareBlackBorder(blackBorderLeft);
-        PrepareBlackBorder(blackBorderRight);
-
-        SetImageAlpha(blackBorderTop, 1f);
-        SetImageAlpha(blackBorderBottom, 1f);
-        SetImageAlpha(blackBorderLeft, 1f);
-        SetImageAlpha(blackBorderRight, 1f);
-
-        SetBlackBorderActive(false);
-    }
-
-    private void PrepareBlackBorder(Image image)
-    {
-        if (image == null)
-            return;
-
-        image.color = Color.black;
-        image.raycastTarget = false;
-    }
-
-    private void SetBlackBorderActive(bool active)
-    {
-        if (blackBorderTop != null)
-            blackBorderTop.gameObject.SetActive(active);
-
-        if (blackBorderBottom != null)
-            blackBorderBottom.gameObject.SetActive(active);
-
-        if (blackBorderLeft != null)
-            blackBorderLeft.gameObject.SetActive(active);
-
-        if (blackBorderRight != null)
-            blackBorderRight.gameObject.SetActive(active);
-    }
-
-    private void PrepareBlink()
-    {
-        PrepareBlinkImage(blinkTop);
-        PrepareBlinkImage(blinkBottom);
-
-        SetBlinkActive(false);
-    }
-
-    private void PrepareBlinkImage(Image image)
-    {
-        if (image == null)
-            return;
-
-        image.color = Color.black;
-        image.raycastTarget = false;
-    }
-
-    private void SetBlinkActive(bool active)
-    {
-        if (blinkTop != null)
-            blinkTop.gameObject.SetActive(active);
-
-        if (blinkBottom != null)
-            blinkBottom.gameObject.SetActive(active);
-    }
-
-    private IEnumerator CameraBlink()
-    {
-        if (blinkTop == null ||
-            blinkBottom == null)
-        {
-            yield break;
-        }
-
-        SetBlinkActive(true);
-
-        blinkTop.transform.SetAsLastSibling();
-        blinkBottom.transform.SetAsLastSibling();
-
-        float time = 0f;
-
-        while (time < blinkDuration)
-        {
-            time += Time.deltaTime;
-
-            float progress =
-                Mathf.Clamp01(
-                    time / blinkDuration
-                );
-
-            float smooth =
-                Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    progress
-                );
-
-            float size =
-                Mathf.Lerp(
-                    blinkClosedSize,
-                    0f,
-                    smooth
-                );
-
-            SetBlinkSize(size);
-
-            yield return null;
-        }
-
-        SetBlinkSize(0f);
-        SetBlinkActive(false);
-
-        blinkCoroutine = null;
-    }
-
-    private void SetBlinkSize(float size)
-    {
-        if (blinkTop != null)
-        {
-            RectTransform top =
-                blinkTop.rectTransform;
-
-            top.anchorMin =
-                new Vector2(0f, 1f);
-
-            top.anchorMax =
-                new Vector2(1f, 1f);
-
-            top.pivot =
-                new Vector2(0.5f, 1f);
-
-            top.offsetMin =
-                new Vector2(0f, -size);
-
-            top.offsetMax =
-                Vector2.zero;
-        }
-
-        if (blinkBottom != null)
-        {
-            RectTransform bottom =
-                blinkBottom.rectTransform;
-
-            bottom.anchorMin =
-                new Vector2(0f, 0f);
-
-            bottom.anchorMax =
-                new Vector2(1f, 0f);
-
-            bottom.pivot =
-                new Vector2(0.5f, 0f);
-
-            bottom.offsetMin =
-                Vector2.zero;
-
-            bottom.offsetMax =
-                new Vector2(0f, size);
-        }
+        if (cameraHUDZoom != null)
+            cameraHUDZoom.ApplyZoom(zoomAmount);
+
+        if (blackBorders != null)
+            blackBorders.SetZoom(zoomAmount);
     }
 
     private void HandleBattery()
     {
-        batteryTimer +=
-            Time.deltaTime;
+        batteryTimer += Time.deltaTime;
 
-        if (batteryTimer >=
-            batteryDrainInterval)
+        if (batteryTimer >= batteryDrainInterval)
         {
             batteryTimer = 0f;
 
@@ -563,8 +222,7 @@ public class PhotoCamera : MonoBehaviour
             return;
         }
 
-        cameraMode =
-            !cameraMode;
+        cameraMode = !cameraMode;
 
         if (crosshair != null)
             crosshair.SetActive(!cameraMode);
@@ -572,9 +230,7 @@ public class PhotoCamera : MonoBehaviour
         UpdateTemporalVisibility();
 
         if (transitionCoroutine != null)
-            StopCoroutine(
-                transitionCoroutine
-            );
+            StopCoroutine(transitionCoroutine);
 
         transitionCoroutine =
             StartCoroutine(
@@ -611,20 +267,17 @@ public class PhotoCamera : MonoBehaviour
             if (cameraHUD != null)
                 cameraHUD.SetActive(true);
 
-            SetBlackBorderActive(true);
-            SetBlackBorders(0f);
-            SetHUDScale(1f);
-
-            if (blinkCoroutine != null)
+            if (blackBorders != null)
             {
-                StopCoroutine(blinkCoroutine);
-                blinkCoroutine = null;
+                blackBorders.SetActive(true);
+                blackBorders.ResetBorders();
             }
 
-            blinkCoroutine =
-                StartCoroutine(
-                    CameraBlink()
-                );
+            if (cameraHUDZoom != null)
+                cameraHUDZoom.ResetHUD();
+
+            if (cameraBlink != null)
+                cameraBlink.Play();
         }
 
         while (time < duration)
@@ -636,7 +289,7 @@ public class PhotoCamera : MonoBehaviour
                     time / duration
                 );
 
-            float smoothProgress =
+            float smooth =
                 Mathf.SmoothStep(
                     0f,
                     1f,
@@ -649,7 +302,7 @@ public class PhotoCamera : MonoBehaviour
                     Mathf.Lerp(
                         startFOV,
                         target,
-                        smoothProgress
+                        smooth
                     );
             }
 
@@ -657,31 +310,11 @@ public class PhotoCamera : MonoBehaviour
                 Mathf.Lerp(
                     startFOV,
                     target,
-                    smoothProgress
+                    smooth
                 );
 
-            UpdateZoomHUD();
-
-            if (fadeImage != null)
-            {
-                Color color =
-                    fadeImage.color;
-
-                color.a =
-                    entering
-                        ? Mathf.Lerp(
-                            0f,
-                            0.35f,
-                            smoothProgress
-                        )
-                        : Mathf.Lerp(
-                            0.35f,
-                            0f,
-                            smoothProgress
-                        );
-
-                fadeImage.color = color;
-            }
+            if (entering)
+                UpdateZoomHUD();
 
             yield return null;
         }
@@ -693,23 +326,20 @@ public class PhotoCamera : MonoBehaviour
 
         if (!entering)
         {
-            if (blinkCoroutine != null)
-            {
-                StopCoroutine(blinkCoroutine);
-                blinkCoroutine = null;
-            }
-
-            SetBlinkActive(false);
-
             if (photoCam != null)
                 photoCam.enabled = false;
 
             if (cameraHUD != null)
                 cameraHUD.SetActive(false);
 
-            SetBlackBorderActive(false);
-            SetBlackBorders(0f);
-            SetHUDScale(1f);
+            if (blackBorders != null)
+            {
+                blackBorders.ResetBorders();
+                blackBorders.SetActive(false);
+            }
+
+            if (cameraHUDZoom != null)
+                cameraHUDZoom.ResetHUD();
         }
 
         isTransitioning = false;
@@ -772,8 +402,6 @@ public class PhotoCamera : MonoBehaviour
             yield return StartCoroutine(
                 FlashCoroutine()
             );
-
-            yield return new WaitForSeconds(2f);
         }
 
         canShoot = true;
@@ -781,7 +409,8 @@ public class PhotoCamera : MonoBehaviour
 
     private Texture2D CreatePhoto()
     {
-        RenderTexture.active = renderTexture;
+        RenderTexture.active =
+            renderTexture;
 
         Texture2D photo =
             new Texture2D(
@@ -842,7 +471,9 @@ public class PhotoCamera : MonoBehaviour
             RevealTemporalObject(renderer);
     }
 
-    private void RevealTemporalObject(Renderer renderer)
+    private void RevealTemporalObject(
+        Renderer renderer
+    )
     {
         if (renderer == null)
             return;
@@ -863,7 +494,9 @@ public class PhotoCamera : MonoBehaviour
         );
     }
 
-    private IEnumerator HideTemporalObject(Renderer renderer)
+    private IEnumerator HideTemporalObject(
+        Renderer renderer
+    )
     {
         yield return new WaitForSeconds(
             tempoRevelado
@@ -944,37 +577,6 @@ public class PhotoCamera : MonoBehaviour
         flashImage.color = color;
 
         flashImage.gameObject.SetActive(false);
-    }
-
-    private void SetupTransparentImage(Image image)
-    {
-        if (image == null)
-            return;
-
-        Color color =
-            image.color;
-
-        color.a = 0f;
-
-        image.color = color;
-
-        image.gameObject.SetActive(false);
-    }
-
-    private void SetImageAlpha(
-        Image image,
-        float alpha
-    )
-    {
-        if (image == null)
-            return;
-
-        Color color =
-            image.color;
-
-        color.a = alpha;
-
-        image.color = color;
     }
 
     private void UseBattery(int amount)

@@ -45898,7 +45898,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1144142298}
-  - component: {fileID: 1144142299}
+  - component: {fileID: 1144142300}
   m_Layer: 5
   m_Name: CameraOpening
   m_TagString: Untagged
@@ -45927,7 +45927,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1144142299
+--- !u!114 &1144142300
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45936,13 +45936,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1144142297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044bd015d71e3da4292caab88ec2ba3e, type: 3}
+  m_Script: {fileID: 11500000, guid: fb4eabf635d56e944a7e31eb3fbf9d2a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraOpeningAnimation
-  top: {fileID: 10097096}
-  bottom: {fileID: 1114636305}
-  duration: 0.45
-  closedHeight: 540
+  m_EditorClassIdentifier: Assembly-CSharp::CameraBlink
+  top: {fileID: 10097097}
+  bottom: {fileID: 1114636306}
+  duration: 0.5
+  closedSize: 600
 --- !u!1 &1145306413 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -58810,37 +58810,25 @@ MonoBehaviour:
   playerCam: {fileID: 1433970454}
   crosshair: {fileID: 857517283}
   cameraHUD: {fileID: 1673972301}
-  fadeImage: {fileID: 404600744}
-  flashImage: {fileID: 1250877734}
-  zoomFOV: 40
   normalFOV: 50
+  zoomFOV: 40
   minZoomFOV: 25
   maxZoomFOV: 60
   zoomSpeed: 2.5
-  cameraHUDContent: {fileID: 1673972302}
-  cameraCorners: []
+  maxBattery: 4
   batteryBars:
   - {fileID: 1215972177}
   - {fileID: 1043615360}
   - {fileID: 1369618110}
   - {fileID: 355872932}
-  normalHUDScale: 1
-  maxZoomHUDScale: 0.72
-  hudZoomSmoothness: 10
-  blackBorderTop: {fileID: 258086838}
-  blackBorderBottom: {fileID: 155604661}
-  blackBorderLeft: {fileID: 1299505386}
-  blackBorderRight: {fileID: 286128299}
-  maxBlackBorderSize: 140
-  blinkTop: {fileID: 10097097}
-  blinkBottom: {fileID: 1114636306}
-  blinkDuration: 0.4
-  blinkClosedSize: 500
+  batteryDrainInterval: 30
+  flashImage: {fileID: 1250877734}
+  flashDuration: 0.07
   enterTransitionTime: 0.4
   exitTransitionTime: 0.12
-  flashDuration: 0.07
-  maxBattery: 4
-  batteryDrainInterval: 30
+  cameraBlink: {fileID: 1144142300}
+  blackBorders: {fileID: 1901362755}
+  cameraHUDZoom: {fileID: 1673972304}
   tempoRevelado: 30
   photoData: {fileID: 1385445670}
 --- !u!82 &1385445669
@@ -74322,6 +74310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673972302}
   - component: {fileID: 1673972303}
+  - component: {fileID: 1673972304}
   m_Layer: 5
   m_Name: CameraHUD
   m_TagString: Untagged
@@ -74361,7 +74350,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673972301}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de20628d40988794cb7c9bb2d5f8a202, type: 3}
   m_Name: 
@@ -74377,6 +74366,24 @@ MonoBehaviour:
   maxVerticalBorder: 180
   maxHorizontalBorder: 260
   smoothness: 12
+--- !u!114 &1673972304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673972301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907cd71e7f414954b853298a6f333b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHUDZoom
+  topLeft: {fileID: 1690641420}
+  topRight: {fileID: 294967943}
+  bottomLeft: {fileID: 1718156345}
+  bottomRight: {fileID: 646600693}
+  normalInset: 70
+  zoomInset: 180
 --- !u!1 &1674354132 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 521389915149535324, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -88523,6 +88530,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1901362754}
+  - component: {fileID: 1901362755}
   m_Layer: 5
   m_Name: BlackFrame
   m_TagString: Untagged
@@ -88553,6 +88561,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1901362755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901362753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7d1d79b02d35044bc47a8e4eb86be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraBlackBorders
+  top: {fileID: 258086838}
+  bottom: {fileID: 155604661}
+  left: {fileID: 1299505386}
+  right: {fileID: 286128299}
+  maxBorder: 180
 --- !u!1 &1903775256 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5692374255365505252, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
