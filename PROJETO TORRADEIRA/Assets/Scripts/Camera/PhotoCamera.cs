@@ -235,7 +235,7 @@ public class PhotoCamera : MonoBehaviour
                 Vector3.Lerp(
                     cameraHUDContent.localScale,
                     Vector3.one * scale,
-                    Time.deltaTime * 10f
+                    Time.deltaTime * hudZoomSmoothness
                 );
         }
 
@@ -250,7 +250,7 @@ public class PhotoCamera : MonoBehaviour
                     Vector3.Lerp(
                         corner.localScale,
                         Vector3.one * scale,
-                        Time.deltaTime * 10f
+                        Time.deltaTime * hudZoomSmoothness
                     );
             }
         }
@@ -266,7 +266,7 @@ public class PhotoCamera : MonoBehaviour
                     Vector3.Lerp(
                         battery.rectTransform.localScale,
                         Vector3.one * scale,
-                        Time.deltaTime * 10f
+                        Time.deltaTime * hudZoomSmoothness
                     );
             }
         }
@@ -441,7 +441,7 @@ public class PhotoCamera : MonoBehaviour
             blinkBottom.gameObject.SetActive(active);
     }
 
-    private IEnumerator CameraBlink(bool opening)
+    private IEnumerator CameraBlink()
     {
         if (blinkTop == null ||
             blinkBottom == null)
@@ -453,16 +453,6 @@ public class PhotoCamera : MonoBehaviour
 
         blinkTop.transform.SetAsLastSibling();
         blinkBottom.transform.SetAsLastSibling();
-
-        float start =
-            opening
-                ? blinkClosedSize
-                : 0f;
-
-        float end =
-            opening
-                ? 0f
-                : blinkClosedSize;
 
         float time = 0f;
 
@@ -484,8 +474,8 @@ public class PhotoCamera : MonoBehaviour
 
             float size =
                 Mathf.Lerp(
-                    start,
-                    end,
+                    blinkClosedSize,
+                    0f,
                     smooth
                 );
 
@@ -494,10 +484,10 @@ public class PhotoCamera : MonoBehaviour
             yield return null;
         }
 
-        SetBlinkSize(end);
+        SetBlinkSize(0f);
+        SetBlinkActive(false);
 
-        if (opening)
-            SetBlinkActive(false);
+        blinkCoroutine = null;
     }
 
     private void SetBlinkSize(float size)
@@ -626,11 +616,14 @@ public class PhotoCamera : MonoBehaviour
             SetHUDScale(1f);
 
             if (blinkCoroutine != null)
+            {
                 StopCoroutine(blinkCoroutine);
+                blinkCoroutine = null;
+            }
 
             blinkCoroutine =
                 StartCoroutine(
-                    CameraBlink(true)
+                    CameraBlink()
                 );
         }
 
@@ -701,12 +694,12 @@ public class PhotoCamera : MonoBehaviour
         if (!entering)
         {
             if (blinkCoroutine != null)
+            {
                 StopCoroutine(blinkCoroutine);
+                blinkCoroutine = null;
+            }
 
-            blinkCoroutine =
-                StartCoroutine(
-                    CameraBlink(false)
-                );
+            SetBlinkActive(false);
 
             if (photoCam != null)
                 photoCam.enabled = false;
