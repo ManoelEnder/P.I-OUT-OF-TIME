@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Radio.unity
     guid: 5bdf4e7088013cd4c8fda19c9f450542
+  - enabled: 1
+    path: Assets/Scenes/Victory TEMP.unity
+    guid: 385ed8a1d7104ef478f9b8d2e05d406b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
