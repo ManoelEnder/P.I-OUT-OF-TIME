@@ -83933,11 +83933,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 907cd71e7f414954b853298a6f333b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHUDZoom
-  topLeft: {fileID: 1690641420}
-  topRight: {fileID: 294967943}
-  bottomLeft: {fileID: 1718156345}
-  bottomRight: {fileID: 646600693}
-  normalInset: 70
+  cameraFrame: {fileID: 848535877}
+  topLeft: {fileID: 646600693}
+  topRight: {fileID: 1718156345}
+  bottomLeft: {fileID: 1690641420}
+  bottomRight: {fileID: 294967943}
+  normalInset: 100
   zoomInset: 180
 --- !u!1 &1674354132 stripped
 GameObject:
