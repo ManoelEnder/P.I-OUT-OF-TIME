@@ -32,6 +32,10 @@ public class CenaNarrativa : MonoBehaviour
     [Header("Texto")]
     [SerializeField] private float velocidadeTexto = 0.035f;
 
+    [Header("Efeito de Pulinho")]
+    [SerializeField] private float alturaPulo = 8f;
+    [SerializeField] private float duracaoPulo = 0.12f;
+
     [Header("Transição")]
     [SerializeField] private float intervaloEntreFalas = 0.25f;
 
@@ -76,7 +80,10 @@ public class CenaNarrativa : MonoBehaviour
             painelNarrativa.SetActive(true);
 
         if (textoLegenda != null)
+        {
             textoLegenda.text = string.Empty;
+            textoLegenda.ForceMeshUpdate();
+        }
     }
 
     private void ConfigurarRadio()
@@ -100,12 +107,12 @@ public class CenaNarrativa : MonoBehaviour
             tempo += Time.unscaledDeltaTime;
 
             float progresso = tempo / tempoFadeRadio;
-            audioRadio.volume = Mathf.Lerp(0f, 1f, progresso);
+            audioRadio.volume = Mathf.Lerp(0f, 0.20f, progresso);
 
             yield return null;
         }
 
-        audioRadio.volume = 1f;
+        audioRadio.volume = 0.20f;
     }
 
     private IEnumerator IniciarNarrativa()
@@ -159,25 +166,117 @@ public class CenaNarrativa : MonoBehaviour
         if (textoCoroutine != null)
             StopCoroutine(textoCoroutine);
 
-        string legendaAtual = falaAtual < legendas.Length
-            ? legendas[falaAtual]
-            : string.Empty;
+        string legendaAtual =
+            falaAtual < legendas.Length
+                ? legendas[falaAtual]
+                : string.Empty;
 
-        textoCoroutine = StartCoroutine(EfeitoTexto(legendaAtual));
+        textoCoroutine =
+            StartCoroutine(
+                EfeitoTexto(legendaAtual)
+            );
     }
 
     private IEnumerator EfeitoTexto(string texto)
     {
-        textoLegenda.text = string.Empty;
+        textoLegenda.text = texto;
+        textoLegenda.ForceMeshUpdate();
 
-        foreach (char caractere in texto)
+        TMP_TextInfo textInfo =
+            textoLegenda.textInfo;
+
+        int totalCaracteres =
+            textInfo.characterCount;
+
+        textoLegenda.maxVisibleCharacters = 0;
+
+        for (int i = 0; i < totalCaracteres; i++)
         {
-            textoLegenda.text += caractere;
+            if (!textInfo.characterInfo[i].isVisible)
+            {
+                textoLegenda.maxVisibleCharacters = i + 1;
+
+                yield return new WaitForSecondsRealtime(
+                    velocidadeTexto
+                );
+
+                continue;
+            }
+
+            textoLegenda.maxVisibleCharacters = i + 1;
+
+            textoLegenda.ForceMeshUpdate();
+
+            textInfo = textoLegenda.textInfo;
+
+            TMP_CharacterInfo characterInfo =
+                textInfo.characterInfo[i];
+
+            int materialIndex =
+                characterInfo.materialReferenceIndex;
+
+            int vertexIndex =
+                characterInfo.vertexIndex;
+
+            Vector3[] vertices =
+                textInfo.meshInfo[materialIndex].vertices;
+
+            Vector3[] originalVertices =
+                new Vector3[4];
+
+            for (int j = 0; j < 4; j++)
+            {
+                originalVertices[j] =
+                    vertices[vertexIndex + j];
+            }
+
+            float tempo = 0f;
+
+            while (tempo < duracaoPulo)
+            {
+                tempo += Time.unscaledDeltaTime;
+
+                float progresso =
+                    Mathf.Clamp01(
+                        tempo / duracaoPulo
+                    );
+
+                float altura =
+                    Mathf.Sin(
+                        progresso * Mathf.PI
+                    ) * alturaPulo;
+
+                for (int j = 0; j < 4; j++)
+                {
+                    vertices[vertexIndex + j] =
+                        originalVertices[j] +
+                        Vector3.up * altura;
+                }
+
+                textoLegenda.UpdateVertexData(
+                    TMP_VertexDataUpdateFlags.Vertices
+                );
+
+                yield return null;
+            }
+
+            for (int j = 0; j < 4; j++)
+            {
+                vertices[vertexIndex + j] =
+                    originalVertices[j];
+            }
+
+            textoLegenda.UpdateVertexData(
+                TMP_VertexDataUpdateFlags.Vertices
+            );
 
             yield return new WaitForSecondsRealtime(
                 velocidadeTexto
             );
         }
+
+        textoLegenda.maxVisibleCharacters =
+            totalCaracteres;
 
         textoCoroutine = null;
         textoTerminou = true;
@@ -301,9 +400,14 @@ public class CenaNarrativa : MonoBehaviour
         if (textoLegenda == null)
             return;
 
-        textoLegenda.text = falaAtual < legendas.Length
-            ? legendas[falaAtual]
-            : string.Empty;
+        textoLegenda.text =
+            falaAtual < legendas.Length
+                ? legendas[falaAtual]
+                : string.Empty;
+
+        textoLegenda.maxVisibleCharacters = -1;
+
+        textoLegenda.ForceMeshUpdate();
 
         textoTerminou = true;
     }
@@ -334,7 +438,10 @@ public class CenaNarrativa : MonoBehaviour
             audioRadio.Stop();
 
         if (textoLegenda != null)
+        {
             textoLegenda.text = string.Empty;
+            textoLegenda.maxVisibleCharacters = -1;
+        }
 
         if (controleDoJogador != null)
             controleDoJogador.enabled = true;

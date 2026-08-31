@@ -351,7 +351,7 @@ MonoBehaviour:
   m_fontSize: 20.36
   m_fontSizeBase: 20.36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -991,7 +991,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 98b0214260b03b741979d0ee0680d8f3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.35
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1094,8 +1094,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d327cab5b6c993c4da5b8bdb43d99e80, type: 3}
   audioRadio: {fileID: 1667290326}
   tempoFadeRadio: 3
-  musicaMenu: {fileID: 0}
-  tempoFadeOutMusica: 2.5
   legendas:
   - "Tem algu\xE9m escutando a\xED?\n...Se estiver... n\xE3o desligue.\nEu n\xE3o
     sei exatamente quem voc\xEA \xE9, nem quanto tempo essa mensagem ira permanecer
@@ -1113,6 +1111,7 @@ MonoBehaviour:
   cenaDoJogo: Principal
   velocidadeTexto: 0.05
   intervaloEntreFalas: 2
+  tempoFadeOutMusica: 2.5
 --- !u!1 &1988008241
 GameObject:
   m_ObjectHideFlags: 0
