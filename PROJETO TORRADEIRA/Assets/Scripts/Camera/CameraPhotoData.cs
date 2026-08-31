@@ -5,10 +5,8 @@ using TMPro;
 public class CameraPhotoData : MonoBehaviour
 {
     public RawImage photoPreview;
-
     public AudioSource audioSource;
     public AudioClip shutterSound;
-
     public TextMeshProUGUI photoCounter;
 
     public MissionSystem missionSystem;
@@ -19,7 +17,8 @@ public class CameraPhotoData : MonoBehaviour
 
     private int photoCount;
 
-    public void Initialize()
+
+public void Initialize()
     {
         photoCount = 0;
 
@@ -57,11 +56,12 @@ public class CameraPhotoData : MonoBehaviour
         }
     }
 
-    void UpdatePhotoCounter()
+    private void UpdatePhotoCounter()
     {
         if (photoCounter != null)
         {
-            photoCounter.text = "Fotos: " + photoCount;
+            photoCounter.text =
+                "Fotos: " + photoCount;
         }
     }
 

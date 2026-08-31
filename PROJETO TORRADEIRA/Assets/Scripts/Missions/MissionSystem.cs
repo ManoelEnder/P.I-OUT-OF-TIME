@@ -6,85 +6,142 @@ using System.Collections;
 
 public class MissionSystem : MonoBehaviour
 {
-    public TextMeshProUGUI textoFotos;
-    public TextMeshProUGUI textoPeca;
+    [SerializeField] private TextMeshProUGUI missionText;
 
-    public int fotosNecessarias = 5;
+    [SerializeField] private int photosRequired = 10;
+    [SerializeField] private int piecesRequired = 5;
 
-    int fotos = 0;
-    bool pecaDescoberta = false;
+    [SerializeField] private string finalSceneName = "Final";
 
-    public string nomeDaCena = "Final";
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private float fadeTime = 1.5f;
 
-    public Image fadeImage;
-    public float fadeTime = 1.5f;
+    private int photos;
+    private int pieces;
 
-    void Start()
+    private bool changingScene;
+
+    private void Start()
     {
-        textoFotos.text = "[ ] Tirar 5 fotos";
-        textoPeca.text = "[ ] Descobrir peça";
-
-        textoFotos.color = Color.gray;
-        textoPeca.color = Color.gray;
+        photos = 0;
+        pieces = 0;
 
         if (fadeImage != null)
         {
-            Color c = fadeImage.color;
-            c.a = 0f;
-            fadeImage.color = c;
+            Color color = fadeImage.color;
+            color.a = 0f;
+            fadeImage.color = color;
         }
+
+        UpdateMissionText();
     }
 
     public void AddFoto()
     {
-        fotos++;
+        if (photos >= photosRequired)
+            return;
 
-        if (fotos >= fotosNecessarias)
-        {
-            textoFotos.text = "[X] Tirar 5 fotos";
-            textoFotos.color = Color.white;
+        photos++;
 
-            ChecarMissoes();
-        }
+        UpdateMissionText();
+        CheckMissions();
+    }
+
+    public void AddPeca()
+    {
+        if (pieces >= piecesRequired)
+            return;
+
+        pieces++;
+
+        UpdateMissionText();
+        CheckMissions();
     }
 
     public void DescobriuPeca()
     {
-        if (pecaDescoberta) return;
-
-        pecaDescoberta = true;
-
-        textoPeca.text = "[X] Descobrir peça";
-        textoPeca.color = Color.white;
-
-        ChecarMissoes();
+        AddPeca();
     }
 
-    void ChecarMissoes()
+    private void UpdateMissionText()
     {
-        if (fotos >= fotosNecessarias && pecaDescoberta)
+        if (missionText == null)
+            return;
+
+        string photoMission =
+            photos >= photosRequired
+                ? "[X] Tirar fotos [" + photosRequired + "/" + photosRequired + "]"
+                : "Tirar 10 fotos [" + photos + "/" + photosRequired + "]";
+
+        string pieceMission =
+            pieces >= piecesRequired
+                ? "[X] Coletar pecas [" + piecesRequired + "/" + piecesRequired + "]"
+                : "Coletar pecas [" + pieces + "/" + piecesRequired + "]";
+
+        string discoverMission =
+            pieces >= 1
+                ? "[X] Descobrir uma peca"
+                : "[ ] Descobrir uma peca";
+
+        missionText.text =
+            photoMission + "\n" +
+            pieceMission + "\n" +
+            discoverMission;
+    }
+
+    private void CheckMissions()
+    {
+        if (changingScene)
+            return;
+
+        if (photos >= photosRequired &&
+            pieces >= piecesRequired)
         {
             StartCoroutine(FadeAndLoad());
         }
     }
 
-    IEnumerator FadeAndLoad()
+    private IEnumerator FadeAndLoad()
     {
-        float t = 0f;
+        changingScene = true;
 
-        while (t < fadeTime)
+        if (fadeImage == null)
         {
-            t += Time.deltaTime;
+            SceneManager.LoadScene(finalSceneName);
+            yield break;
+        }
 
-            float alpha = Mathf.Lerp(0f, 1f, t / fadeTime);
+        float time = 0f;
 
-            Color c = fadeImage.color;
-            c.a = alpha;
-            fadeImage.color = c;
+        while (time < fadeTime)
+        {
+            time += Time.deltaTime;
+
+            float alpha =
+                Mathf.Clamp01(time / fadeTime);
+
+            Color color = fadeImage.color;
+            color.a = alpha;
+            fadeImage.color = color;
 
             yield return null;
         }
 
-        SceneManager.LoadScene(nomeDaCena);
+        SceneManager.LoadScene(finalSceneName);
+    }
+
+    public int GetPhotoCount()
+    {
+        return photos;
+    }
+
+    public int GetPieceCount()
+    {
+        return pieces;
+    }
+
+    public bool HasDiscoveredPiece()
+    {
+        return pieces >= 1;
     }
 }

@@ -5,6 +5,9 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
     [Header("Interaction")]
     [SerializeField] private bool canBeCollected = true;
 
+    [Header("Mission")]
+    [SerializeField] private MissionSystem missionSystem;
+
     private bool isRevealed;
     private bool isCollected;
 
@@ -12,39 +15,29 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
     {
         isRevealed = false;
         isCollected = false;
+
+        if (missionSystem == null)
+            missionSystem = FindFirstObjectByType<MissionSystem>();
     }
 
     public void SetRevealed(bool revealed)
     {
         if (isCollected)
-        {
             return;
-        }
 
         isRevealed = revealed;
-
-        Debug.Log(
-            $"{name} | SetRevealed chamado: {revealed}",
-            this
-        );
     }
 
     public bool CanInteract()
     {
         if (isCollected)
-        {
             return false;
-        }
 
         if (!isRevealed)
-        {
             return false;
-        }
 
         if (!canBeCollected)
-        {
             return false;
-        }
 
         return true;
     }
@@ -57,9 +50,7 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (!CanInteract())
-        {
             return;
-        }
 
         Collect();
     }
@@ -67,21 +58,15 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
     private void Collect()
     {
         if (isCollected)
-        {
             return;
-        }
 
         isCollected = true;
 
-        Debug.Log(
-            $"{name} | Objeto coletado!",
-            this
-        );
+        if (missionSystem != null)
+            missionSystem.AddPeca();
 
         if (InteractionUI.Instance != null)
-        {
             InteractionUI.Instance.Hide();
-        }
 
         gameObject.SetActive(false);
     }

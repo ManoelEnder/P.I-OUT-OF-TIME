@@ -67,16 +67,12 @@ public class PhotoCamera : MonoBehaviour
 
     private void Start()
     {
-        renderTexture =
-            new RenderTexture(512, 512, 24);
-
+        renderTexture = new RenderTexture(512, 512, 24);
         renderTexture.Create();
 
         if (photoCam != null)
         {
-            photoCam.targetTexture =
-                renderTexture;
-
+            photoCam.targetTexture = renderTexture;
             photoCam.enabled = false;
         }
 
@@ -86,6 +82,7 @@ public class PhotoCamera : MonoBehaviour
             playerCam.fieldOfView = normalFOV;
 
         currentBattery = maxBattery;
+        batteryTimer = 0f;
 
         UpdateBatteryUI();
 
@@ -117,6 +114,9 @@ public class PhotoCamera : MonoBehaviour
         if (Keyboard.current != null &&
             Keyboard.current.cKey.wasPressedThisFrame)
         {
+            if (!cameraMode && currentBattery <= 0)
+                return;
+
             ToggleCameraMode();
         }
 
@@ -129,7 +129,8 @@ public class PhotoCamera : MonoBehaviour
 
             if (Mouse.current != null &&
                 Mouse.current.leftButton.wasPressedThisFrame &&
-                canShoot)
+                canShoot &&
+                currentBattery > 0)
             {
                 StartCoroutine(TakePhoto());
             }
@@ -143,30 +144,26 @@ public class PhotoCamera : MonoBehaviour
         if (Mouse.current == null)
             return;
 
-        float scroll =
-            Mouse.current.scroll.ReadValue().y;
+        float scroll = Mouse.current.scroll.ReadValue().y;
 
         if (scroll != 0f)
         {
-            targetFOV -=
-                scroll * zoomSpeed;
+            targetFOV -= scroll * zoomSpeed;
 
-            targetFOV =
-                Mathf.Clamp(
-                    targetFOV,
-                    minZoomFOV,
-                    maxZoomFOV
-                );
+            targetFOV = Mathf.Clamp(
+                targetFOV,
+                minZoomFOV,
+                maxZoomFOV
+            );
         }
 
         if (playerCam != null)
         {
-            playerCam.fieldOfView =
-                Mathf.Lerp(
-                    playerCam.fieldOfView,
-                    targetFOV,
-                    Time.deltaTime * 10f
-                );
+            playerCam.fieldOfView = Mathf.Lerp(
+                playerCam.fieldOfView,
+                targetFOV,
+                Time.deltaTime * 10f
+            );
         }
 
         UpdateZoomHUD();
@@ -179,15 +176,13 @@ public class PhotoCamera : MonoBehaviour
                 ? playerCam.fieldOfView
                 : normalFOV;
 
-        float zoomAmount =
-            Mathf.InverseLerp(
-                normalFOV,
-                minZoomFOV,
-                currentFOV
-            );
+        float zoomAmount = Mathf.InverseLerp(
+            normalFOV,
+            minZoomFOV,
+            currentFOV
+        );
 
-        zoomAmount =
-            Mathf.Clamp01(zoomAmount);
+        zoomAmount = Mathf.Clamp01(zoomAmount);
 
         if (cameraHUDZoom != null)
             cameraHUDZoom.ApplyZoom(zoomAmount);
@@ -198,29 +193,29 @@ public class PhotoCamera : MonoBehaviour
 
     private void HandleBattery()
     {
+        if (!cameraMode)
+            return;
+
         batteryTimer += Time.deltaTime;
 
         if (batteryTimer >= batteryDrainInterval)
         {
             batteryTimer = 0f;
 
-            UseBattery(1);
+            if (currentBattery > 0)
+                UseBattery(1);
 
-            if (currentBattery <= 0 &&
-                cameraMode)
+            if (currentBattery <= 0)
             {
-                ToggleCameraMode();
+                CloseCamera();
             }
         }
     }
 
     private void ToggleCameraMode()
     {
-        if (!cameraMode &&
-            currentBattery <= 0)
-        {
+        if (!cameraMode && currentBattery <= 0)
             return;
-        }
 
         cameraMode = !cameraMode;
 
@@ -233,9 +228,26 @@ public class PhotoCamera : MonoBehaviour
             StopCoroutine(transitionCoroutine);
 
         transitionCoroutine =
-            StartCoroutine(
-                CameraTransition(cameraMode)
-            );
+            StartCoroutine(CameraTransition(cameraMode));
+    }
+
+    private void CloseCamera()
+    {
+        if (!cameraMode)
+            return;
+
+        cameraMode = false;
+
+        if (crosshair != null)
+            crosshair.SetActive(true);
+
+        UpdateTemporalVisibility();
+
+        if (transitionCoroutine != null)
+            StopCoroutine(transitionCoroutine);
+
+        transitionCoroutine =
+            StartCoroutine(CameraTransition(false));
     }
 
     private IEnumerator CameraTransition(bool entering)
@@ -285,9 +297,7 @@ public class PhotoCamera : MonoBehaviour
             time += Time.deltaTime;
 
             float progress =
-                Mathf.Clamp01(
-                    time / duration
-                );
+                Mathf.Clamp01(time / duration);
 
             float smooth =
                 Mathf.SmoothStep(
@@ -347,15 +357,10 @@ public class PhotoCamera : MonoBehaviour
 
     private IEnumerator TakePhoto()
     {
-        if (!canShoot ||
-            currentBattery <= 0)
-        {
+        if (!canShoot || currentBattery <= 0)
             yield break;
-        }
 
         canShoot = false;
-
-        UseBattery(1);
 
         if (photoCam != null &&
             playerCam != null)
@@ -372,22 +377,29 @@ public class PhotoCamera : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         DetectTemporalObject();
-
         UpdateTemporalVisibility();
 
         if (photoCam != null)
             photoCam.Render();
 
-        Texture2D photo =
-            CreatePhoto();
+        Texture2D photo = CreatePhoto();
 
-        if (photoData != null)
+        if (photo != null && photoData != null)
         {
             photoData.ProcessPhoto(photo);
 
             yield return StartCoroutine(
                 FlashCoroutine()
             );
+
+            UseBattery(1);
+
+            if (currentBattery <= 0)
+            {
+                yield return new WaitForSeconds(0.05f);
+
+                CloseCamera();
+            }
 
             yield return new WaitForSeconds(
                 photoData.previewDuration
@@ -402,6 +414,11 @@ public class PhotoCamera : MonoBehaviour
             yield return StartCoroutine(
                 FlashCoroutine()
             );
+
+            UseBattery(1);
+
+            if (currentBattery <= 0)
+                CloseCamera();
         }
 
         canShoot = true;
@@ -409,8 +426,10 @@ public class PhotoCamera : MonoBehaviour
 
     private Texture2D CreatePhoto()
     {
-        RenderTexture.active =
-            renderTexture;
+        if (renderTexture == null)
+            return null;
+
+        RenderTexture.active = renderTexture;
 
         Texture2D photo =
             new Texture2D(
@@ -534,8 +553,7 @@ public class PhotoCamera : MonoBehaviour
             renderer.enabled = false;
         }
 
-        temporais =
-            lista.ToArray();
+        temporais = lista.ToArray();
     }
 
     private void UpdateTemporalVisibility()
@@ -561,11 +579,8 @@ public class PhotoCamera : MonoBehaviour
 
         flashImage.gameObject.SetActive(true);
 
-        Color color =
-            flashImage.color;
-
+        Color color = flashImage.color;
         color.a = 1f;
-
         flashImage.color = color;
 
         yield return new WaitForSeconds(
@@ -573,7 +588,6 @@ public class PhotoCamera : MonoBehaviour
         );
 
         color.a = 0f;
-
         flashImage.color = color;
 
         flashImage.gameObject.SetActive(false);
