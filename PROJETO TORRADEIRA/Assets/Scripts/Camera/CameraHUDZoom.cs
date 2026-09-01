@@ -2,105 +2,107 @@ using UnityEngine;
 
 public class CameraHUDZoom : MonoBehaviour
 {
-    [Header("Camera Frame")]
-    [SerializeField] private RectTransform cameraFrame;
-
-    [Header("Corners")]
     [SerializeField] private RectTransform topLeft;
     [SerializeField] private RectTransform topRight;
     [SerializeField] private RectTransform bottomLeft;
     [SerializeField] private RectTransform bottomRight;
 
-    [Header("Zoom")]
-    [SerializeField] private float normalInset = 0f;
-    [SerializeField] private float zoomInset = 120f;
+    [SerializeField] private float maxZoomPositionMultiplier = 0.55f;
 
-    private readonly Vector3[] frameCorners = new Vector3[4];
+    private Vector2 topLeftOriginalPosition;
+    private Vector2 topRightOriginalPosition;
+    private Vector2 bottomLeftOriginalPosition;
+    private Vector2 bottomRightOriginalPosition;
 
-    private void Start()
+    private bool positionsSaved;
+
+    private void Awake()
     {
-        ApplyZoom(0f);
+        SaveOriginalPositions();
+    }
+
+    private void OnEnable()
+    {
+        if (!positionsSaved)
+            SaveOriginalPositions();
+
+        ResetHUD();
+    }
+
+    private void SaveOriginalPositions()
+    {
+        if (topLeft != null)
+            topLeftOriginalPosition = topLeft.anchoredPosition;
+
+        if (topRight != null)
+            topRightOriginalPosition = topRight.anchoredPosition;
+
+        if (bottomLeft != null)
+            bottomLeftOriginalPosition = bottomLeft.anchoredPosition;
+
+        if (bottomRight != null)
+            bottomRightOriginalPosition = bottomRight.anchoredPosition;
+
+        positionsSaved = true;
     }
 
     public void ApplyZoom(float zoom)
     {
-        if (cameraFrame == null)
-            return;
+        if (!positionsSaved)
+            SaveOriginalPositions();
 
         zoom = Mathf.Clamp01(zoom);
 
-        cameraFrame.GetWorldCorners(frameCorners);
-
-        Vector3 bottomLeftPosition = frameCorners[0];
-        Vector3 topLeftPosition = frameCorners[1];
-        Vector3 topRightPosition = frameCorners[2];
-        Vector3 bottomRightPosition = frameCorners[3];
-
-        float inset = Mathf.Lerp(
-            normalInset,
-            zoomInset,
+        float multiplier = Mathf.Lerp(
+            1f,
+            maxZoomPositionMultiplier,
             zoom
         );
 
-        Vector3 leftDirection =
-            (topRightPosition - topLeftPosition).normalized;
+        if (topLeft != null)
+        {
+            topLeft.anchoredPosition =
+                topLeftOriginalPosition * multiplier;
+        }
 
-        Vector3 rightDirection =
-            (topRightPosition - topLeftPosition).normalized;
+        if (topRight != null)
+        {
+            topRight.anchoredPosition =
+                topRightOriginalPosition * multiplier;
+        }
 
-        Vector3 verticalDirection =
-            (topLeftPosition - bottomLeftPosition).normalized;
+        if (bottomLeft != null)
+        {
+            bottomLeft.anchoredPosition =
+                bottomLeftOriginalPosition * multiplier;
+        }
 
-        topLeftPosition +=
-            leftDirection * inset -
-            verticalDirection * inset;
-
-        topRightPosition -=
-            rightDirection * inset +
-            verticalDirection * inset;
-
-        bottomLeftPosition +=
-            leftDirection * inset +
-            verticalDirection * inset;
-
-        bottomRightPosition -=
-            rightDirection * inset -
-            verticalDirection * inset;
-
-        SetCornerPosition(
-            topLeft,
-            topLeftPosition
-        );
-
-        SetCornerPosition(
-            topRight,
-            topRightPosition
-        );
-
-        SetCornerPosition(
-            bottomLeft,
-            bottomLeftPosition
-        );
-
-        SetCornerPosition(
-            bottomRight,
-            bottomRightPosition
-        );
-    }
-
-    private void SetCornerPosition(
-        RectTransform corner,
-        Vector3 worldPosition
-    )
-    {
-        if (corner == null)
-            return;
-
-        corner.position = worldPosition;
+        if (bottomRight != null)
+        {
+            bottomRight.anchoredPosition =
+                bottomRightOriginalPosition * multiplier;
+        }
     }
 
     public void ResetHUD()
     {
-        ApplyZoom(0f);
+        if (!positionsSaved)
+            SaveOriginalPositions();
+
+        if (topLeft != null)
+            topLeft.anchoredPosition =
+                topLeftOriginalPosition;
+
+        if (topRight != null)
+            topRight.anchoredPosition =
+                topRightOriginalPosition;
+
+        if (bottomLeft != null)
+            bottomLeft.anchoredPosition =
+                bottomLeftOriginalPosition;
+
+        if (bottomRight != null)
+            bottomRight.anchoredPosition =
+                bottomRightOriginalPosition;
     }
 }

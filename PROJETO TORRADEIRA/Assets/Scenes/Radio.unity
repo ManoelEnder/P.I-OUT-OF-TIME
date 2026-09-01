@@ -1109,7 +1109,7 @@ MonoBehaviour:
   painelNarrativa: {fileID: 798770366}
   controleDoJogador: {fileID: 0}
   cenaDoJogo: Principal
-  velocidadeTexto: 0.05
+  velocidadeTexto: 0.04
   intervaloEntreFalas: 2
   tempoFadeOutMusica: 2.5
 --- !u!1 &1988008241
