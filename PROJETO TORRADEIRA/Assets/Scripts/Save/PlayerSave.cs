@@ -1,218 +1,345 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class PlayerSave : MonoBehaviour
 {
-    [Header("Sistema de Save")]
+    [Header("Save System")]
     [SerializeField] private SaveSystem saveSystem;
 
     [Header("Auto Save")]
-    [SerializeField] private float intervaloAutoSave = 180f;
+    [SerializeField] private float autoSaveInterval = 180f;
 
-    private float contadorAutoSave;
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI saveMessageText;
+    [SerializeField] private float messageDuration = 2f;
+
+    [Header("Fade")]
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private float fadeDuration = 1f;
 
     private CharacterController characterController;
-
-    private string mensagem = "";
-    private float tempoMensagem;
+    private float autoSaveTimer;
+    private Coroutine messageCoroutine;
+    private bool isLoading;
 
     private void Awake()
     {
-        saveSystem = FindFirstObjectByType<SaveSystem>();
+        if (saveSystem == null)
+        {
+            saveSystem = FindFirstObjectByType<SaveSystem>();
+        }
 
-        characterController =
-            GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
 
-        contadorAutoSave = intervaloAutoSave;
+        autoSaveTimer = autoSaveInterval;
+
+        if (saveMessageText != null)
+        {
+            saveMessageText.gameObject.SetActive(false);
+        }
+
+        if (fadeImage != null)
+        {
+            Color color = fadeImage.color;
+            color.r = 0f;
+            color.g = 0f;
+            color.b = 0f;
+            color.a = 0f;
+
+            fadeImage.color = color;
+        }
     }
 
     private void Update()
     {
-        
-
-        contadorAutoSave -= Time.deltaTime;
-
-        if (contadorAutoSave <= 0)
+        if (isLoading)
         {
-            SalvarJogo();
-
-            contadorAutoSave = intervaloAutoSave;
+            return;
         }
 
-      
+        HandleAutoSave();
+        HandleInput();
+    }
+
+    private void HandleAutoSave()
+    {
+        if (autoSaveInterval <= 0f)
+        {
+            return;
+        }
+
+        autoSaveTimer -= Time.deltaTime;
+
+        if (autoSaveTimer <= 0f)
+        {
+            SaveGame();
+
+            autoSaveTimer = autoSaveInterval;
+        }
+    }
+
+    private void HandleInput()
+    {
         if (Input.GetKeyDown(KeyCode.F5))
         {
-            SalvarJogo();
+            SaveGame();
         }
 
         if (Input.GetKeyDown(KeyCode.F9))
         {
-            CarregarJogo();
-        }
-
-        if (tempoMensagem > 0)
-        {
-            tempoMensagem -= Time.deltaTime;
+            LoadGame();
         }
     }
 
-    public void SalvarJogo()
+    public void SaveGame()
     {
-        if (saveSystem == null)
+        if (saveSystem == null || isLoading)
         {
-            Debug.LogError("SaveSystem não encontrado!");
             return;
         }
 
-        SaveData dados = new SaveData();
+        ShowMessage("SALVANDO...");
 
-    
+        SaveData data = new();
 
-        dados.playerX = transform.position.x;
-        dados.playerY = transform.position.y;
-        dados.playerZ = transform.position.z;
+        data.playerX = transform.position.x;
+        data.playerY = transform.position.y;
+        data.playerZ = transform.position.z;
 
-        dados.playerRotX = transform.eulerAngles.x;
-        dados.playerRotY = transform.eulerAngles.y;
-        dados.playerRotZ = transform.eulerAngles.z;
+        data.playerRotX = transform.eulerAngles.x;
+        data.playerRotY = transform.eulerAngles.y;
+        data.playerRotZ = transform.eulerAngles.z;
 
-        SaveableObject[] objetos =
+        SaveableObject[] saveableObjects =
             FindObjectsByType<SaveableObject>(
                 FindObjectsInactive.Include,
                 FindObjectsSortMode.None
             );
 
-        foreach (SaveableObject objeto in objetos)
+        foreach (SaveableObject saveableObject in saveableObjects)
         {
-            
-            if (objeto.gameObject == gameObject)
+            if (saveableObject.gameObject == gameObject)
+            {
                 continue;
+            }
 
-            dados.objetos.Add(
-                objeto.CriarDados()
+            data.objects.Add(
+                saveableObject.CreateData()
             );
         }
 
-        if (saveSystem.Salvar(dados))
+        if (saveSystem.Save(data))
         {
-            MostrarMensagem("JOGO SALVO!");
+            StartCoroutine(SaveCompleted());
         }
     }
 
-    public void CarregarJogo()
+    private IEnumerator SaveCompleted()
     {
-        if (saveSystem == null)
+        yield return new WaitForSeconds(0.5f);
+
+        ShowMessage("JOGO SALVO!");
+    }
+
+    public void LoadGame()
+    {
+        if (saveSystem == null || isLoading)
         {
-            Debug.LogError("SaveSystem não encontrado!");
             return;
         }
 
-        if (!saveSystem.Carregar(out SaveData dados))
+        StartCoroutine(LoadGameRoutine());
+    }
+
+    private IEnumerator LoadGameRoutine()
+    {
+        isLoading = true;
+
+        if (!saveSystem.Load(out SaveData data))
         {
-            MostrarMensagem("NENHUM SAVE!");
-            return;
+            ShowMessage("NENHUM SAVE ENCONTRADO!");
+
+            isLoading = false;
+
+            yield break;
         }
 
-        Vector3 posicaoPlayer = new Vector3(
-            dados.playerX,
-            dados.playerY,
-            dados.playerZ
+        ShowMessage("CARREGANDO...");
+
+        yield return StartCoroutine(
+            Fade(0f, 1f)
         );
 
-        Quaternion rotacaoPlayer =
-            Quaternion.Euler(
-                dados.playerRotX,
-                dados.playerRotY,
-                dados.playerRotZ
-            );
+        LoadPlayer(data);
+        LoadObjects(data);
+
+        yield return null;
+
+        yield return StartCoroutine(
+            Fade(1f, 0f)
+        );
+
+        ShowMessage("JOGO CARREGADO!");
+
+        isLoading = false;
+    }
+
+    private void LoadPlayer(SaveData data)
+    {
+        Vector3 position = new(
+            data.playerX,
+            data.playerY,
+            data.playerZ
+        );
+
+        Quaternion rotation = Quaternion.Euler(
+            data.playerRotX,
+            data.playerRotY,
+            data.playerRotZ
+        );
 
         if (characterController != null)
         {
             characterController.enabled = false;
         }
 
-        transform.position = posicaoPlayer;
-        transform.rotation = rotacaoPlayer;
+        transform.SetPositionAndRotation(
+            position,
+            rotation
+        );
 
         if (characterController != null)
         {
             characterController.enabled = true;
         }
+    }
 
-        
-        SaveableObject[] objetos =
+    private void LoadObjects(SaveData data)
+    {
+        Dictionary<string, ObjectSaveData> savedObjects =
+            new();
+
+        foreach (ObjectSaveData objectData in data.objects)
+        {
+            if (!string.IsNullOrEmpty(objectData.id))
+            {
+                savedObjects[objectData.id] =
+                    objectData;
+            }
+        }
+
+        SaveableObject[] sceneObjects =
             FindObjectsByType<SaveableObject>(
                 FindObjectsInactive.Include,
                 FindObjectsSortMode.None
             );
 
-        foreach (SaveableObject objeto in objetos)
+        foreach (SaveableObject sceneObject in sceneObjects)
         {
-            foreach (ObjectSaveData dadosObjeto in dados.objetos)
+            if (
+                savedObjects.TryGetValue(
+                    sceneObject.ID,
+                    out ObjectSaveData objectData
+                )
+            )
             {
-                if (objeto.ID == dadosObjeto.id)
-                {
-                    objeto.AplicarDados(dadosObjeto);
-                    break;
-                }
+                sceneObject.ApplyData(objectData);
             }
         }
+    }
 
-        MostrarMensagem("JOGO CARREGADO!");
+    private IEnumerator Fade(
+        float startAlpha,
+        float endAlpha
+    )
+    {
+        if (fadeImage == null)
+        {
+            yield break;
+        }
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+
+            float progress = Mathf.Clamp01(
+                elapsedTime / fadeDuration
+            );
+
+            progress = Mathf.SmoothStep(
+                0f,
+                1f,
+                progress
+            );
+
+            Color color = fadeImage.color;
+
+            color.a = Mathf.Lerp(
+                startAlpha,
+                endAlpha,
+                progress
+            );
+
+            fadeImage.color = color;
+
+            yield return null;
+        }
+
+        Color finalColor = fadeImage.color;
+        finalColor.a = endAlpha;
+
+        fadeImage.color = finalColor;
+    }
+
+    private void ShowMessage(string message)
+    {
+        if (saveMessageText == null)
+        {
+            return;
+        }
+
+        if (messageCoroutine != null)
+        {
+            StopCoroutine(messageCoroutine);
+        }
+
+        saveMessageText.gameObject.SetActive(true);
+        saveMessageText.text = message;
+
+        messageCoroutine = StartCoroutine(
+            HideMessageAfterTime()
+        );
+    }
+
+    private IEnumerator HideMessageAfterTime()
+    {
+        yield return new WaitForSecondsRealtime(
+            messageDuration
+        );
+
+        if (saveMessageText != null)
+        {
+            saveMessageText.gameObject.SetActive(false);
+        }
+
+        messageCoroutine = null;
+    }
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused)
+        {
+            SaveGame();
+        }
     }
 
     private void OnApplicationQuit()
     {
-        SalvarJogo();
-    }
-
-    private void OnApplicationPause(bool pausado)
-    {
-        if (pausado)
-        {
-            SalvarJogo();
-        }
-    }
-
-    private void MostrarMensagem(string texto)
-    {
-        mensagem = texto;
-        tempoMensagem = 3f;
-
-        Debug.Log(texto);
-    }
-
-    private void OnGUI()
-    {
-        if (tempoMensagem <= 0)
-            return;
-
-        GUIStyle estilo =
-            new GUIStyle(GUI.skin.label);
-
-        estilo.fontSize = 30;
-        estilo.fontStyle = FontStyle.Bold;
-        estilo.alignment = TextAnchor.MiddleCenter;
-
-        GUI.Box(
-            new Rect(
-                Screen.width / 2 - 175,
-                40,
-                350,
-                70
-            ),
-            ""
-        );
-
-        GUI.Label(
-            new Rect(
-                Screen.width / 2 - 175,
-                40,
-                350,
-                70
-            ),
-            mensagem,
-            estilo
-        );
+        SaveGame();
     }
 }

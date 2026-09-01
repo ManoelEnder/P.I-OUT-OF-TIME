@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class SaveableObject : MonoBehaviour
 {
@@ -7,63 +7,82 @@ public class SaveableObject : MonoBehaviour
 
     public string ID => id;
 
-    private void Awake()
+    private void Reset()
+    {
+        GenerateID();
+    }
+
+    private void OnValidate()
     {
         if (string.IsNullOrEmpty(id))
         {
-            id = Guid.NewGuid().ToString();
+            GenerateID();
         }
     }
 
-    public ObjectSaveData CriarDados()
+    private void GenerateID()
     {
-        ObjectSaveData dados = new ObjectSaveData();
-
-        dados.id = id;
-
-        dados.posX = transform.position.x;
-        dados.posY = transform.position.y;
-        dados.posZ = transform.position.z;
-
-        dados.rotX = transform.eulerAngles.x;
-        dados.rotY = transform.eulerAngles.y;
-        dados.rotZ = transform.eulerAngles.z;
-
-        dados.ativo = gameObject.activeSelf;
-
-        return dados;
+        id = Guid.NewGuid().ToString();
     }
 
-    public void AplicarDados(ObjectSaveData dados)
+    public ObjectSaveData CreateData()
     {
-        Vector3 posicao = new Vector3(
-            dados.posX,
-            dados.posY,
-            dados.posZ
-        );
-
-        Quaternion rotacao = Quaternion.Euler(
-            dados.rotX,
-            dados.rotY,
-            dados.rotZ
-        );
-
-  
-        Rigidbody rb = GetComponent<Rigidbody>();
-
-        if (rb != null)
+        return new ObjectSaveData
         {
-            rb.position = posicao;
-            rb.rotation = rotacao;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            id = id,
+
+            posX = transform.position.x,
+            posY = transform.position.y,
+            posZ = transform.position.z,
+
+            rotX = transform.eulerAngles.x,
+            rotY = transform.eulerAngles.y,
+            rotZ = transform.eulerAngles.z,
+
+            active = gameObject.activeSelf
+        };
+    }
+
+    public void ApplyData(ObjectSaveData data)
+    {
+        if (data.active && !gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+
+        Vector3 position = new(
+            data.posX,
+            data.posY,
+            data.posZ
+        );
+
+        Quaternion rotation = Quaternion.Euler(
+            data.rotX,
+            data.rotY,
+            data.rotZ
+        );
+
+        Rigidbody rigidbodyComponent = GetComponent<Rigidbody>();
+
+        if (rigidbodyComponent != null)
+        {
+            rigidbodyComponent.position = position;
+            rigidbodyComponent.rotation = rotation;
+            rigidbodyComponent.linearVelocity = Vector3.zero;
+            rigidbodyComponent.angularVelocity = Vector3.zero;
         }
         else
         {
-            transform.position = posicao;
-            transform.rotation = rotacao;
+            transform.SetPositionAndRotation(
+                position,
+                rotation
+            );
         }
 
-        gameObject.SetActive(dados.ativo);
+        if (!data.active && gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
+

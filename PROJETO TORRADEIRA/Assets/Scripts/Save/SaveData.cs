@@ -4,7 +4,6 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    // PLAYER
     public float playerX;
     public float playerY;
     public float playerZ;
@@ -13,8 +12,7 @@ public class SaveData
     public float playerRotY;
     public float playerRotZ;
 
-    // OBJETOS DO MUNDO
-    public List<ObjectSaveData> objetos = new List<ObjectSaveData>();
+    public List<ObjectSaveData> objects = new();
 }
 
 [Serializable]
@@ -30,5 +28,5 @@ public class ObjectSaveData
     public float rotY;
     public float rotZ;
 
-    public bool ativo;
+    public bool active;
 }

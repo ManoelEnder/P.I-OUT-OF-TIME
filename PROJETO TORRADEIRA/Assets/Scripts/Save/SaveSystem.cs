@@ -1,73 +1,66 @@
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
-    private string caminhoSave;
+    private string savePath;
 
     private void Awake()
     {
-        caminhoSave = Path.Combine(
+        savePath = Path.Combine(
             Application.persistentDataPath,
             "save.json"
         );
-
-        Debug.Log("Save em: " + caminhoSave);
     }
 
-    public bool Salvar(SaveData dados)
+    public bool Save(SaveData data)
     {
         try
         {
-            string json = JsonUtility.ToJson(dados, true);
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(savePath, json);
 
-            File.WriteAllText(caminhoSave, json);
-
-            Debug.Log("JOGO SALVO!");
             return true;
         }
-        catch (System.Exception erro)
+        catch
         {
-            Debug.LogError(
-                "Erro ao salvar: " + erro.Message
-            );
-
             return false;
         }
     }
 
-    public bool Carregar(out SaveData dados)
+    public bool Load(out SaveData data)
     {
-        dados = null;
+        data = null;
 
-        if (!File.Exists(caminhoSave))
+        if (!File.Exists(savePath))
         {
-            Debug.LogWarning("Nenhum save encontrado.");
             return false;
         }
 
         try
         {
-            string json = File.ReadAllText(caminhoSave);
+            string json = File.ReadAllText(savePath);
 
-            dados = JsonUtility.FromJson<SaveData>(json);
+            data = JsonUtility.FromJson<SaveData>(json);
 
-            Debug.Log("JOGO CARREGADO!");
-
-            return true;
+            return data != null;
         }
-        catch (System.Exception erro)
+        catch
         {
-            Debug.LogError(
-                "Erro ao carregar: " + erro.Message
-            );
-
             return false;
         }
     }
 
-    public bool ExisteSave()
+    public bool SaveExists()
     {
-        return File.Exists(caminhoSave);
+        return File.Exists(savePath);
+    }
+
+    public void DeleteSave()
+    {
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+        }
     }
 }
