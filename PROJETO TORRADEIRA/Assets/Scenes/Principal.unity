@@ -64216,7 +64216,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1250877733
 RectTransform:
   m_ObjectHideFlags: 0
@@ -69819,7 +69819,8 @@ MonoBehaviour:
   - {fileID: 355872932}
   batteryDrainInterval: 30
   flashImage: {fileID: 1250877734}
-  flashDuration: 0.07
+  flashDuration: 0.5
+  flashFadeDuration: 0.1
   enterTransitionTime: 0.4
   exitTransitionTime: 0.12
   cameraBlink: {fileID: 1144142300}
