@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.72156864, g: 0.60784316, b: 0.47843137, a: 1}
+  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.25
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
@@ -1122,21 +1122,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &15261256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 15261253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &15469039 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1434522282648673283, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -4524,9 +4509,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 194362443}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 194362444}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1491283895}
@@ -5813,9 +5795,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 882771272}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 882771273}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1710528211}
@@ -7250,9 +7229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &169709394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8190,9 +8166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &189252843 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3040435971106087777, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -8386,21 +8359,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &194362444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194362441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &194796124 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7811021386775989063, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -9266,21 +9224,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &221664027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 221664024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &223432342 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3070708174891773534, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -9881,9 +9824,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 221664026}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 221664027}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 865544702}
@@ -11955,9 +11895,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1849197439}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1849197440}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 194204302}
@@ -13457,21 +13394,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &323453530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 323453527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &325286059 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1363767989341693910, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -14171,9 +14093,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &342883351
 GameObject:
   m_ObjectHideFlags: 0
@@ -14801,9 +14720,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 405444502}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 405444503}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 19724625}
@@ -16005,9 +15921,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 625308697}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 625308698}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 245093584}
@@ -16612,9 +16525,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2115087915}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2115087916}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1729982431}
@@ -17633,21 +17543,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &386241290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386241287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &389111528 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8020329403637408051, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -18210,9 +18105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &404600742
 GameObject:
   m_ObjectHideFlags: 0
@@ -18373,21 +18265,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &405444503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405444500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &405601031
 GameObject:
   m_ObjectHideFlags: 0
@@ -18837,21 +18714,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &415219024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 415219021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &415450580
 GameObject:
   m_ObjectHideFlags: 0
@@ -18974,21 +18836,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &418044096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 418044093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &418383047 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 650873223069009381, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -19140,9 +18987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &420194255
 GameObject:
   m_ObjectHideFlags: 0
@@ -20487,9 +20331,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 820437197}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 820437198}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1938086364}
@@ -21976,21 +21817,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &466870506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466870503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!114 &467034680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22003,9 +21829,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &467202288 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5686024186090366680, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -24254,9 +24077,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1351928472}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1351928473}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 99426893}
@@ -24580,9 +24400,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1783928595}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1783928596}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1892446142}
@@ -25595,9 +25412,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &551554458 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3534765032027960046, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -26494,9 +26308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &568978528 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7260043960217183377, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -26799,9 +26610,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1510300736}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1510300737}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2093871657}
@@ -26934,9 +26742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &580731372 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2206475670684236387, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -27451,9 +27256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &593728486 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3580997420207022437, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -27978,9 +27780,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2142150220}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2142150221}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 167398410}
@@ -28665,21 +28464,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &625308698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625308695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &625994607 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8218066208345056863, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -29056,9 +28840,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &636055657 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7916997262811101326, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -29569,21 +29350,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &645235173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645235170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &646600692
 GameObject:
   m_ObjectHideFlags: 0
@@ -29829,7 +29595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &656426834
@@ -30134,9 +29900,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &659201932
 GameObject:
   m_ObjectHideFlags: 0
@@ -31684,9 +31447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &690349938 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8128668236925612103, guid: 3be7ffa8e61c4a946840959c827cf79c, type: 3}
@@ -31994,9 +31754,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 645235172}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 645235173}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1237468148}
@@ -32526,9 +32283,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 415219023}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 415219024}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 278937225}
@@ -34620,9 +34374,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 323453529}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 323453530}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1046502976}
@@ -36168,9 +35919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &798711675 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7379265568141769784, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -37196,21 +36944,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &820437198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820437195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &820647745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38099,9 +37832,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &847174397 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4705326812218487376, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -39837,9 +39567,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1861116986}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1861116987}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 574200349}
@@ -40072,21 +39799,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &882771273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 882771270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &883078531 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7806791523251236706, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -40919,9 +40631,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1307675353}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1307675354}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2023246471}
@@ -41267,9 +40976,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &900049052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42645,9 +42351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &937115209 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4779801518992824307, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -42871,21 +42574,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &939517683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939517680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &939613042
 GameObject:
   m_ObjectHideFlags: 0
@@ -48092,9 +47780,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &949404020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8400306218160448428, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -49109,9 +48794,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 418044095}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 418044096}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2048828217}
@@ -49403,9 +49085,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &980469484 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -563491878269373991, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -49674,9 +49353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &996407001 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2234930890444494011, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -50826,9 +50502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1026900126 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8400306218160448428, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -51321,21 +50994,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1044741177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044741174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1045386087 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7149504128969096320, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -53850,9 +53508,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 386241289}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 386241290}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 179181762}
@@ -54017,9 +53672,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2029458644}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2029458645}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 488733335}
@@ -54583,9 +54235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1126680885 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3534765032027960046, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -55264,9 +54913,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 939517682}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 939517683}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 69746359}
@@ -55542,9 +55188,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1145306415}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1145306416}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 463648282}
@@ -55850,21 +55493,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1145306416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1145306413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!114 &1146363444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55877,9 +55505,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1149173054
 GameObject:
   m_ObjectHideFlags: 0
@@ -57326,9 +56951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1190999459 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5394775954336096889, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -62861,21 +62483,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1204204826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204204823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1204525189 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8829257432468306650, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -63107,9 +62714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1210258794
 GameObject:
   m_ObjectHideFlags: 0
@@ -63234,9 +62838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1214135228 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2009973407826256872, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -65219,7 +64820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1250877733
 RectTransform:
   m_ObjectHideFlags: 0
@@ -65448,21 +65049,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1256658597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1256658594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1257736257 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2427630348623703409, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -66955,21 +66541,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1286708706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1286708703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1287591516 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5686024186090366680, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -67903,21 +67474,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1307675354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307675351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1307762037
 GameObject:
   m_ObjectHideFlags: 0
@@ -68320,9 +67876,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1312486258 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6665867171234709580, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -68990,9 +68543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1337450467
 GameObject:
   m_ObjectHideFlags: 0
@@ -69684,21 +69234,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1351928473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351928470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1352767004 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2194284013269202595, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -70468,9 +70003,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1369618108
 GameObject:
   m_ObjectHideFlags: 0
@@ -71961,9 +71493,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1913375950}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1913375951}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 225991979}
@@ -72278,21 +71807,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1417132836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417132833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1417299995 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5686024186090366680, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -72471,9 +71985,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1421172060 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8447397297047287839, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -72604,9 +72115,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204204825}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1204204826}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1739992711}
@@ -74576,118 +74084,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8555761789143442523, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
---- !u!1 &1459033321
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1459033325}
-  - component: {fileID: 1459033324}
-  - component: {fileID: 1459033323}
-  - component: {fileID: 1459033322}
-  m_Layer: 0
-  m_Name: Ground
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!64 &1459033322
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459033321}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1459033323
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459033321}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1459033324
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459033321}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1459033325
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459033321}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36.42327, y: 0, z: -118.6}
-  m_LocalScale: {x: 4.2639, y: 1, z: 6.1186}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1460841738 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5327927021524704698, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -75136,9 +74532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1470411336 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4332515409568827972, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -75200,8 +74593,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -24.264, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -709.04956, y: -262}
-  m_SizeDelta: {x: 332.5167, y: 79.7937}
+  m_AnchoredPosition: {x: -675.9682, y: -275.75858}
+  m_SizeDelta: {x: 405.0903, y: 107.3109}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1471177794
 MonoBehaviour:
@@ -75821,21 +75214,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1483643133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1483643130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &1484596053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77247,21 +76625,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1510300737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1510300734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1512157699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2421829180989147089, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -78230,9 +77593,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1534016135
 GameObject:
   m_ObjectHideFlags: 0
@@ -78363,9 +77723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1540546674 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3980074085028300748, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -78572,9 +77929,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &1551752589
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80123,21 +79477,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1589926057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1589926054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1001 &1590831400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80855,9 +80194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1610160136 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 107306024449313462, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -81473,9 +80809,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1622449103 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4049840857681077367, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -82145,9 +81478,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1417132835}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1417132836}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 385935314}
@@ -83459,33 +82789,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.4041734, y: 9.930536, z: 85.332825}
   m_Center: {x: 0.0000032782555, y: 0.0000019073486, z: 0.000011444092}
---- !u!1 &1660110028 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6764670414152113135, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-  m_PrefabInstance: {fileID: 1778078831}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1660110034
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660110028}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 9040383578400411524, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
 --- !u!1001 &1661026207
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83589,9 +82892,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1286708705}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1286708706}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1162906185}
@@ -83732,9 +83032,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1483643132}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1483643133}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1023155506}
@@ -83999,9 +83296,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1662797959 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3474627287385942787, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -90012,8 +89306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -42.574, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 817, y: -438}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 808.26166, y: -438}
+  m_SizeDelta: {x: 223.7324, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1686159201
 MonoBehaviour:
@@ -90062,7 +89356,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.35
+  m_fontSize: 39.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -90621,9 +89915,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1693624230 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6159953176551926693, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -92174,9 +91465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1718938753 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2215842218761148969, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -93680,9 +92968,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1589926056}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1589926057}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 755451965}
@@ -95446,9 +94731,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1256658596}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1256658597}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1151687614}
@@ -95554,9 +94836,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -6665867171234709580, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1273473013}
-    - targetCorrespondingSourceObject: {fileID: 6764670414152113135, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1660110034}
     - targetCorrespondingSourceObject: {fileID: 2520961099079601088, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2970801}
@@ -95686,9 +94965,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1780581271 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3534765032027960046, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -95871,9 +95147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1782564099 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8020329403637408051, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -95932,21 +95205,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1783928596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1783928593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1790154651 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2759928092425159827, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -96230,9 +95488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1797109903 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7556538684902560396, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -103058,21 +102313,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1849197440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849197437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1850255290 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3474627287385942787, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -103179,9 +102419,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 15261255}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 15261256}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1406840151}
@@ -103721,21 +102958,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1861116987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861116984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1862651978 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3070708174891773534, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -105536,9 +104758,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1901362753
 GameObject:
   m_ObjectHideFlags: 0
@@ -105658,9 +104877,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1906273307 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4705326812218487376, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -105773,21 +104989,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1913375951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913375948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1914119493 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1363767989341693910, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -107763,9 +106964,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1954974554 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1057973539276228139, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -109123,9 +108321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &1984817665 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5692374255365505252, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -109875,9 +109070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2003934659 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5838865865318152568, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -110713,21 +109905,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2029458645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029458642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2029526156
 GameObject:
   m_ObjectHideFlags: 0
@@ -111114,9 +110291,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 466870505}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 466870506}
     - targetCorrespondingSourceObject: {fileID: -3621398138403650186, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1636288378}
@@ -111562,9 +110736,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1044741176}
-    - targetCorrespondingSourceObject: {fileID: 8128668236925612103, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1044741177}
     - targetCorrespondingSourceObject: {fileID: -8857389705127907935, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1098990887}
@@ -119575,21 +118746,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2115087916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115087913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2115873823 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8389800772676825349, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -119745,9 +118901,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2121948082 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6629092801212127835, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -119846,9 +118999,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2122799463 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1057973539276228139, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -120274,9 +119424,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 0}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2132494008 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5692374255365505252, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -120428,9 +119575,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2133468364 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6159953176551926693, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -121022,21 +120166,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2142150221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2142150218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afb6c4ece1566e447b753ab8c1e3fbf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceOptimizer
-  player: {fileID: 2137393036}
-  activationDistance: 50
-  isActive: 1
 --- !u!1 &2142874704 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1057973539276228139, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -121293,6 +120422,5 @@ SceneRoots:
   - {fileID: 513641472}
   - {fileID: 460537734}
   - {fileID: 826274444}
-  - {fileID: 1459033325}
   - {fileID: 820647745}
   - {fileID: 403982757}
