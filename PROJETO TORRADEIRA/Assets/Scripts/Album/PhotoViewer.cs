@@ -21,7 +21,8 @@ public class PhotoViewer : MonoBehaviour
     [SerializeField] private float maxZoom = 3f;
 
     [Header("Delete")]
-    [SerializeField] private float deletedMessageDuration = 2f;
+    [SerializeField]
+    private float deletedMessageDuration = 2f;
 
     private IReadOnlyList<AlbumPhoto> photos;
 
@@ -36,7 +37,7 @@ public class PhotoViewer : MonoBehaviour
 
     void Start()
     {
-        Close();
+        CloseWithoutReturn();
 
         if (confirmationPanel != null)
             confirmationPanel.SetActive(false);
@@ -69,8 +70,10 @@ public class PhotoViewer : MonoBehaviour
         int index
     )
     {
-        if (photoList == null ||
-            photoList.Count == 0)
+        if (
+            photoList == null ||
+            photoList.Count == 0
+        )
         {
             return;
         }
@@ -95,44 +98,37 @@ public class PhotoViewer : MonoBehaviour
         confirmingDelete = false;
 
         ResetZoom();
-
         ShowCurrentPhoto();
-    }
-
-    public void Close()
-    {
-        if (viewerPanel != null)
-            viewerPanel.SetActive(false);
-
-        if (confirmationPanel != null)
-            confirmationPanel.SetActive(false);
-
-        confirmingDelete = false;
     }
 
     void HandleNavigation()
     {
         if (
-            Keyboard.current.rightArrowKey.wasPressedThisFrame ||
-            Keyboard.current.dKey.wasPressedThisFrame
+            Keyboard.current.rightArrowKey
+                .wasPressedThisFrame ||
+            Keyboard.current.dKey
+                .wasPressedThisFrame
         )
         {
             Next();
         }
 
         if (
-            Keyboard.current.leftArrowKey.wasPressedThisFrame ||
-            Keyboard.current.aKey.wasPressedThisFrame
+            Keyboard.current.leftArrowKey
+                .wasPressedThisFrame ||
+            Keyboard.current.aKey
+                .wasPressedThisFrame
         )
         {
             Previous();
         }
 
         if (
-            Keyboard.current.escapeKey.wasPressedThisFrame
+            Keyboard.current.escapeKey
+                .wasPressedThisFrame
         )
         {
-            Close();
+            ReturnToAlbum();
         }
     }
 
@@ -142,13 +138,17 @@ public class PhotoViewer : MonoBehaviour
             return;
 
         float scroll =
-            Mouse.current.scroll.ReadValue().y;
+            Mouse.current.scroll
+                .ReadValue()
+                .y;
 
-        if (scroll == 0f)
+        if (Mathf.Approximately(scroll, 0f))
             return;
 
         zoom +=
-            scroll * zoomSpeed * 0.01f;
+            scroll *
+            zoomSpeed *
+            0.01f;
 
         zoom =
             Mathf.Clamp(
@@ -163,7 +163,8 @@ public class PhotoViewer : MonoBehaviour
     void HandleDelete()
     {
         if (
-            Keyboard.current.deleteKey.wasPressedThisFrame
+            Keyboard.current.deleteKey
+                .wasPressedThisFrame
         )
         {
             StartDeleteConfirmation();
@@ -173,15 +174,19 @@ public class PhotoViewer : MonoBehaviour
     void HandleDeleteConfirmation()
     {
         if (
-            Keyboard.current.yKey.wasPressedThisFrame
+            Keyboard.current.yKey
+                .wasPressedThisFrame
         )
         {
             ConfirmDelete();
+            return;
         }
 
         if (
-            Keyboard.current.nKey.wasPressedThisFrame ||
-            Keyboard.current.escapeKey.wasPressedThisFrame
+            Keyboard.current.nKey
+                .wasPressedThisFrame ||
+            Keyboard.current.escapeKey
+                .wasPressedThisFrame
         )
         {
             CancelDelete();
@@ -210,7 +215,8 @@ public class PhotoViewer : MonoBehaviour
         currentIndex--;
 
         if (currentIndex < 0)
-            currentIndex = photos.Count - 1;
+            currentIndex =
+                photos.Count - 1;
 
         ResetZoom();
         ShowCurrentPhoto();
@@ -218,8 +224,10 @@ public class PhotoViewer : MonoBehaviour
 
     void ShowCurrentPhoto()
     {
-        if (!HasPhotos() ||
-            largeImage == null)
+        if (
+            !HasPhotos() ||
+            largeImage == null
+        )
         {
             return;
         }
@@ -232,6 +240,9 @@ public class PhotoViewer : MonoBehaviour
 
         largeImage.color =
             photo.Color;
+
+        if (album != null)
+            album.SelectPhoto(currentIndex);
     }
 
     void StartDeleteConfirmation()
@@ -259,23 +270,29 @@ public class PhotoViewer : MonoBehaviour
             confirmationPanel.SetActive(false);
 
         if (album != null)
+        {
             album.RemovePhoto(
                 indexToRemove
             );
 
-        photos = album != null
-            ? album.Photos
-            : null;
+            photos =
+                album.Photos;
+        }
 
         if (!HasPhotos())
         {
-            Close();
+            ReturnToAlbum();
             return;
         }
 
-        if (currentIndex >= photos.Count)
+        if (
+            currentIndex >=
+            photos.Count
+        )
+        {
             currentIndex =
                 photos.Count - 1;
+        }
 
         ResetZoom();
         ShowCurrentPhoto();
@@ -307,9 +324,33 @@ public class PhotoViewer : MonoBehaviour
         deletedMessage.SetActive(false);
     }
 
+    void ReturnToAlbum()
+    {
+        if (album != null)
+        {
+            album.ReturnFromViewer();
+        }
+        else
+        {
+            CloseWithoutReturn();
+        }
+    }
+
+    public void CloseWithoutReturn()
+    {
+        if (viewerPanel != null)
+            viewerPanel.SetActive(false);
+
+        if (confirmationPanel != null)
+            confirmationPanel.SetActive(false);
+
+        confirmingDelete = false;
+    }
+
     void ResetZoom()
     {
         zoom = 1f;
+
         ApplyZoom();
     }
 
@@ -324,7 +365,8 @@ public class PhotoViewer : MonoBehaviour
 
     bool HasPhotos()
     {
-        return photos != null &&
-               photos.Count > 0;
+        return
+            photos != null &&
+            photos.Count > 0;
     }
 }

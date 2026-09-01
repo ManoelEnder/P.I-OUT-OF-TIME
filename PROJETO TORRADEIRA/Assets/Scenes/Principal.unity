@@ -2080,6 +2080,81 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7613127620187343925, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
+--- !u!1 &44565202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 44565203}
+  - component: {fileID: 44565205}
+  - component: {fileID: 44565204}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &44565203
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44565202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 219014418}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &44565204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44565202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &44565205
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44565202}
+  m_CullTransparentMesh: 1
 --- !u!1 &44676483 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1057973539276228139, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -9023,6 +9098,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 44565203}
   - {fileID: 770749937}
   m_Father: {fileID: 466417943}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21837,10 +21913,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AlbumController
   albumPanel: {fileID: 219014415}
   photoContainer: {fileID: 770749937}
-  photoPrefab: {fileID: 723966423471526790, guid: 0d55636cbe4334d48b98a4cb9a52ef22, type: 3}
-  photoViewer: {fileID: 0}
+  photoPrefab: {fileID: 6063136662120591505, guid: 0d55636cbe4334d48b98a4cb9a52ef22, type: 3}
+  photoViewer: {fileID: 814008932}
   playerMovement: {fileID: 2137393034}
   photoCamera: {fileID: 1385445668}
+  columns: 4
+  rows: 3
 --- !u!1 &466570181 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2009973407826256872, guid: c522e60e38c10a0489494e8d6c1b407c, type: 3}
@@ -29709,6 +29787,81 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7813906747482078813, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
+--- !u!1 &656426832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 656426833}
+  - component: {fileID: 656426835}
+  - component: {fileID: 656426834}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &656426833
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656426832}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 814008931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0.000030517578}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &656426834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656426832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &656426835
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656426832}
+  m_CullTransparentMesh: 1
 --- !u!1 &656958016 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 521389915149535324, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -34993,10 +35146,10 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 400, y: 250}
-  m_Spacing: {x: 25, y: 25}
+  m_CellSize: {x: 150, y: 100}
+  m_Spacing: {x: 15, y: 15}
   m_Constraint: 1
-  m_ConstraintCount: 3
+  m_ConstraintCount: 4
 --- !u!1 &771123524 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2759928092425159827, guid: 6f82f0819f2967b47a30b7b711d7ef0a, type: 3}
@@ -36792,7 +36945,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &814008931
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36805,6 +36958,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 656426833}
   - {fileID: 2052804826}
   - {fileID: 1801020611}
   - {fileID: 1472021877}
@@ -36827,10 +36981,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd6940858c77304689de6244f060133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhotoViewer
-  viewerPanel: {fileID: 0}
+  viewerPanel: {fileID: 814008930}
   largeImage: {fileID: 2052804827}
   deletedMessage: {fileID: 1801020610}
-  confirmationPanel: {fileID: 0}
+  confirmationPanel: {fileID: 1472021876}
   album: {fileID: 466417944}
   zoomSpeed: 5
   minZoom: 0.5
@@ -75220,7 +75374,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1472021877
 RectTransform:
   m_ObjectHideFlags: 0
@@ -96209,7 +96363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1801020611
 RectTransform:
   m_ObjectHideFlags: 0
@@ -112133,10 +112287,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 814008931}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2052804827
 MonoBehaviour:
@@ -121180,10 +121334,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1423159999}
+  - {fileID: 11782724}
   - {fileID: 333528160}
   - {fileID: 876928135}
   - {fileID: 1958910404}
-  - {fileID: 11782724}
   - {fileID: 1013388082}
   - {fileID: 1917844993}
   - {fileID: 1058271367}

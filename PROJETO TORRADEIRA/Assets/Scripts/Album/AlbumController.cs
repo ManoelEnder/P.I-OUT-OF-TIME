@@ -16,6 +16,10 @@ public class AlbumController : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PhotoCamera photoCamera;
 
+    [Header("Album Layout")]
+    [SerializeField] private int columns = 4;
+    [SerializeField] private int rows = 3;
+
     private readonly List<AlbumPhoto> photos =
         new List<AlbumPhoto>();
 
@@ -23,11 +27,16 @@ public class AlbumController : MonoBehaviour
         new List<AlbumPhotoSlot>();
 
     private int selectedIndex = -1;
-    private int hoveredIndex = -1;
+    private int currentPage;
 
-    public IReadOnlyList<AlbumPhoto> Photos => photos;
+    public IReadOnlyList<AlbumPhoto> Photos =>
+        photos;
 
-    public int SelectedIndex => selectedIndex;
+    public int SelectedIndex =>
+        selectedIndex;
+
+    private int PhotosPerPage =>
+        columns * rows;
 
     void Start()
     {
@@ -42,20 +51,46 @@ public class AlbumController : MonoBehaviour
         if (Keyboard.current == null)
             return;
 
-        if (Keyboard.current.tKey.wasPressedThisFrame)
-        {
-            ToggleViewer();
-        }
-
-        if (Mouse.current != null &&
-            Mouse.current.rightButton.wasPressedThisFrame)
+        if (
+            Mouse.current != null &&
+            Mouse.current.rightButton.wasPressedThisFrame &&
+            (photoViewer == null ||
+             !photoViewer.IsOpen)
+        )
         {
             ToggleAlbum();
         }
 
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if (
+            photoViewer != null &&
+            photoViewer.IsOpen
+        )
+        {
+            return;
+        }
+
+        if (
+            albumPanel == null ||
+            !albumPanel.activeSelf
+        )
+        {
+            return;
+        }
+
+        HandleAlbumNavigation();
+
+        if (
+            Keyboard.current.eKey.wasPressedThisFrame
+        )
         {
             OpenSelectedPhoto();
+        }
+
+        if (
+            Keyboard.current.escapeKey.wasPressedThisFrame
+        )
+        {
+            CloseAlbum();
         }
     }
 
@@ -64,53 +99,118 @@ public class AlbumController : MonoBehaviour
         if (albumPanel == null)
             return;
 
-        bool abrir = !albumPanel.activeSelf;
-
-        albumPanel.SetActive(abrir);
-
-        SetGameInputLocked(abrir);
-    }
-
-    void SetGameInputLocked(bool locked)
-    {
-        if (playerMovement != null)
-            playerMovement.enabled = !locked;
-
-        if (photoCamera != null)
-            photoCamera.enabled = !locked;
-
-        if (locked)
+        if (albumPanel.activeSelf)
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            CloseAlbum();
         }
         else
         {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            OpenAlbum();
         }
     }
 
-    public void ToggleViewer()
+    public void OpenAlbum()
     {
-        if (photoViewer == null ||
-            photos.Count == 0)
+        if (albumPanel == null)
+            return;
+
+        albumPanel.SetActive(true);
+
+        SetGameInputLocked(true);
+
+        if (
+            selectedIndex < 0 &&
+            photos.Count > 0
+        )
         {
+            selectedIndex = 0;
+        }
+
+        UpdatePageFromSelection();
+    }
+
+    public void CloseAlbum()
+    {
+        if (albumPanel != null)
+            albumPanel.SetActive(false);
+
+        SetGameInputLocked(false);
+    }
+
+    void HandleAlbumNavigation()
+    {
+        if (photos.Count == 0)
+            return;
+
+        if (selectedIndex < 0)
+        {
+            SelectPhoto(0);
             return;
         }
 
-        if (photoViewer.IsOpen)
+        int newIndex = selectedIndex;
+
+        if (
+            Keyboard.current.rightArrowKey
+                .wasPressedThisFrame
+        )
         {
-            photoViewer.Close();
-            return;
+            int column =
+                selectedIndex % columns;
+
+            if (
+                column < columns - 1 &&
+                selectedIndex + 1 < photos.Count
+            )
+            {
+                newIndex++;
+            }
         }
 
-        photoViewer.Open(
-            photos,
-            selectedIndex >= 0
-                ? selectedIndex
-                : 0
-        );
+        if (
+            Keyboard.current.leftArrowKey
+                .wasPressedThisFrame
+        )
+        {
+            int column =
+                selectedIndex % columns;
+
+            if (column > 0)
+                newIndex--;
+        }
+
+        if (
+            Keyboard.current.downArrowKey
+                .wasPressedThisFrame
+        )
+        {
+            int targetIndex =
+                selectedIndex + columns;
+
+            if (targetIndex < photos.Count)
+            {
+                newIndex = targetIndex;
+            }
+        }
+
+        if (
+            Keyboard.current.upArrowKey
+                .wasPressedThisFrame
+        )
+        {
+            int targetIndex =
+                selectedIndex - columns;
+
+            if (targetIndex >= 0)
+            {
+                newIndex = targetIndex;
+            }
+        }
+
+        if (newIndex != selectedIndex)
+        {
+            SelectPhoto(newIndex);
+        }
     }
 
     public void AddPhoto(Texture2D texture)
@@ -123,13 +223,90 @@ public class AlbumController : MonoBehaviour
 
         photos.Add(photo);
 
-        CreateSlot(
-            photo,
-            photos.Count - 1
-        );
-
         selectedIndex =
             photos.Count - 1;
+
+        UpdatePageFromSelection();
+    }
+
+    public void SelectPhoto(int index)
+    {
+        if (!IsValidIndex(index))
+            return;
+
+        selectedIndex = index;
+
+        int previousPage =
+            currentPage;
+
+        currentPage =
+            selectedIndex /
+            PhotosPerPage;
+
+        if (previousPage != currentPage)
+        {
+            RebuildCurrentPage();
+        }
+        else
+        {
+            UpdateSelectionVisual();
+        }
+    }
+
+    void UpdatePageFromSelection()
+    {
+        if (photos.Count == 0)
+        {
+            currentPage = 0;
+            ClearSlots();
+            return;
+        }
+
+        if (selectedIndex < 0)
+            selectedIndex = 0;
+
+        currentPage =
+            selectedIndex /
+            PhotosPerPage;
+
+        RebuildCurrentPage();
+    }
+
+    void RebuildCurrentPage()
+    {
+        ClearSlots();
+
+        if (
+            photoPrefab == null ||
+            photoContainer == null
+        )
+        {
+            return;
+        }
+
+        int startIndex =
+            currentPage *
+            PhotosPerPage;
+
+        int endIndex =
+            Mathf.Min(
+                startIndex + PhotosPerPage,
+                photos.Count
+            );
+
+        for (
+            int i = startIndex;
+            i < endIndex;
+            i++
+        )
+        {
+            CreateSlot(
+                photos[i],
+                i
+            );
+        }
+
+        UpdateSelectionVisual();
     }
 
     void CreateSlot(
@@ -137,12 +314,6 @@ public class AlbumController : MonoBehaviour
         int index
     )
     {
-        if (photoPrefab == null ||
-            photoContainer == null)
-        {
-            return;
-        }
-
         GameObject slotObject =
             Instantiate(
                 photoPrefab,
@@ -151,12 +322,16 @@ public class AlbumController : MonoBehaviour
             );
 
         AlbumPhotoSlot slot =
-            slotObject.GetComponent<AlbumPhotoSlot>();
+            slotObject.GetComponent<
+                AlbumPhotoSlot
+            >();
 
         if (slot == null)
         {
             slot =
-                slotObject.AddComponent<AlbumPhotoSlot>();
+                slotObject.AddComponent<
+                    AlbumPhotoSlot
+                >();
         }
 
         slot.Initialize(
@@ -168,43 +343,80 @@ public class AlbumController : MonoBehaviour
         slots.Add(slot);
     }
 
-    public void SelectPhoto(int index)
+    void ClearSlots()
     {
-        if (!IsValidIndex(index))
-            return;
+        foreach (
+            AlbumPhotoSlot slot
+            in slots
+        )
+        {
+            if (slot != null)
+            {
+                Destroy(
+                    slot.gameObject
+                );
+            }
+        }
 
-        selectedIndex = index;
-
-        Debug.Log(
-            "Foto selecionada: " +
-            index
-        );
+        slots.Clear();
     }
 
-    public void SetHoveredPhoto(int index)
+    void UpdateSelectionVisual()
     {
-        if (IsValidIndex(index))
-            hoveredIndex = index;
-    }
+        foreach (
+            AlbumPhotoSlot slot
+            in slots
+        )
+        {
+            if (slot == null)
+                continue;
 
-    public void ClearHoveredPhoto(int index)
-    {
-        if (hoveredIndex == index)
-            hoveredIndex = -1;
+            slot.SetSelected(
+                slot.Index ==
+                selectedIndex
+            );
+        }
     }
 
     public void OpenSelectedPhoto()
     {
-        if (photoViewer == null ||
-            !IsValidIndex(selectedIndex))
+        if (
+            photoViewer == null ||
+            !IsValidIndex(selectedIndex)
+        )
         {
             return;
         }
+
+        if (albumPanel != null)
+            albumPanel.SetActive(false);
 
         photoViewer.Open(
             photos,
             selectedIndex
         );
+    }
+
+    public void ReturnFromViewer()
+    {
+        if (photoViewer != null)
+            photoViewer.CloseWithoutReturn();
+
+        if (photos.Count == 0)
+        {
+            CloseAlbum();
+            return;
+        }
+
+        if (selectedIndex < 0)
+            selectedIndex = 0;
+
+        if (albumPanel != null)
+            albumPanel.SetActive(true);
+
+        SetGameInputLocked(true);
+
+        UpdatePageFromSelection();
     }
 
     public void RemovePhoto(int index)
@@ -219,44 +431,29 @@ public class AlbumController : MonoBehaviour
 
         photo.Destroy();
 
-        RebuildSlots();
-
         if (photos.Count == 0)
         {
             selectedIndex = -1;
-            hoveredIndex = -1;
+            currentPage = 0;
+
+            ClearSlots();
             return;
         }
 
-        if (selectedIndex >= photos.Count)
-            selectedIndex = photos.Count - 1;
-
-        if (selectedIndex > index)
+        if (index < selectedIndex)
+        {
             selectedIndex--;
-
-        if (hoveredIndex >= photos.Count)
-            hoveredIndex = -1;
-        else if (hoveredIndex > index)
-            hoveredIndex--;
-    }
-
-    void RebuildSlots()
-    {
-        foreach (AlbumPhotoSlot slot in slots)
-        {
-            if (slot != null)
-                Destroy(slot.gameObject);
         }
 
-        slots.Clear();
-
-        for (int i = 0; i < photos.Count; i++)
+        if (
+            selectedIndex >= photos.Count
+        )
         {
-            CreateSlot(
-                photos[i],
-                i
-            );
+            selectedIndex =
+                photos.Count - 1;
         }
+
+        UpdatePageFromSelection();
     }
 
     public List<Sprite> GetSprites()
@@ -264,7 +461,10 @@ public class AlbumController : MonoBehaviour
         List<Sprite> result =
             new List<Sprite>();
 
-        foreach (AlbumPhoto photo in photos)
+        foreach (
+            AlbumPhoto photo
+            in photos
+        )
         {
             result.Add(photo.Sprite);
         }
@@ -277,7 +477,10 @@ public class AlbumController : MonoBehaviour
         List<Color> result =
             new List<Color>();
 
-        foreach (AlbumPhoto photo in photos)
+        foreach (
+            AlbumPhoto photo
+            in photos
+        )
         {
             result.Add(photo.Color);
         }
@@ -292,7 +495,32 @@ public class AlbumController : MonoBehaviour
 
     bool IsValidIndex(int index)
     {
-        return index >= 0 &&
-               index < photos.Count;
+        return
+            index >= 0 &&
+            index < photos.Count;
+    }
+
+    void SetGameInputLocked(bool locked)
+    {
+        if (playerMovement != null)
+            playerMovement.enabled = !locked;
+
+        if (photoCamera != null)
+            photoCamera.enabled = !locked;
+
+        if (locked)
+        {
+            Cursor.visible = true;
+
+            Cursor.lockState =
+                CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+
+            Cursor.lockState =
+                CursorLockMode.Locked;
+        }
     }
 }
