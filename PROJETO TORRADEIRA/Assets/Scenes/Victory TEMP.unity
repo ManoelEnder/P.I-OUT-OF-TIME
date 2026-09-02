@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 421052801}
   - component: {fileID: 421052800}
   - component: {fileID: 421052802}
+  - component: {fileID: 421052803}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -306,6 +307,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa040966b16a6a47b0a6a6579c242f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnlockMouse
+--- !u!114 &421052803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421052799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcfd3aa1a2b59e4fb4ccef42d5b9660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCursor
+  cursorTexture: {fileID: 2800000, guid: d5f5e9d4500772f4a9c1e364797a1f4e, type: 3}
 --- !u!1 &604773431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,8 +1514,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1986972036}
   - {fileID: 1239108407}
-  - {fileID: 1517390405}
-  - {fileID: 2069825928}
   - {fileID: 895176877}
   - {fileID: 421052801}
+  - {fileID: 1517390405}
+  - {fileID: 2069825928}
   - {fileID: 166147214}
