@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -8,53 +9,68 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject settingsMenu;
 
-    [Header("Scene")]
-    [SerializeField] private string mainMenuSceneName = "Menu";
+    [Header("Player")]
+    [SerializeField] private GameObject armsObject;
 
-    private bool isPaused;
+    [Header("Other UI")]
+    [SerializeField] private GraphicRaycaster otherCanvasRaycaster;
+
+    [Header("Scene")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+
+    public static bool IsPaused { get; private set; }
 
     private void Start()
     {
-        pauseMenu.SetActive(false);
+        IsPaused = false;
+        Time.timeScale = 1f;
 
-        if (settingsMenu != null)
-        {
-            settingsMenu.SetActive(false);
-        }
+        pauseMenu.SetActive(false);
+        settingsMenu.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
     {
+        if (Keyboard.current == null)
+            return;
+
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            TogglePause();
-        }
+            HandleEscape();
     }
 
-    private void TogglePause()
+    private void HandleEscape()
     {
-        if (isPaused)
-        {
-            ResumeGame();
-        }
-        else
+        if (!IsPaused)
         {
             PauseGame();
+            return;
         }
+
+        if (settingsMenu.activeSelf)
+        {
+            CloseSettings();
+            return;
+        }
+
+        ResumeGame();
     }
 
     public void PauseGame()
     {
-        isPaused = true;
+        IsPaused = true;
+        Time.timeScale = 0f;
 
         pauseMenu.SetActive(true);
+        settingsMenu.SetActive(false);
 
-        if (settingsMenu != null)
-        {
-            settingsMenu.SetActive(false);
-        }
+        if (armsObject != null)
+            armsObject.SetActive(false);
 
-        Time.timeScale = 0f;
+        if (otherCanvasRaycaster != null)
+            otherCanvasRaycaster.enabled = false;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -62,16 +78,17 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
-        isPaused = false;
+        IsPaused = false;
+        Time.timeScale = 1f;
 
         pauseMenu.SetActive(false);
+        settingsMenu.SetActive(false);
 
-        if (settingsMenu != null)
-        {
-            settingsMenu.SetActive(false);
-        }
+        if (armsObject != null)
+            armsObject.SetActive(true);
 
-        Time.timeScale = 1f;
+        if (otherCanvasRaycaster != null)
+            otherCanvasRaycaster.enabled = true;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -79,29 +96,23 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenSettings()
     {
-        if (settingsMenu == null)
-        {
-            return;
-        }
-
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(true);
     }
 
     public void CloseSettings()
     {
-        if (settingsMenu == null)
-        {
-            return;
-        }
-
         settingsMenu.SetActive(false);
         pauseMenu.SetActive(true);
     }
 
     public void GoToMainMenu()
     {
+        IsPaused = false;
         Time.timeScale = 1f;
+
+        if (otherCanvasRaycaster != null)
+            otherCanvasRaycaster.enabled = true;
 
         SceneManager.LoadScene(mainMenuSceneName);
     }

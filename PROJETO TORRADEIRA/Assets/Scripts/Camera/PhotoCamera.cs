@@ -117,6 +117,11 @@ public class PhotoCamera : MonoBehaviour
 
     private void Update()
     {
+        // Para completamente os controles da câmera
+        // enquanto o menu de pausa estiver aberto.
+        if (PauseMenu.IsPaused)
+            return;
+
         if (Keyboard.current != null &&
             Keyboard.current.cKey.wasPressedThisFrame)
         {
@@ -155,6 +160,9 @@ public class PhotoCamera : MonoBehaviour
 
     private void HandleZoom()
     {
+        if (PauseMenu.IsPaused)
+            return;
+
         if (Mouse.current == null)
             return;
 
@@ -163,8 +171,7 @@ public class PhotoCamera : MonoBehaviour
 
         if (scroll != 0f)
         {
-            targetFOV -=
-                scroll * zoomSpeed;
+            targetFOV -= scroll * zoomSpeed;
 
             targetFOV =
                 Mathf.Clamp(
@@ -231,6 +238,9 @@ public class PhotoCamera : MonoBehaviour
 
     private void ToggleCameraMode()
     {
+        if (PauseMenu.IsPaused)
+            return;
+
         if (isTransitioning)
             return;
 
@@ -252,6 +262,9 @@ public class PhotoCamera : MonoBehaviour
 
     private void OpenCamera()
     {
+        if (PauseMenu.IsPaused)
+            return;
+
         if (currentBattery <= 0)
             return;
 
@@ -332,6 +345,12 @@ public class PhotoCamera : MonoBehaviour
 
         while (time < duration)
         {
+            // Espera enquanto o jogo estiver pausado.
+            while (PauseMenu.IsPaused)
+            {
+                yield return null;
+            }
+
             time += Time.deltaTime;
 
             float progress =
@@ -397,7 +416,8 @@ public class PhotoCamera : MonoBehaviour
     {
         if (!canShoot ||
             currentBattery <= 0 ||
-            !cameraMode)
+            !cameraMode ||
+            PauseMenu.IsPaused)
         {
             yield break;
         }
@@ -417,6 +437,12 @@ public class PhotoCamera : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
+
+        if (PauseMenu.IsPaused)
+        {
+            canShoot = true;
+            yield break;
+        }
 
         DetectTemporalObject();
 

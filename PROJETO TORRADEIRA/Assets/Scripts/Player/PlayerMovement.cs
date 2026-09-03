@@ -28,27 +28,43 @@ public class PlayerMovement : MonoBehaviour
     public float intervaloPasso = 0.5f;
     public float intervaloPassoCorrendo = 0.3f;
 
-    float xRotation = 0f;
-    float yVelocity = 0f;
-    float headBobTimer = 0f;
-    float contadorPasso = 0f;
+    private float xRotation = 0f;
+    private float yVelocity = 0f;
+    private float headBobTimer = 0f;
+    private float contadorPasso = 0f;
 
     private Vector3 cameraStartPosition;
     private ItemColetavel itemPerto;
 
-    void Start()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        textoInteracao.gameObject.SetActive(false);
+        if (textoInteracao != null)
+        {
+            textoInteracao.gameObject.SetActive(false);
+        }
 
-        cameraStartPosition =
-            cameraTransform.localPosition;
+        if (cameraTransform != null)
+        {
+            cameraStartPosition =
+                cameraTransform.localPosition;
+        }
     }
 
-    void Update()
+    private void Update()
     {
+        if (PauseMenu.IsPaused)
+        {
+            return;
+        }
+
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
         Vector2 moveInput = Vector2.zero;
 
         if (Keyboard.current.wKey.isPressed)
@@ -71,7 +87,9 @@ public class PlayerMovement : MonoBehaviour
             transform.forward * moveInput.y;
 
         if (controller.isGrounded && yVelocity < 0)
+        {
             yVelocity = -2f;
+        }
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame &&
             controller.isGrounded)
@@ -113,29 +131,33 @@ public class PlayerMovement : MonoBehaviour
             isSprinting
         );
 
-        Vector2 mouseDelta =
-            Mouse.current.delta.ReadValue() *
-            mouseSensitivity;
+        if (Mouse.current != null &&
+            cameraTransform != null)
+        {
+            Vector2 mouseDelta =
+                Mouse.current.delta.ReadValue() *
+                mouseSensitivity;
 
-        xRotation -= mouseDelta.y;
+            xRotation -= mouseDelta.y;
 
-        xRotation =
-            Mathf.Clamp(
-                xRotation,
-                -90f,
-                90f
+            xRotation =
+                Mathf.Clamp(
+                    xRotation,
+                    -90f,
+                    90f
+                );
+
+            cameraTransform.localRotation =
+                Quaternion.Euler(
+                    xRotation,
+                    0f,
+                    0f
+                );
+
+            transform.Rotate(
+                Vector3.up * mouseDelta.x
             );
-
-        cameraTransform.localRotation =
-            Quaternion.Euler(
-                xRotation,
-                0f,
-                0f
-            );
-
-        transform.Rotate(
-            Vector3.up * mouseDelta.x
-        );
+        }
 
         if (itemPerto != null &&
             Keyboard.current.eKey.wasPressedThisFrame)
@@ -144,15 +166,21 @@ public class PlayerMovement : MonoBehaviour
 
             itemPerto = null;
 
-            textoInteracao.gameObject.SetActive(false);
+            if (textoInteracao != null)
+            {
+                textoInteracao.gameObject.SetActive(false);
+            }
         }
     }
 
-    void HandleHeadBob(
+    private void HandleHeadBob(
         Vector2 moveInput,
         bool isSprinting
     )
     {
+        if (cameraTransform == null)
+            return;
+
         bool isMoving =
             moveInput.sqrMagnitude > 0.01f &&
             controller.isGrounded;
@@ -209,7 +237,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void HandleFootsteps(
+    private void HandleFootsteps(
         Vector2 moveInput,
         bool isSprinting
     )
@@ -224,7 +252,9 @@ public class PlayerMovement : MonoBehaviour
 
             if (contadorPasso <= 0f)
             {
-                if (sonsPassos.Length > 0)
+                if (sonsPassos != null &&
+                    sonsPassos.Length > 0 &&
+                    audioPassos != null)
                 {
                     int passo =
                         Random.Range(
@@ -247,8 +277,11 @@ public class PlayerMovement : MonoBehaviour
         {
             contadorPasso = 0f;
 
-            if (audioPassos.isPlaying)
+            if (audioPassos != null &&
+                audioPassos.isPlaying)
+            {
                 audioPassos.Stop();
+            }
         }
     }
 
@@ -261,11 +294,14 @@ public class PlayerMovement : MonoBehaviour
         {
             itemPerto = item;
 
-            textoInteracao.text =
-                "Aperte [E] para coletar " +
-                item.itemNome;
+            if (textoInteracao != null)
+            {
+                textoInteracao.text =
+                    "Aperte [E] para coletar " +
+                    item.itemNome;
 
-            textoInteracao.gameObject.SetActive(true);
+                textoInteracao.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -279,7 +315,10 @@ public class PlayerMovement : MonoBehaviour
         {
             itemPerto = null;
 
-            textoInteracao.gameObject.SetActive(false);
+            if (textoInteracao != null)
+            {
+                textoInteracao.gameObject.SetActive(false);
+            }
         }
     }
 }
