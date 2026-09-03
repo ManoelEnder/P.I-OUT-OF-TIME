@@ -8,9 +8,11 @@ public class PauseMenu : MonoBehaviour
     [Header("Menus")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private GameObject controlsMenu;
 
     [Header("Player")]
     [SerializeField] private GameObject armsObject;
+    [SerializeField] private GameObject crosshair;
 
     [Header("Other UI")]
     [SerializeField] private GraphicRaycaster otherCanvasRaycaster;
@@ -25,8 +27,14 @@ public class PauseMenu : MonoBehaviour
         IsPaused = false;
         Time.timeScale = 1f;
 
-        pauseMenu.SetActive(false);
-        settingsMenu.SetActive(false);
+        if (pauseMenu != null)
+            pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+            settingsMenu.SetActive(false);
+
+        if (controlsMenu != null)
+            controlsMenu.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -49,9 +57,15 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
-        if (settingsMenu.activeSelf)
+        if (settingsMenu != null && settingsMenu.activeSelf)
         {
             CloseSettings();
+            return;
+        }
+
+        if (controlsMenu != null && controlsMenu.activeSelf)
+        {
+            CloseControls();
             return;
         }
 
@@ -63,11 +77,20 @@ public class PauseMenu : MonoBehaviour
         IsPaused = true;
         Time.timeScale = 0f;
 
-        pauseMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        if (pauseMenu != null)
+            pauseMenu.SetActive(true);
+
+        if (settingsMenu != null)
+            settingsMenu.SetActive(false);
+
+        if (controlsMenu != null)
+            controlsMenu.SetActive(false);
 
         if (armsObject != null)
             armsObject.SetActive(false);
+
+        if (crosshair != null)
+            crosshair.SetActive(false);
 
         if (otherCanvasRaycaster != null)
             otherCanvasRaycaster.enabled = false;
@@ -81,11 +104,20 @@ public class PauseMenu : MonoBehaviour
         IsPaused = false;
         Time.timeScale = 1f;
 
-        pauseMenu.SetActive(false);
-        settingsMenu.SetActive(false);
+        if (pauseMenu != null)
+            pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+            settingsMenu.SetActive(false);
+
+        if (controlsMenu != null)
+            controlsMenu.SetActive(false);
 
         if (armsObject != null)
             armsObject.SetActive(true);
+
+        if (crosshair != null)
+            crosshair.SetActive(true);
 
         if (otherCanvasRaycaster != null)
             otherCanvasRaycaster.enabled = true;
@@ -96,14 +128,38 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenSettings()
     {
-        pauseMenu.SetActive(false);
-        settingsMenu.SetActive(true);
+        if (pauseMenu != null)
+            pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+            settingsMenu.SetActive(true);
     }
 
     public void CloseSettings()
     {
-        settingsMenu.SetActive(false);
-        pauseMenu.SetActive(true);
+        if (settingsMenu != null)
+            settingsMenu.SetActive(false);
+
+        if (pauseMenu != null)
+            pauseMenu.SetActive(true);
+    }
+
+    public void OpenControls()
+    {
+        if (pauseMenu != null)
+            pauseMenu.SetActive(false);
+
+        if (controlsMenu != null)
+            controlsMenu.SetActive(true);
+    }
+
+    public void CloseControls()
+    {
+        if (controlsMenu != null)
+            controlsMenu.SetActive(false);
+
+        if (pauseMenu != null)
+            pauseMenu.SetActive(true);
     }
 
     public void GoToMainMenu()

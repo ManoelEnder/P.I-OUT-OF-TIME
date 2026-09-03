@@ -75,13 +75,13 @@ public class MissionSystem : MonoBehaviour
 
         string pieceMission =
             pieces >= piecesRequired
-                ? "[X] Coletar pecas [" + piecesRequired + "/" + piecesRequired + "]"
-                : "Coletar pecas [" + pieces + "/" + piecesRequired + "]";
+                ? "[X] Coletar peças [" + piecesRequired + "/" + piecesRequired + "]"
+                : "Coletar peças [" + pieces + "/" + piecesRequired + "]";
 
         string discoverMission =
             pieces >= 1
-                ? "[X] Descobrir uma peca"
-                : "[ ] Descobrir uma peca";
+                ? "[X] Descobrir uma peça"
+                : "[ ] Descobrir uma peça";
 
         missionText.text =
             photoMission + "\n" +
