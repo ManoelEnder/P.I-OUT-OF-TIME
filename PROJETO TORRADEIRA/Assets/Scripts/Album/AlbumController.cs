@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 
 public class AlbumController : MonoBehaviour
@@ -10,8 +12,10 @@ public class AlbumController : MonoBehaviour
     [SerializeField] private GameObject photoPrefab;
     [SerializeField] private GameObject crosshair;
 
-    [Header("Viewer")]
-    [SerializeField] private PhotoViewer photoViewer;
+    [Header("Delete Confirmation")]
+    [SerializeField] private GameObject deleteConfirmationPanel;
+    [SerializeField] private TMP_Text deleteConfirmationText;
+    [SerializeField] private float deletedMessageDuration = 2f;
 
     [Header("Input")]
     [SerializeField] private Key albumKey = Key.F;
@@ -20,8 +24,14 @@ public class AlbumController : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PhotoCamera photoCamera;
 
+    [Header("Other Scripts")]
+    [SerializeField] private MonoBehaviour pauseMenuScript;
+
+    [Header("Album Settings")]
+    [SerializeField] private int maxPhotos = 6;
+
     [Header("Album Layout")]
-    [SerializeField] private int columns = 3;
+    [SerializeField] private int columns = 2;
     [SerializeField] private int rows = 3;
 
     private readonly List<AlbumPhoto> photos =
@@ -33,11 +43,18 @@ public class AlbumController : MonoBehaviour
     private int selectedIndex = -1;
     private int currentPage;
 
+    private bool confirmingDelete;
+    private Coroutine deletedMessageCoroutine;
+
     public IReadOnlyList<AlbumPhoto> Photos =>
         photos;
 
     public int SelectedIndex =>
         selectedIndex;
+
+    public bool IsAlbumOpen =>
+        albumPanel != null &&
+        albumPanel.activeSelf;
 
     private int PhotosPerPage =>
         columns * rows;
@@ -46,6 +63,11 @@ public class AlbumController : MonoBehaviour
     {
         if (albumPanel != null)
             albumPanel.SetActive(false);
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(false);
+
+        Time.timeScale = 1f;
 
         SetCrosshairVisible(true);
         SetGameInputLocked(false);
@@ -57,56 +79,47 @@ public class AlbumController : MonoBehaviour
             return;
 
         if (
-            Keyboard.current[albumKey]
-                .wasPressedThisFrame &&
-            (photoViewer == null ||
-             !photoViewer.IsOpen)
+            IsAlbumOpen &&
+            confirmingDelete
+        )
+        {
+            HandleDeleteConfirmation();
+            return;
+        }
+
+        if (
+            IsAlbumOpen &&
+            Keyboard.current.escapeKey.wasPressedThisFrame
+        )
+        {
+            CloseAlbum();
+            return;
+        }
+
+        if (
+            Keyboard.current[albumKey].wasPressedThisFrame
         )
         {
             ToggleAlbum();
-        }
-
-        if (
-            photoViewer != null &&
-            photoViewer.IsOpen
-        )
-        {
             return;
         }
 
-        if (
-            albumPanel == null ||
-            !albumPanel.activeSelf
-        )
-        {
+        if (!IsAlbumOpen)
             return;
-        }
 
         HandleAlbumNavigation();
 
         if (
-            Keyboard.current.eKey
-                .wasPressedThisFrame
+            Keyboard.current.deleteKey.wasPressedThisFrame
         )
         {
-            OpenSelectedPhoto();
-        }
-
-        if (
-            Keyboard.current.escapeKey
-                .wasPressedThisFrame
-        )
-        {
-            CloseAlbum();
+            StartDeleteConfirmation();
         }
     }
 
     public void ToggleAlbum()
     {
-        if (albumPanel == null)
-            return;
-
-        if (albumPanel.activeSelf)
+        if (IsAlbumOpen)
         {
             CloseAlbum();
         }
@@ -121,10 +134,20 @@ public class AlbumController : MonoBehaviour
         if (albumPanel == null)
             return;
 
+        Time.timeScale = 0f;
+
         albumPanel.SetActive(true);
+
+        if (pauseMenuScript != null)
+            pauseMenuScript.enabled = false;
 
         SetCrosshairVisible(false);
         SetGameInputLocked(true);
+
+        confirmingDelete = false;
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(false);
 
         if (
             selectedIndex < 0 &&
@@ -139,8 +162,27 @@ public class AlbumController : MonoBehaviour
 
     public void CloseAlbum()
     {
+        Time.timeScale = 1f;
+
         if (albumPanel != null)
             albumPanel.SetActive(false);
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(false);
+
+        confirmingDelete = false;
+
+        if (deletedMessageCoroutine != null)
+        {
+            StopCoroutine(
+                deletedMessageCoroutine
+            );
+
+            deletedMessageCoroutine = null;
+        }
+
+        if (pauseMenuScript != null)
+            pauseMenuScript.enabled = true;
 
         SetCrosshairVisible(true);
         SetGameInputLocked(false);
@@ -160,8 +202,7 @@ public class AlbumController : MonoBehaviour
         int newIndex = selectedIndex;
 
         if (
-            Keyboard.current.rightArrowKey
-                .wasPressedThisFrame
+            Keyboard.current.rightArrowKey.wasPressedThisFrame
         )
         {
             int column =
@@ -177,8 +218,7 @@ public class AlbumController : MonoBehaviour
         }
 
         if (
-            Keyboard.current.leftArrowKey
-                .wasPressedThisFrame
+            Keyboard.current.leftArrowKey.wasPressedThisFrame
         )
         {
             int column =
@@ -189,8 +229,7 @@ public class AlbumController : MonoBehaviour
         }
 
         if (
-            Keyboard.current.downArrowKey
-                .wasPressedThisFrame
+            Keyboard.current.downArrowKey.wasPressedThisFrame
         )
         {
             int targetIndex =
@@ -201,8 +240,7 @@ public class AlbumController : MonoBehaviour
         }
 
         if (
-            Keyboard.current.upArrowKey
-                .wasPressedThisFrame
+            Keyboard.current.upArrowKey.wasPressedThisFrame
         )
         {
             int targetIndex =
@@ -216,10 +254,121 @@ public class AlbumController : MonoBehaviour
             SelectPhoto(newIndex);
     }
 
+    void StartDeleteConfirmation()
+    {
+        if (!IsValidIndex(selectedIndex))
+            return;
+
+        if (deletedMessageCoroutine != null)
+        {
+            StopCoroutine(
+                deletedMessageCoroutine
+            );
+
+            deletedMessageCoroutine = null;
+        }
+
+        confirmingDelete = true;
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(true);
+
+        if (deleteConfirmationText != null)
+        {
+            deleteConfirmationText.text =
+                "Deseja apagar a foto?\n\n[Y] SIM     [N] NÃO";
+        }
+    }
+
+    void HandleDeleteConfirmation()
+    {
+        if (
+            Keyboard.current.yKey.wasPressedThisFrame
+        )
+        {
+            ConfirmDelete();
+            return;
+        }
+
+        if (
+            Keyboard.current.nKey.wasPressedThisFrame ||
+            Keyboard.current.escapeKey.wasPressedThisFrame
+        )
+        {
+            CancelDelete();
+        }
+    }
+
+    void ConfirmDelete()
+    {
+        int indexToRemove =
+            selectedIndex;
+
+        confirmingDelete = false;
+
+        RemovePhoto(indexToRemove);
+
+        ShowPhotoDeletedMessage();
+    }
+
+    void CancelDelete()
+    {
+        confirmingDelete = false;
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(false);
+    }
+
+    void ShowPhotoDeletedMessage()
+    {
+        if (
+            deleteConfirmationPanel == null ||
+            deleteConfirmationText == null
+        )
+        {
+            return;
+        }
+
+        if (deletedMessageCoroutine != null)
+        {
+            StopCoroutine(
+                deletedMessageCoroutine
+            );
+        }
+
+        deleteConfirmationPanel.SetActive(true);
+
+        deleteConfirmationText.text =
+            "FOTO APAGADA";
+
+        deletedMessageCoroutine =
+            StartCoroutine(
+                HideDeletedMessage()
+            );
+    }
+
+    IEnumerator HideDeletedMessage()
+    {
+        yield return new WaitForSecondsRealtime(
+            deletedMessageDuration
+        );
+
+        if (deleteConfirmationPanel != null)
+            deleteConfirmationPanel.SetActive(false);
+
+        deletedMessageCoroutine = null;
+    }
+
     public void AddPhoto(Texture2D texture)
     {
         if (texture == null)
             return;
+
+        if (photos.Count >= maxPhotos)
+        {
+            Object.Destroy(texture);
+            return;
+        }
 
         AlbumPhoto photo =
             new AlbumPhoto(texture);
@@ -243,8 +392,7 @@ public class AlbumController : MonoBehaviour
             currentPage;
 
         currentPage =
-            selectedIndex /
-            PhotosPerPage;
+            selectedIndex / PhotosPerPage;
 
         if (previousPage != currentPage)
         {
@@ -261,7 +409,9 @@ public class AlbumController : MonoBehaviour
         if (photos.Count == 0)
         {
             currentPage = 0;
+
             ClearSlots();
+
             return;
         }
 
@@ -269,8 +419,7 @@ public class AlbumController : MonoBehaviour
             selectedIndex = 0;
 
         currentPage =
-            selectedIndex /
-            PhotosPerPage;
+            selectedIndex / PhotosPerPage;
 
         RebuildCurrentPage();
     }
@@ -288,8 +437,7 @@ public class AlbumController : MonoBehaviour
         }
 
         int startIndex =
-            currentPage *
-            PhotosPerPage;
+            currentPage * PhotosPerPage;
 
         int endIndex =
             Mathf.Min(
@@ -354,7 +502,11 @@ public class AlbumController : MonoBehaviour
         )
         {
             if (slot != null)
-                Destroy(slot.gameObject);
+            {
+                Destroy(
+                    slot.gameObject
+                );
+            }
         }
 
         slots.Clear();
@@ -371,54 +523,9 @@ public class AlbumController : MonoBehaviour
                 continue;
 
             slot.SetSelected(
-                slot.Index ==
-                selectedIndex
+                slot.Index == selectedIndex
             );
         }
-    }
-
-    public void OpenSelectedPhoto()
-    {
-        if (
-            photoViewer == null ||
-            !IsValidIndex(selectedIndex)
-        )
-        {
-            return;
-        }
-
-        if (albumPanel != null)
-            albumPanel.SetActive(false);
-
-        SetCrosshairVisible(false);
-
-        photoViewer.Open(
-            photos,
-            selectedIndex
-        );
-    }
-
-    public void ReturnFromViewer()
-    {
-        if (photoViewer != null)
-            photoViewer.CloseWithoutReturn();
-
-        if (photos.Count == 0)
-        {
-            CloseAlbum();
-            return;
-        }
-
-        if (selectedIndex < 0)
-            selectedIndex = 0;
-
-        if (albumPanel != null)
-            albumPanel.SetActive(true);
-
-        SetCrosshairVisible(false);
-        SetGameInputLocked(true);
-
-        UpdatePageFromSelection();
     }
 
     public void RemovePhoto(int index)
@@ -439,15 +546,11 @@ public class AlbumController : MonoBehaviour
             currentPage = 0;
 
             ClearSlots();
+
             return;
         }
 
-        if (index < selectedIndex)
-            selectedIndex--;
-
-        if (
-            selectedIndex >= photos.Count
-        )
+        if (selectedIndex >= photos.Count)
         {
             selectedIndex =
                 photos.Count - 1;
@@ -466,7 +569,9 @@ public class AlbumController : MonoBehaviour
             in photos
         )
         {
-            result.Add(photo.Sprite);
+            result.Add(
+                photo.Sprite
+            );
         }
 
         return result;
@@ -482,7 +587,9 @@ public class AlbumController : MonoBehaviour
             in photos
         )
         {
-            result.Add(photo.Color);
+            result.Add(
+                photo.Color
+            );
         }
 
         return result;
