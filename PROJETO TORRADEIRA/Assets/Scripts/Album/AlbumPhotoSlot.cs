@@ -1,20 +1,26 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class AlbumPhotoSlot :
     MonoBehaviour,
     IPointerClickHandler
 {
     [Header("UI")]
-    [SerializeField] private Image image;
-    [SerializeField] private Outline selectionOutline;
+    [SerializeField] private Image photoImage;
+    [SerializeField] private GameObject selectionBorder;
 
     private AlbumPhoto photo;
     private AlbumController album;
     private int index;
 
     public int Index => index;
+
+    private void Awake()
+    {
+        if (selectionBorder != null)
+            selectionBorder.SetActive(false);
+    }
 
     public void Initialize(
         AlbumPhoto newPhoto,
@@ -26,20 +32,14 @@ public class AlbumPhotoSlot :
         album = newAlbum;
         index = newIndex;
 
-        if (image == null)
-            image = GetComponent<Image>();
-
-        if (selectionOutline == null)
-            selectionOutline = GetComponent<Outline>();
-
-        if (image == null || photo == null)
+        if (photoImage == null || photo == null)
             return;
 
-        image.sprite = photo.Sprite;
-        image.color = photo.Color;
+        photoImage.sprite = photo.Sprite;
+        photoImage.color = Color.white;
 
-        image.type = Image.Type.Simple;
-        image.preserveAspect = true;
+        photoImage.type = Image.Type.Simple;
+        photoImage.preserveAspect = false;
 
         SetSelected(
             album != null &&
@@ -49,8 +49,8 @@ public class AlbumPhotoSlot :
 
     public void SetSelected(bool selected)
     {
-        if (selectionOutline != null)
-            selectionOutline.enabled = selected;
+        if (selectionBorder != null)
+            selectionBorder.SetActive(selected);
     }
 
     public void OnPointerClick(

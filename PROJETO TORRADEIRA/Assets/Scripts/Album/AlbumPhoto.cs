@@ -21,7 +21,8 @@ public class AlbumPhoto
                 texture.width,
                 texture.height
             ),
-            new Vector2(0.5f, 0.5f)
+            new Vector2(0.5f, 0.5f),
+            100f
         );
 
         Color = Color.white;

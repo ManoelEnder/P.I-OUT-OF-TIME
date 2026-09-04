@@ -8,16 +8,20 @@ public class AlbumController : MonoBehaviour
     [SerializeField] private GameObject albumPanel;
     [SerializeField] private Transform photoContainer;
     [SerializeField] private GameObject photoPrefab;
+    [SerializeField] private GameObject crosshair;
 
     [Header("Viewer")]
     [SerializeField] private PhotoViewer photoViewer;
+
+    [Header("Input")]
+    [SerializeField] private Key albumKey = Key.F;
 
     [Header("Input Lock")]
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PhotoCamera photoCamera;
 
     [Header("Album Layout")]
-    [SerializeField] private int columns = 4;
+    [SerializeField] private int columns = 3;
     [SerializeField] private int rows = 3;
 
     private readonly List<AlbumPhoto> photos =
@@ -43,6 +47,7 @@ public class AlbumController : MonoBehaviour
         if (albumPanel != null)
             albumPanel.SetActive(false);
 
+        SetCrosshairVisible(true);
         SetGameInputLocked(false);
     }
 
@@ -52,8 +57,8 @@ public class AlbumController : MonoBehaviour
             return;
 
         if (
-            Mouse.current != null &&
-            Mouse.current.rightButton.wasPressedThisFrame &&
+            Keyboard.current[albumKey]
+                .wasPressedThisFrame &&
             (photoViewer == null ||
              !photoViewer.IsOpen)
         )
@@ -80,14 +85,16 @@ public class AlbumController : MonoBehaviour
         HandleAlbumNavigation();
 
         if (
-            Keyboard.current.eKey.wasPressedThisFrame
+            Keyboard.current.eKey
+                .wasPressedThisFrame
         )
         {
             OpenSelectedPhoto();
         }
 
         if (
-            Keyboard.current.escapeKey.wasPressedThisFrame
+            Keyboard.current.escapeKey
+                .wasPressedThisFrame
         )
         {
             CloseAlbum();
@@ -116,6 +123,7 @@ public class AlbumController : MonoBehaviour
 
         albumPanel.SetActive(true);
 
+        SetCrosshairVisible(false);
         SetGameInputLocked(true);
 
         if (
@@ -134,6 +142,7 @@ public class AlbumController : MonoBehaviour
         if (albumPanel != null)
             albumPanel.SetActive(false);
 
+        SetCrosshairVisible(true);
         SetGameInputLocked(false);
     }
 
@@ -188,9 +197,7 @@ public class AlbumController : MonoBehaviour
                 selectedIndex + columns;
 
             if (targetIndex < photos.Count)
-            {
                 newIndex = targetIndex;
-            }
         }
 
         if (
@@ -202,15 +209,11 @@ public class AlbumController : MonoBehaviour
                 selectedIndex - columns;
 
             if (targetIndex >= 0)
-            {
                 newIndex = targetIndex;
-            }
         }
 
         if (newIndex != selectedIndex)
-        {
             SelectPhoto(newIndex);
-        }
     }
 
     public void AddPhoto(Texture2D texture)
@@ -351,11 +354,7 @@ public class AlbumController : MonoBehaviour
         )
         {
             if (slot != null)
-            {
-                Destroy(
-                    slot.gameObject
-                );
-            }
+                Destroy(slot.gameObject);
         }
 
         slots.Clear();
@@ -391,6 +390,8 @@ public class AlbumController : MonoBehaviour
         if (albumPanel != null)
             albumPanel.SetActive(false);
 
+        SetCrosshairVisible(false);
+
         photoViewer.Open(
             photos,
             selectedIndex
@@ -414,6 +415,7 @@ public class AlbumController : MonoBehaviour
         if (albumPanel != null)
             albumPanel.SetActive(true);
 
+        SetCrosshairVisible(false);
         SetGameInputLocked(true);
 
         UpdatePageFromSelection();
@@ -441,9 +443,7 @@ public class AlbumController : MonoBehaviour
         }
 
         if (index < selectedIndex)
-        {
             selectedIndex--;
-        }
 
         if (
             selectedIndex >= photos.Count
@@ -498,6 +498,12 @@ public class AlbumController : MonoBehaviour
         return
             index >= 0 &&
             index < photos.Count;
+    }
+
+    void SetCrosshairVisible(bool visible)
+    {
+        if (crosshair != null)
+            crosshair.SetActive(visible);
     }
 
     void SetGameInputLocked(bool locked)
