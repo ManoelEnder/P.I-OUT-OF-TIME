@@ -3542,33 +3542,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 866089731}
   m_SourcePrefab: {fileID: 100100000, guid: 2fa4d8abdb3c5ee488a687f87d60c9ca, type: 3}
---- !u!1 &147958859 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3832299933402426386, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
-  m_PrefabInstance: {fileID: 820647745}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &147958865
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 147958859}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5078179852417774543, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
 --- !u!1 &148237668
 GameObject:
   m_ObjectHideFlags: 0
@@ -22982,7 +22955,8 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3832299933402426386, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
       insertIndex: -1
@@ -23009,9 +22983,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8235474737882195109, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1477774849}
-    - targetCorrespondingSourceObject: {fileID: 3832299933402426386, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 147958865}
     - targetCorrespondingSourceObject: {fileID: -344305436441794155, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
       insertIndex: -1
       addedObject: {fileID: 737859897}
@@ -82749,7 +82720,7 @@ Transform:
   m_GameObject: {fileID: 2137393033}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.39, y: 13.12, z: -153.8715}
+  m_LocalPosition: {x: -6.095047, y: 12.59, z: -154.50291}
   m_LocalScale: {x: 1, y: 0.71, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
