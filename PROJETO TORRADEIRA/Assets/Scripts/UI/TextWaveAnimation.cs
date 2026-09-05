@@ -25,8 +25,8 @@ public class TextWaveAnimation : MonoBehaviour
     private void Awake()
     {
         textComponent = GetComponent<TMP_Text>();
-        textComponent.ForceMeshUpdate();
 
+        textComponent.ForceMeshUpdate();
         originalMeshInfo = textComponent.textInfo.CopyMeshInfoVertexData();
 
         ScheduleNextBlink();
@@ -34,6 +34,9 @@ public class TextWaveAnimation : MonoBehaviour
 
     private void Update()
     {
+        if (textComponent == null || originalMeshInfo == null)
+            return;
+
         AnimateWave();
 
         if (enableBlink)
@@ -44,11 +47,37 @@ public class TextWaveAnimation : MonoBehaviour
 
     private void AnimateWave()
     {
-        textComponent.ForceMeshUpdate();
+        if (textComponent == null)
+            return;
 
         TMP_TextInfo textInfo = textComponent.textInfo;
 
+        if (textInfo == null)
+            return;
+
         float time = Time.unscaledTime * waveSpeed;
+
+        for (int i = 0; i < textInfo.meshInfo.Length; i++)
+        {
+            if (i >= originalMeshInfo.Length)
+                continue;
+
+            Vector3[] sourceVertices = originalMeshInfo[i].vertices;
+            Vector3[] destinationVertices = textInfo.meshInfo[i].vertices;
+
+            if (sourceVertices == null || destinationVertices == null)
+                continue;
+
+            int length = Mathf.Min(
+                sourceVertices.Length,
+                destinationVertices.Length
+            );
+
+            for (int j = 0; j < length; j++)
+            {
+                destinationVertices[j] = sourceVertices[j];
+            }
+        }
 
         for (int i = 0; i < textInfo.characterCount; i++)
         {
@@ -60,7 +89,13 @@ public class TextWaveAnimation : MonoBehaviour
             int materialIndex = character.materialReferenceIndex;
             int vertexIndex = character.vertexIndex;
 
+            if (materialIndex >= textInfo.meshInfo.Length)
+                continue;
+
             Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
+
+            if (vertices == null || vertexIndex + 3 >= vertices.Length)
+                continue;
 
             float offset = Mathf.Sin(
                 time + i * waveFrequency
@@ -74,11 +109,14 @@ public class TextWaveAnimation : MonoBehaviour
 
         for (int i = 0; i < textInfo.meshInfo.Length; i++)
         {
-            textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
-            textComponent.UpdateGeometry(
-                textInfo.meshInfo[i].mesh,
-                i
-            );
+            Mesh mesh = textInfo.meshInfo[i].mesh;
+
+            if (mesh == null)
+                continue;
+
+            mesh.vertices = textInfo.meshInfo[i].vertices;
+
+            textComponent.UpdateGeometry(mesh, i);
         }
     }
 
@@ -100,11 +138,19 @@ public class TextWaveAnimation : MonoBehaviour
 
         if (progress < 0.5f)
         {
-            alpha = Mathf.Lerp(1f, 0.25f, progress * 2f);
+            alpha = Mathf.Lerp(
+                1f,
+                0.25f,
+                progress * 2f
+            );
         }
         else
         {
-            alpha = Mathf.Lerp(0.25f, 1f, (progress - 0.5f) * 2f);
+            alpha = Mathf.Lerp(
+                0.25f,
+                1f,
+                (progress - 0.5f) * 2f
+            );
         }
 
         SetAlpha(alpha);
@@ -135,38 +181,12 @@ public class TextWaveAnimation : MonoBehaviour
 
     private void SetAlpha(float alpha)
     {
-        Color color = textComponent.color;
-        color.a = alpha;
-        textComponent.color = color;
-    }
-
-    private void OnDestroy()
-    {
-        RestoreOriginalMesh();
-    }
-
-    private void RestoreOriginalMesh()
-    {
-        if (originalMeshInfo == null)
+        if (textComponent == null)
             return;
 
-        textComponent.ForceMeshUpdate();
+        Color color = textComponent.color;
+        color.a = alpha;
 
-        for (int i = 0; i < originalMeshInfo.Length; i++)
-        {
-            Vector3[] originalVertices = originalMeshInfo[i].vertices;
-            Vector3[] currentVertices = textComponent.textInfo.meshInfo[i].vertices;
-
-            for (int j = 0; j < originalVertices.Length; j++)
-            {
-                currentVertices[j] = originalVertices[j];
-            }
-
-            textComponent.textInfo.meshInfo[i].mesh.vertices = currentVertices;
-            textComponent.UpdateGeometry(
-                textComponent.textInfo.meshInfo[i].mesh,
-                i
-            );
-        }
+        textComponent.color = color;
     }
 }
