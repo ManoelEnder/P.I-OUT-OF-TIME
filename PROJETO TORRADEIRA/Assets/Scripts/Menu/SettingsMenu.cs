@@ -1,85 +1,33 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    [SerializeField] private Slider volumeSlider;
-    [SerializeField] private Slider brightnessSlider;
     [SerializeField] private AudioSettings audioSettings;
     [SerializeField] private BrightnessSettings brightnessSettings;
 
-    private void Start()
+    public void VolumeUp()
     {
-        ConfigureSliders();
-        ConfigureEvents();
-        UpdateInterface();
+        audioSettings.IncreaseVolume();
     }
 
-    private void ConfigureSliders()
+    public void VolumeDown()
     {
-        volumeSlider.minValue = 0f;
-        volumeSlider.maxValue = 1f;
-        volumeSlider.wholeNumbers = false;
-
-        brightnessSlider.minValue = 0f;
-        brightnessSlider.maxValue = 1f;
-        brightnessSlider.wholeNumbers = false;
+        audioSettings.DecreaseVolume();
     }
 
-    private void ConfigureEvents()
+    public void BrightnessUp()
     {
-        volumeSlider.onValueChanged.RemoveListener(ChangeVolume);
-        brightnessSlider.onValueChanged.RemoveListener(ChangeBrightness);
-
-        volumeSlider.onValueChanged.AddListener(ChangeVolume);
-        brightnessSlider.onValueChanged.AddListener(ChangeBrightness);
+        brightnessSettings.IncreaseBrightness();
     }
 
-    private void UpdateInterface()
+    public void BrightnessDown()
     {
-        if (audioSettings != null)
-        {
-            volumeSlider.SetValueWithoutNotify(
-                audioSettings.Volume
-            );
-        }
-
-        if (brightnessSettings != null)
-        {
-            brightnessSlider.SetValueWithoutNotify(
-                brightnessSettings.Brightness
-            );
-        }
-    }
-
-    public void ChangeVolume(float value)
-    {
-        if (audioSettings != null)
-        {
-            audioSettings.SetVolume(value);
-        }
-    }
-
-    public void ChangeBrightness(float value)
-    {
-        if (brightnessSettings != null)
-        {
-            brightnessSettings.SetBrightness(value);
-        }
+        brightnessSettings.DecreaseBrightness();
     }
 
     public void ResetSettings()
     {
-        if (audioSettings != null)
-        {
-            audioSettings.ResetVolume();
-        }
-
-        if (brightnessSettings != null)
-        {
-            brightnessSettings.ResetBrightness();
-        }
-
-        UpdateInterface();
+        audioSettings.ResetVolume();
+        brightnessSettings.ResetBrightness();
     }
 }

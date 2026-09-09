@@ -4,6 +4,7 @@ public class AudioSettings : MonoBehaviour
 {
     private const string VolumeKey = "GameVolume";
     private const float DefaultVolume = 1f;
+    private const float Step = 0.1f;
 
     public float Volume { get; private set; }
 
@@ -12,9 +13,20 @@ public class AudioSettings : MonoBehaviour
         Load();
     }
 
+    public void IncreaseVolume()
+    {
+        SetVolume(Volume + Step);
+    }
+
+    public void DecreaseVolume()
+    {
+        SetVolume(Volume - Step);
+    }
+
     public void SetVolume(float value)
     {
         Volume = Mathf.Clamp01(value);
+
         AudioListener.volume = Volume;
 
         PlayerPrefs.SetFloat(VolumeKey, Volume);
@@ -23,7 +35,11 @@ public class AudioSettings : MonoBehaviour
 
     public void Load()
     {
-        Volume = PlayerPrefs.GetFloat(VolumeKey, DefaultVolume);
+        Volume = PlayerPrefs.GetFloat(
+            VolumeKey,
+            DefaultVolume
+        );
+
         AudioListener.volume = Volume;
     }
 
