@@ -47978,7 +47978,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -48010,7 +48010,9 @@ MonoBehaviour:
   emissionIntensity: 2
   minTime: 0.05
   maxTime: 0.3
-  chanceToTurnOff: 0.5
+  toggleOnOff: 1
+  chanceToToggle: 0.5
+  minIntensityFactor: 0.2
 --- !u!1001 &1485673591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60041,7 +60043,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1500
+  m_Intensity: 500
   m_Range: 5
   m_SpotAngle: 95
   m_InnerSpotAngle: 30
@@ -60080,7 +60082,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -60112,7 +60114,9 @@ MonoBehaviour:
   emissionIntensity: 2
   minTime: 0.05
   maxTime: 0.3
-  chanceToTurnOff: 0.5
+  toggleOnOff: 1
+  chanceToToggle: 0.5
+  minIntensityFactor: 0.2
 --- !u!1 &1700074543
 GameObject:
   m_ObjectHideFlags: 0

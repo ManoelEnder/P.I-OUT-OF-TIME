@@ -10,24 +10,36 @@ public class RandomLightFlicker : MonoBehaviour
     [SerializeField] private Renderer lampRenderer;
     [SerializeField] private float emissionIntensity = 2f;
 
-    [Header("Flicker Settings")]
+    [Header("Flicker Timing")]
     [SerializeField] private float minTime = 0.05f;
     [SerializeField] private float maxTime = 0.3f;
-    [SerializeField] private float chanceToTurnOff = 0.5f;
+
+    [Header("Flicker Style")]
+    [Tooltip("Se true, alterna liga/desliga. Se false, varia a intensidade.")]
+    [SerializeField] private bool toggleOnOff = true;
+    [SerializeField, Range(0f, 1f)] private float chanceToToggle = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float minIntensityFactor = 0.2f;
 
     private Material lampMaterial;
-    private readonly int emissionColor = Shader.PropertyToID("_EmissionColor");
+    private MaterialPropertyBlock propBlock;
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+    private float baseLightIntensity;
 
     private void Awake()
     {
         if (targetLight == null)
-        {
             targetLight = GetComponent<Light>();
-        }
+
+        if (targetLight != null)
+            baseLightIntensity = targetLight.intensity;
 
         if (lampRenderer != null)
         {
-            lampMaterial = lampRenderer.material;
+            propBlock = new MaterialPropertyBlock();
+            lampMaterial = lampRenderer.sharedMaterial;
+
+            if (lampMaterial != null)
+                lampMaterial.EnableKeyword("_EMISSION");
         }
     }
 
@@ -41,36 +53,35 @@ public class RandomLightFlicker : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(minTime, maxTime));
-
-            if (Random.value <= chanceToTurnOff)
+            Debug.Log($"[Flicker] Tick - isOn atual: {targetLight.enabled}");
+            if (toggleOnOff)
             {
-                bool isOn = !targetLight.enabled;
+                if (Random.value <= chanceToToggle && targetLight != null)
+                {
+                    bool isOn = !targetLight.enabled;
+                    targetLight.enabled = isOn;
+                    UpdateLampEmission(isOn ? 1f : 0f);
+                }
+            }
+            else
+            {
+                float factor = Random.Range(minIntensityFactor, 1f);
 
-                targetLight.enabled = isOn;
-                UpdateLampEmission(isOn);
+                if (targetLight != null)
+                    targetLight.intensity = baseLightIntensity * factor;
+
+                UpdateLampEmission(factor);
             }
         }
     }
 
-    private void UpdateLampEmission(bool isOn)
+    private void UpdateLampEmission(float factor)
     {
-        if (lampMaterial == null)
+        if (lampRenderer == null || lampMaterial == null)
             return;
 
-        if (isOn)
-        {
-            lampMaterial.EnableKeyword("_EMISSION");
-            lampMaterial.SetColor(
-                emissionColor,
-                Color.white * emissionIntensity
-            );
-        }
-        else
-        {
-            lampMaterial.SetColor(
-                emissionColor,
-                Color.black
-            );
-        }
+        lampRenderer.GetPropertyBlock(propBlock);
+        propBlock.SetColor(EmissionColorId, Color.white * emissionIntensity * factor);
+        lampRenderer.SetPropertyBlock(propBlock);
     }
 }
