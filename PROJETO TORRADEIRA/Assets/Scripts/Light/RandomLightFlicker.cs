@@ -1,13 +1,16 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class RandomLightFlicker : MonoBehaviour
 {
     [Header("Light")]
     [SerializeField] private Light targetLight;
 
-    [Header("Lamp Material")]
+    [Header("Lamp Mesh")]
     [SerializeField] private Renderer lampRenderer;
+
+    [Header("Emission")]
+    [SerializeField] private Color emissionColor = Color.white;
     [SerializeField] private float emissionIntensity = 2f;
 
     [Header("Flicker Timing")]
@@ -15,73 +18,116 @@ public class RandomLightFlicker : MonoBehaviour
     [SerializeField] private float maxTime = 0.3f;
 
     [Header("Flicker Style")]
-    [Tooltip("Se true, alterna liga/desliga. Se false, varia a intensidade.")]
     [SerializeField] private bool toggleOnOff = true;
-    [SerializeField, Range(0f, 1f)] private float chanceToToggle = 0.5f;
-    [SerializeField, Range(0f, 1f)] private float minIntensityFactor = 0.2f;
+    [SerializeField][Range(0f, 1f)] private float chanceToToggle = 0.5f;
+    [SerializeField][Range(0f, 1f)] private float minIntensityFactor = 0.2f;
 
+    private float originalIntensity;
     private Material lampMaterial;
-    private MaterialPropertyBlock propBlock;
-    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
-    private float baseLightIntensity;
-
-    private void Awake()
-    {
-        if (targetLight == null)
-            targetLight = GetComponent<Light>();
-
-        if (targetLight != null)
-            baseLightIntensity = targetLight.intensity;
-
-        if (lampRenderer != null)
-        {
-            propBlock = new MaterialPropertyBlock();
-            lampMaterial = lampRenderer.sharedMaterial;
-
-            if (lampMaterial != null)
-                lampMaterial.EnableKeyword("_EMISSION");
-        }
-    }
+    private Color baseEmission;
 
     private void Start()
     {
-        StartCoroutine(FlickerLight());
+        if (targetLight != null)
+            originalIntensity = targetLight.intensity;
+
+        if (lampRenderer != null)
+        {
+            lampMaterial = lampRenderer.material;
+
+            if (lampMaterial.HasProperty("_EmissionColor"))
+            {
+                lampMaterial.EnableKeyword("_EMISSION");
+
+                baseEmission =
+                    emissionColor * emissionIntensity;
+
+                lampMaterial.SetColor(
+                    "_EmissionColor",
+                    baseEmission
+                );
+            }
+        }
+
+        StartCoroutine(Flicker());
     }
 
-    private IEnumerator FlickerLight()
+    private IEnumerator Flicker()
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(minTime, maxTime));
-            Debug.Log($"[Flicker] Tick - isOn atual: {targetLight.enabled}");
-            if (toggleOnOff)
+            yield return new WaitForSeconds(
+                Random.Range(minTime, maxTime)
+            );
+
+            if (toggleOnOff &&
+                Random.value < chanceToToggle)
             {
-                if (Random.value <= chanceToToggle && targetLight != null)
-                {
-                    bool isOn = !targetLight.enabled;
-                    targetLight.enabled = isOn;
-                    UpdateLampEmission(isOn ? 1f : 0f);
-                }
+                bool state =
+                    targetLight != null &&
+                    targetLight.enabled;
+
+                SetState(!state);
             }
             else
             {
-                float factor = Random.Range(minIntensityFactor, 1f);
+                float factor =
+                    Random.Range(
+                        minIntensityFactor,
+                        1f
+                    );
 
-                if (targetLight != null)
-                    targetLight.intensity = baseLightIntensity * factor;
-
-                UpdateLampEmission(factor);
+                ApplyFlicker(factor);
             }
         }
     }
 
-    private void UpdateLampEmission(float factor)
+    private void ApplyFlicker(float factor)
     {
-        if (lampRenderer == null || lampMaterial == null)
-            return;
+        if (targetLight != null)
+        {
+            targetLight.enabled = true;
 
-        lampRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetColor(EmissionColorId, Color.white * emissionIntensity * factor);
-        lampRenderer.SetPropertyBlock(propBlock);
+            targetLight.intensity =
+                originalIntensity * factor;
+        }
+
+        if (lampRenderer != null)
+            lampRenderer.enabled = true;
+
+        if (lampMaterial != null &&
+            lampMaterial.HasProperty("_EmissionColor"))
+        {
+            lampMaterial.SetColor(
+                "_EmissionColor",
+                baseEmission * factor
+            );
+        }
+    }
+
+    private void SetState(bool state)
+    {
+        if (targetLight != null)
+        {
+            targetLight.enabled = state;
+
+            if (state)
+                targetLight.intensity =
+                    originalIntensity;
+        }
+
+        if (lampRenderer != null)
+            lampRenderer.enabled = true;
+
+        if (lampMaterial != null &&
+            lampMaterial.HasProperty("_EmissionColor"))
+        {
+            lampMaterial.SetColor(
+                "_EmissionColor",
+                state
+                    ? baseEmission
+                    : Color.black
+            );
+        }
     }
 }
