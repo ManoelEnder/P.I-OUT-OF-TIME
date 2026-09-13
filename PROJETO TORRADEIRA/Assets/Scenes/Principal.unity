@@ -8759,8 +8759,8 @@ AudioReverbZone:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644955987}
   m_Enabled: 1
-  m_MinDistance: 10
-  m_MaxDistance: 100
+  m_MinDistance: 10000
+  m_MaxDistance: 10000
   m_ReverbPreset: 11
   m_Room: -1000
   m_RoomHF: -1000
@@ -16617,17 +16617,17 @@ MonoBehaviour:
   audioSource: {fileID: 978134656}
   countdownSound: {fileID: 8300000, guid: 3268f9fd768d8ad4ab85c7d5ffe2de60, type: 3}
   glitchSound: {fileID: 8300000, guid: bb2590fe0ddb16c44a98cc539e05ddbd, type: 3}
-  finalSound: {fileID: 8300000, guid: 7323fc762d897bc4a9d78a0667086d51, type: 3}
+  finalSound: {fileID: 0}
   countdownVolume: 0.05
   glitchVolume: 0.05
-  finalVolume: 0.5
+  finalVolume: 0.08
   startYear: 2026
   targetYear: 1975
   countdownDuration: 2.2
   countdownSoundInterval: 0.045
-  glitchDuration: 1.8
-  glitchInterval: 0.04
-  finalPause: 2
+  glitchDuration: 3
+  glitchInterval: 0.05
+  finalPause: 1.8
   fadeDuration: 1
   glitchPosition: 12
   flickerAmount: 0.07
@@ -46031,7 +46031,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: b0973dc3788292942823d967664bc5bb, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -46133,7 +46133,7 @@ MonoBehaviour:
   visibleDuration: 5
   exitDuration: 0.4
   startOffset: 70
-  movementAmount: 2
+  movementAmount: 3
   movementSpeed: 2
 --- !u!1 &1961873934
 GameObject:
@@ -52499,7 +52499,7 @@ Transform:
   m_GameObject: {fileID: 2137393033}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.113167, y: 12.08, z: -154.50586}
+  m_LocalPosition: {x: -1.66, y: 12.08, z: -148.26}
   m_LocalScale: {x: 1, y: 0.71, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
