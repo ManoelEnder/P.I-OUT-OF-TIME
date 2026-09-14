@@ -8,7 +8,6 @@ public class BrightnessSettings : MonoBehaviour
 
     private const string BrightnessKey = "GameBrightness";
     private const float DefaultBrightness = 1f;
-    private const float Step = 0.1f;
 
     private ColorAdjustments colorAdjustments;
 
@@ -29,7 +28,10 @@ public class BrightnessSettings : MonoBehaviour
             globalVolume = FindFirstObjectByType<Volume>();
 
         if (globalVolume == null)
+        {
+            Debug.LogError("GlobalVolume não encontrado.");
             return;
+        }
 
         VolumeProfile profile = globalVolume.profile;
 
@@ -43,27 +45,13 @@ public class BrightnessSettings : MonoBehaviour
         minimumExposure = defaultExposure - 3f;
     }
 
-    public void IncreaseBrightness()
-    {
-        SetBrightness(Brightness + Step);
-    }
-
-    public void DecreaseBrightness()
-    {
-        SetBrightness(Brightness - Step);
-    }
-
     public void SetBrightness(float value)
     {
         Brightness = Mathf.Clamp01(value);
 
         ApplyBrightness();
 
-        PlayerPrefs.SetFloat(
-            BrightnessKey,
-            Brightness
-        );
-
+        PlayerPrefs.SetFloat(BrightnessKey, Brightness);
         PlayerPrefs.Save();
     }
 
