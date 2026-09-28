@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: PROJETO TORRADEIRA
+  companyName: Jullya fez nada no projeto
+  productName: OUT OF TIME
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.3773585, g: 0.34709862, b: 0.3546636, a: 1}
