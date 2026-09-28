@@ -566,6 +566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -573,6 +574,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1001 &38481095
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -835,6 +837,7 @@ MonoBehaviour:
   armsObject: {fileID: 0}
   crosshair: {fileID: 857517283}
   otherCanvasRaycaster: {fileID: 460537731}
+  globalVolume: {fileID: 333528159}
   mainMenuSceneName: Menu
 --- !u!4 &114160018
 Transform:
@@ -845,7 +848,7 @@ Transform:
   m_GameObject: {fileID: 114160016}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 567.1448, y: 746.5531, z: -17.99038}
+  m_LocalPosition: {x: 567.1657, y: 746.5531, z: -17.99038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -863,9 +866,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126e414d0797c6044a8558b63d0b12d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenu
-  audioSettings: {fileID: 114160021}
-  brightnessSettings: {fileID: 114160020}
-  sensitivitySettings: {fileID: 0}
   volumeSlider: {fileID: 1609783176}
   brightnessSlider: {fileID: 2000383369}
   sensitivitySlider: {fileID: 988372010}
@@ -2187,6 +2187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -2194,6 +2195,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &258086836
 GameObject:
   m_ObjectHideFlags: 0
@@ -7964,6 +7966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -7971,6 +7974,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!23 &605848869 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8253523443731797829, guid: d1bbf5d69e6177346b9d9008eddbe9e0, type: 3}
@@ -15525,6 +15529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -15532,6 +15537,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &891573071 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5734732479589127617, guid: 8452ced58b4943649b2ba55266305b6f, type: 3}
@@ -16144,7 +16150,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -177.1, y: -61.5}
+  m_AnchoredPosition: {x: -109.40464, y: -61.5}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &988372010
@@ -27699,7 +27705,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -177.8, y: 0}
+  m_AnchoredPosition: {x: -110.10464, y: 0}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1609783176
@@ -34172,6 +34178,7 @@ GameObject:
   - component: {fileID: 1718009698}
   - component: {fileID: 1718009697}
   - component: {fileID: 1718009696}
+  - component: {fileID: 1718009699}
   m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -34251,15 +34258,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126e414d0797c6044a8558b63d0b12d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenu
-  audioSettings: {fileID: 1718009698}
-  brightnessSettings: {fileID: 1718009697}
-  sensitivitySettings: {fileID: 0}
-  volumeSlider: {fileID: 0}
-  brightnessSlider: {fileID: 0}
-  sensitivitySlider: {fileID: 0}
-  volumePercentageText: {fileID: 0}
-  brightnessPercentageText: {fileID: 0}
-  sensitivityPercentageText: {fileID: 0}
+  volumeSlider: {fileID: 1609783176}
+  brightnessSlider: {fileID: 2000383369}
+  sensitivitySlider: {fileID: 988372010}
+  volumePercentageText: {fileID: 214230734}
+  brightnessPercentageText: {fileID: 690892504}
+  sensitivityPercentageText: {fileID: 2065463044}
 --- !u!114 &1718009697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34285,6 +34289,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 472a729724563fa448f6cb3317e83548, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
+--- !u!114 &1718009699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718009692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390e9faa4a5f138458b1fe4c6cd1adc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SensitivitySettings
 --- !u!1 &1718156344
 GameObject:
   m_ObjectHideFlags: 0
@@ -40106,6 +40122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -40113,6 +40130,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1001 &1802214588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46200,6 +46218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
   waveSpeed: 0.8
   waveAmount: 2
   waveFrequency: 0.8
@@ -46207,6 +46226,7 @@ MonoBehaviour:
   minimumBlinkInterval: 4
   maximumBlinkInterval: 9
   blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &1991524302 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6cb808775499be949a92b5adabb7b20a, type: 3}
@@ -46381,7 +46401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -170.2, y: 69}
+  m_AnchoredPosition: {x: -102.50463, y: 69}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2000383369
