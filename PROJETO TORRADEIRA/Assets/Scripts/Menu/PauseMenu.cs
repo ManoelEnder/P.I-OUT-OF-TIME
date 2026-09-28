@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -17,10 +19,17 @@ public class PauseMenu : MonoBehaviour
     [Header("Other UI")]
     [SerializeField] private GraphicRaycaster otherCanvasRaycaster;
 
+    [Header("Camera Effects")]
+    [SerializeField] private Volume globalVolume;
+
     [Header("Scene")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     public static bool IsPaused { get; private set; }
+
+    private LensDistortion lensDistortion;
+    private float originalDistortion;
+    private bool hasLensDistortion;
 
     private void Start()
     {
@@ -35,6 +44,8 @@ public class PauseMenu : MonoBehaviour
 
         if (controlsMenu != null)
             controlsMenu.SetActive(false);
+
+        SetupLensDistortion();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -72,10 +83,40 @@ public class PauseMenu : MonoBehaviour
         ResumeGame();
     }
 
+    private void SetupLensDistortion()
+    {
+        if (globalVolume == null)
+            return;
+
+        if (globalVolume.profile.TryGet(out lensDistortion))
+        {
+            originalDistortion = lensDistortion.intensity.value;
+            hasLensDistortion = true;
+        }
+    }
+
+    private void DisableLensDistortion()
+    {
+        if (!hasLensDistortion)
+            return;
+
+        lensDistortion.intensity.Override(0f);
+    }
+
+    private void RestoreLensDistortion()
+    {
+        if (!hasLensDistortion)
+            return;
+
+        lensDistortion.intensity.Override(originalDistortion);
+    }
+
     public void PauseGame()
     {
         IsPaused = true;
         Time.timeScale = 0f;
+
+        RestoreLensDistortion();
 
         if (pauseMenu != null)
             pauseMenu.SetActive(true);
@@ -101,6 +142,8 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        RestoreLensDistortion();
+
         IsPaused = false;
         Time.timeScale = 1f;
 
@@ -133,10 +176,14 @@ public class PauseMenu : MonoBehaviour
 
         if (settingsMenu != null)
             settingsMenu.SetActive(true);
+
+        DisableLensDistortion();
     }
 
     public void CloseSettings()
     {
+        RestoreLensDistortion();
+
         if (settingsMenu != null)
             settingsMenu.SetActive(false);
 
@@ -146,6 +193,8 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenControls()
     {
+        RestoreLensDistortion();
+
         if (pauseMenu != null)
             pauseMenu.SetActive(false);
 
@@ -164,6 +213,8 @@ public class PauseMenu : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        RestoreLensDistortion();
+
         IsPaused = false;
         Time.timeScale = 1f;
 

@@ -14,7 +14,7 @@ public class SensitivitySettings : MonoBehaviour
 
     public void SetSensitivity(float value)
     {
-        Sensitivity = Mathf.Clamp(value, 0.1f, 2f);
+        Sensitivity = Mathf.Clamp01(value);
 
         PlayerPrefs.SetFloat(
             SensitivityKey,
@@ -30,6 +30,8 @@ public class SensitivitySettings : MonoBehaviour
             SensitivityKey,
             DefaultSensitivity
         );
+
+        Sensitivity = Mathf.Clamp01(Sensitivity);
     }
 
     public void ResetSensitivity()
