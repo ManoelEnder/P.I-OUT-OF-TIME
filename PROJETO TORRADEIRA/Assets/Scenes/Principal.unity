@@ -1019,6 +1019,7 @@ MonoBehaviour:
   controlsMenu: {fileID: 423184981}
   armsObject: {fileID: 0}
   crosshair: {fileID: 857517283}
+  photoCamera: {fileID: 1385445668}
   otherCanvasRaycaster: {fileID: 460537731}
   globalVolume: {fileID: 333528159}
   mainMenuSceneName: Menu
@@ -14330,6 +14331,75 @@ Transform:
   - {fileID: 1921797090}
   m_Father: {fileID: 403982757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &748724654
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.8510404
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.000013
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -155.38309
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
+      propertyPath: m_Name
+      value: PartesCAM
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 46aa5eb94da69cc47b27399a385090b9, type: 3}
 --- !u!1 &759100658
 GameObject:
   m_ObjectHideFlags: 0
@@ -25572,18 +25642,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47eae6a23db781648b76af57512a3d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraPhotoData
-  preview:
-    image: {fileID: 0}
-  shutter:
-    audioSource: {fileID: 11782726}
-    clip: {fileID: 0}
-  counter:
-    label: {fileID: 1686159201}
-    prefix: 'Fotos: '
+  photoPreview: {fileID: 1614467165}
+  audioSource: {fileID: 1385445669}
+  shutterSound: {fileID: 8300000, guid: 2b612dfe22a6ec849a63a6df8626219a, type: 3}
+  photoCounter: {fileID: 1686159201}
   missionSystem: {fileID: 1013388081}
   albumController: {fileID: 466417944}
   cooldown: 1
   previewDuration: 1.3
+  popDuration: 0.18
+  popStartScale: 0.85
+  moveDuration: 0.75
+  endScale: 0.3
+  endRotationZ: -12
+  cornerMargin: {x: 40, y: 40}
+  cornerHoldDuration: 1.5
+  fadeOutDuration: 0.3
 --- !u!114 &1385445671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26898,6 +26972,7 @@ GameObject:
   - component: {fileID: 1471177793}
   - component: {fileID: 1471177795}
   - component: {fileID: 1471177794}
+  - component: {fileID: 1471177796}
   m_Layer: 5
   m_Name: RadioTXT
   m_TagString: Untagged
@@ -27023,6 +27098,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1471177792}
   m_CullTransparentMesh: 1
+--- !u!114 &1471177796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471177792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
+  waveSpeed: 0.8
+  waveAmount: 2
+  waveFrequency: 0.8
+  enableBlink: 1
+  minimumBlinkInterval: 4
+  maximumBlinkInterval: 9
+  blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &1472021876
 GameObject:
   m_ObjectHideFlags: 0
@@ -28694,6 +28790,78 @@ MonoBehaviour:
   hoverSound: {fileID: 8300000, guid: 20f1bc22f7b58d14eb006163c89b567c, type: 3}
   audioSource: {fileID: 2098984120}
   hoverVolume: 1
+--- !u!1 &1614467161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1614467162}
+  - component: {fileID: 1614467164}
+  - component: {fileID: 1614467165}
+  m_Layer: 5
+  m_Name: PhotoPreview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1614467162
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614467161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1673972302}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 250}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1614467164
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614467161}
+  m_CullTransparentMesh: 1
+--- !u!114 &1614467165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614467161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1001 &1618477682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34093,7 +34261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1673972302
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34111,6 +34279,7 @@ RectTransform:
   - {fileID: 1250877733}
   - {fileID: 1689727553}
   - {fileID: 1686159200}
+  - {fileID: 1614467162}
   m_Father: {fileID: 460537734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -34206,6 +34375,7 @@ GameObject:
   - component: {fileID: 1686159200}
   - component: {fileID: 1686159202}
   - component: {fileID: 1686159201}
+  - component: {fileID: 1686159203}
   m_Layer: 5
   m_Name: PhotoCounter
   m_TagString: Untagged
@@ -34331,6 +34501,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1686159199}
   m_CullTransparentMesh: 1
+--- !u!114 &1686159203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686159199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
+  waveSpeed: 0.8
+  waveAmount: 2
+  waveFrequency: 0.8
+  enableBlink: 1
+  minimumBlinkInterval: 4
+  maximumBlinkInterval: 9
+  blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &1689727552
 GameObject:
   m_ObjectHideFlags: 0
@@ -34342,6 +34533,7 @@ GameObject:
   - component: {fileID: 1689727553}
   - component: {fileID: 1689727555}
   - component: {fileID: 1689727554}
+  - component: {fileID: 1689727556}
   m_Layer: 5
   m_Name: TXT
   m_TagString: Untagged
@@ -34467,6 +34659,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1689727552}
   m_CullTransparentMesh: 1
+--- !u!114 &1689727556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689727552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04993eba45877aa46989c4f2909e8c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextWaveAnimation
+  enableWave: 1
+  waveSpeed: 0.8
+  waveAmount: 2
+  waveFrequency: 0.8
+  enableBlink: 1
+  minimumBlinkInterval: 4
+  maximumBlinkInterval: 9
+  blinkDuration: 0.12
+  blinkMinimumAlpha: 0.25
 --- !u!1 &1690641419
 GameObject:
   m_ObjectHideFlags: 0
@@ -53508,3 +53721,4 @@ SceneRoots:
   - {fileID: 826274444}
   - {fileID: 820647745}
   - {fileID: 403982757}
+  - {fileID: 748724654}

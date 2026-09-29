@@ -16,6 +16,9 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject armsObject;
     [SerializeField] private GameObject crosshair;
 
+    [Header("Camera")]
+    [SerializeField] private PhotoCamera photoCamera;
+
     [Header("Other UI")]
     [SerializeField] private GraphicRaycaster otherCanvasRaycaster;
 
@@ -64,6 +67,9 @@ public class PauseMenu : MonoBehaviour
     {
         if (!IsPaused)
         {
+            if (photoCamera != null && photoCamera.TryExitCameraMode())
+                return;
+
             PauseGame();
             return;
         }
