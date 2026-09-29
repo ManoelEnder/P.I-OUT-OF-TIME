@@ -25315,6 +25315,12 @@ GameObject:
   - component: {fileID: 1385445665}
   - component: {fileID: 1385445668}
   - component: {fileID: 1385445670}
+  - component: {fileID: 1385445672}
+  - component: {fileID: 1385445673}
+  - component: {fileID: 1385445671}
+  - component: {fileID: 1385445674}
+  - component: {fileID: 1385445675}
+  - component: {fileID: 1385445676}
   - component: {fileID: 1385445667}
   - component: {fileID: 1385445666}
   - component: {fileID: 1385445669}
@@ -25447,30 +25453,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a2d9a0a841180418820be5e2cd11d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhotoCamera
-  photoCam: {fileID: 1385445667}
   playerCam: {fileID: 1433970454}
-  crosshair: {fileID: 857517283}
-  cameraHUD: {fileID: 1673972301}
-  normalFOV: 50
-  zoomFOV: 40
-  minZoomFOV: 25
-  maxZoomFOV: 60
-  zoomSpeed: 2.5
-  maxBattery: 4
-  batteryBars:
-  - {fileID: 1215972177}
-  - {fileID: 1043615360}
-  - {fileID: 1369618110}
-  - {fileID: 355872932}
-  batteryDrainInterval: 30
-  flashImage: {fileID: 1250877734}
-  flashDuration: 0.1
-  flashFadeDuration: 0.1
+  photoCapture: {fileID: 1385445675}
+  hud: {fileID: 1385445674}
+  zoom: {fileID: 1385445673}
+  battery: {fileID: 1385445672}
+  flash: {fileID: 1385445671}
   enterTransitionTime: 0.4
   exitTransitionTime: 0.12
-  cameraBlink: {fileID: 1144142300}
-  blackBorders: {fileID: 1901362755}
-  cameraHUDZoom: {fileID: 1673972303}
   tempoRevelado: 30
   photoData: {fileID: 1385445670}
 --- !u!82 &1385445669
@@ -25582,14 +25572,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47eae6a23db781648b76af57512a3d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraPhotoData
-  photoPreview: {fileID: 0}
-  audioSource: {fileID: 1385445669}
-  shutterSound: {fileID: 8300000, guid: 2b612dfe22a6ec849a63a6df8626219a, type: 3}
-  photoCounter: {fileID: 1686159201}
+  preview:
+    image: {fileID: 0}
+  shutter:
+    audioSource: {fileID: 11782726}
+    clip: {fileID: 0}
+  counter:
+    label: {fileID: 1686159201}
+    prefix: 'Fotos: '
   missionSystem: {fileID: 1013388081}
   albumController: {fileID: 466417944}
   cooldown: 1
   previewDuration: 1.3
+--- !u!114 &1385445671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ca1e2eb945e244ead0ca6ef0a8a22d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFlash
+  flashImage: {fileID: 1250877734}
+  flashDuration: 0.07
+  flashFadeDuration: 0.1
+--- !u!114 &1385445672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9470935f920b4c82069f16b42d660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraBattery
+  maxBattery: 10
+  batteryBars:
+  - {fileID: 1215972177}
+  - {fileID: 1043615360}
+  - {fileID: 1369618110}
+  - {fileID: 355872932}
+  drainInterval: 10
+--- !u!114 &1385445673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2732023ab094a084ab7fbb0a2690b831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraZoom
+  normalFOV: 60
+  zoomFOV: 40
+  minZoomFOV: 25
+  maxZoomFOV: 60
+  zoomSpeed: 2.5
+--- !u!114 &1385445674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec0b04bf727d13f4aae023f560064ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHUD
+  crosshair: {fileID: 857517283}
+  cameraHUD: {fileID: 1673972301}
+  cameraBlink: {fileID: 1144142300}
+  blackBorders: {fileID: 1901362755}
+  cameraHUDZoom: {fileID: 1673972303}
+--- !u!114 &1385445675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c60b43a8bf306c2449dd1cf4fc1bdb7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhotoCapture
+  photoCam: {fileID: 1385445667}
+  resolution: 512
+  depthBits: 24
+--- !u!114 &1385445676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385445664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b06723e5d94ac4fbb41190cfefba52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectRevealer
 --- !u!1 &1388953408 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6cb808775499be949a92b5adabb7b20a, type: 3}
