@@ -98,6 +98,15 @@ public class PhotoCamera : MonoBehaviour
         return battery.IsFull;
     }
 
+    public bool TryExitCameraMode()
+    {
+        if (!cameraMode)
+            return false;
+
+        CloseCamera();
+        return true;
+    }
+
     private void HandleShootInput()
     {
         if (Mouse.current != null &&
