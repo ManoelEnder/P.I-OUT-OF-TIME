@@ -30,7 +30,9 @@ public class TemporalObjectRevealer : MonoBehaviour
     {
         List<Renderer> found = new List<Renderer>();
 
-        foreach (Renderer renderer in UnityEngine.Object.FindObjectsOfType<Renderer>(true))
+        foreach (Renderer renderer in UnityEngine.Object.FindObjectsByType<Renderer>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None))
         {
             if (!renderer.CompareTag(TemporalTag))
                 continue;
@@ -63,7 +65,9 @@ public class TemporalObjectRevealer : MonoBehaviour
         if (playerCam == null)
             return;
 
-        Ray ray = playerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray ray = playerCam.ViewportPointToRay(
+            new Vector3(0.5f, 0.5f, 0f)
+        );
 
         if (!Physics.Raycast(ray, out RaycastHit hit, RaycastDistance))
             return;
@@ -104,7 +108,8 @@ public class TemporalObjectRevealer : MonoBehaviour
 
     private void SetPickupRevealed(Renderer renderer, bool value)
     {
-        TemporalObjectPickup pickup = renderer.GetComponent<TemporalObjectPickup>();
+        TemporalObjectPickup pickup =
+            renderer.GetComponent<TemporalObjectPickup>();
 
         if (pickup != null)
             pickup.SetRevealed(value);

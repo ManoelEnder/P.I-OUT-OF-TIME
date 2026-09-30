@@ -60,7 +60,6 @@ public class TimeTravelIntro : MonoBehaviour
     private Color glitchOriginalColor;
 
     private bool running;
-    private int lastPlayedYear = -1;
 
     private readonly string[] glitchValues =
     {
