@@ -24,7 +24,7 @@ public class CameraZoom : MonoBehaviour
             playerCam.fieldOfView = normalFOV;
     }
 
-    public void Update(Camera playerCam, float scroll, float deltaTime)
+    public void UpdateZoom(Camera playerCam, float scroll, float deltaTime)
     {
         if (scroll != 0f)
         {

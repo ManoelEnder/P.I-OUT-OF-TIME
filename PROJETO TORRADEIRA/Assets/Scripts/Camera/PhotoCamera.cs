@@ -24,6 +24,9 @@ public class PhotoCamera : MonoBehaviour
     [Header("Dados da Foto")]
     [SerializeField] private CameraPhotoData photoData;
 
+    [Header("Missões")]
+    [SerializeField] private MissionSystem missionSystem;
+
     private TemporalObjectRevealer temporalRevealer;
     private Coroutine transitionCoroutine;
 
@@ -58,6 +61,9 @@ public class PhotoCamera : MonoBehaviour
 
         if (photoData != null)
             photoData.Initialize();
+
+        if (missionSystem == null)
+            Debug.LogWarning("PhotoCamera: MissionSystem não foi atribuído no Inspector.", this);
     }
 
     private void Update()
@@ -124,7 +130,7 @@ public class PhotoCamera : MonoBehaviour
 
         float scroll = Mouse.current.scroll.ReadValue().y;
 
-        zoom.Update(playerCam, scroll, Time.deltaTime);
+        zoom.UpdateZoom(playerCam, scroll, Time.deltaTime);
         UpdateZoomHUD();
     }
 
@@ -262,6 +268,9 @@ public class PhotoCamera : MonoBehaviour
         temporalRevealer.UpdateVisibility();
 
         Texture2D photo = photoCapture.Capture();
+
+        if (missionSystem != null)
+            missionSystem.RegisterPhoto(playerCam);
 
         yield return StartCoroutine(flash.Play());
 
