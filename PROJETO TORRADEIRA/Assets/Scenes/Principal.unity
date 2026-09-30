@@ -14853,7 +14853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1110243468162739172, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -344305436441794155, guid: dbc6696c76b9a4c4db2a092ceaf49153, type: 3}
       propertyPath: m_Layer
