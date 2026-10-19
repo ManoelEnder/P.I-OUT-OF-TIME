@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class TemporalObjectPickup : MonoBehaviour, IInteractable
@@ -7,6 +8,9 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
 
     [Header("Mission")]
     [SerializeField] private MissionSystem missionSystem;
+
+    [Header("Detector")]
+    [SerializeField] private GameObject marcadorDetector;
 
     private bool isRevealed;
     private bool isCollected;
@@ -61,6 +65,9 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
             return;
 
         isCollected = true;
+
+        if (marcadorDetector != null)
+            marcadorDetector.SetActive(false);
 
         if (missionSystem != null)
             missionSystem.AddPeca();
