@@ -1697,6 +1697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectPickup
   canBeCollected: 1
   missionSystem: {fileID: 1013388081}
+  marcadorDetector: {fileID: 0}
 --- !u!114 &188796639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7243,6 +7244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectPickup
   canBeCollected: 1
   missionSystem: {fileID: 1013388081}
+  marcadorDetector: {fileID: 1541940387}
 --- !u!114 &568527112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13015,6 +13017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectPickup
   canBeCollected: 1
   missionSystem: {fileID: 1013388081}
+  marcadorDetector: {fileID: 0}
 --- !u!114 &661240130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27057,6 +27060,56 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533063417}
   m_Mesh: {fileID: -5330751955970779049, guid: 8452ced58b4943649b2ba55266305b6f, type: 3}
+--- !u!1 &1541940387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541940389}
+  - component: {fileID: 1541940388}
+  m_Layer: 0
+  m_Name: Detectador
+  m_TagString: PecaDetector
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1541940388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541940387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f2aeee456e05f4191de90f24aa9f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectorPecas
+  distanciaMaxima: 15
+  intervaloLonge: 1.5
+  intervaloPerto: 0.12
+  volumeMinimo: 0.03
+  volumeMaximo: 0.2
+  somDetector: {fileID: 8300000, guid: a75fff97090084740ba16ed1ced2b1fe, type: 3}
+--- !u!4 &1541940389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541940387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.72, y: 12.89, z: -147.621}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1552024870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27825,6 +27878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectPickup
   canBeCollected: 1
   missionSystem: {fileID: 1013388081}
+  marcadorDetector: {fileID: 0}
 --- !u!114 &1622137286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39403,6 +39457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemporalObjectPickup
   canBeCollected: 1
   missionSystem: {fileID: 1013388081}
+  marcadorDetector: {fileID: 0}
 --- !u!114 &1796743317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52077,7 +52132,7 @@ Transform:
   m_GameObject: {fileID: 2137393033}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.008759975, z: -0, w: 0.9999617}
-  m_LocalPosition: {x: -1.6591271, y: 12.08, z: -148.25969}
+  m_LocalPosition: {x: -9.23, y: 12.08, z: -148.25969}
   m_LocalScale: {x: 1, y: 0.71, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52307,3 +52362,4 @@ SceneRoots:
   - {fileID: 826274444}
   - {fileID: 820647745}
   - {fileID: 403982757}
+  - {fileID: 1541940389}
