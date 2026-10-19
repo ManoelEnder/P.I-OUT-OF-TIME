@@ -1588,7 +1588,7 @@ GameObject:
   m_TagString: Temporal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &188796634
 Transform:
@@ -5905,8 +5905,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403982756}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.30475, y: 12.00001, z: -167.23096}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -21.304752, y: 12, z: -167.23096}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7134,7 +7134,7 @@ GameObject:
   m_TagString: Temporal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &568527107
 Transform:
@@ -12950,7 +12950,7 @@ GameObject:
   m_TagString: Temporal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &661240126
 Transform:
@@ -17819,7 +17819,7 @@ GameObject:
   m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1197453078
 Transform:
@@ -27716,7 +27716,7 @@ GameObject:
   m_TagString: Temporal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1622137281
 Transform:
@@ -28059,7 +28059,7 @@ GameObject:
   m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!199 &1666231384
 ParticleSystemRenderer:
@@ -34453,7 +34453,7 @@ GameObject:
   m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1788093443
 Transform:
@@ -39294,7 +39294,7 @@ GameObject:
   m_TagString: Temporal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1796743312
 Transform:
@@ -39748,7 +39748,7 @@ GameObject:
   m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1830085822
 Transform:
@@ -46552,7 +46552,7 @@ GameObject:
   m_TagString: Particles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2096402512
 Transform:
@@ -52076,8 +52076,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137393033}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.66, y: 12.08, z: -148.26}
+  m_LocalRotation: {x: -0, y: 0.008759975, z: -0, w: 0.9999617}
+  m_LocalPosition: {x: -1.6591271, y: 12.08, z: -148.25969}
   m_LocalScale: {x: 1, y: 0.71, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52086,7 +52086,7 @@ Transform:
   - {fileID: 1320158151}
   - {fileID: 659564936}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 1.004, z: 0}
 --- !u!136 &2137393037
 CapsuleCollider:
   m_ObjectHideFlags: 0
