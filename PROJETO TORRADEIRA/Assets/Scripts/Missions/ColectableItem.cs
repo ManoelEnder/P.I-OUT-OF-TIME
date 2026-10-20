@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,8 @@ public class ItemColetavel : MonoBehaviour
     public Transform player;
     public string nomeDaCena;
     public FadeController fade;
+    public GameObject marcadorDetector;
+
     private bool coletado = false;
 
     void Update()
@@ -38,8 +41,15 @@ public class ItemColetavel : MonoBehaviour
 
     public void Coletar()
     {
+        if (coletado) return;
+
         coletado = true;
         texto.text = "Item coletado!";
+
+        if (marcadorDetector != null)
+        {
+            marcadorDetector.SetActive(false);
+        }
 
         MeshRenderer render = GetComponent<MeshRenderer>();
         if (render != null) render.enabled = false;
@@ -56,6 +66,7 @@ public class ItemColetavel : MonoBehaviour
         {
             fade.MostrarPainel();
         }
+
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(nomeDaCena);
     }
