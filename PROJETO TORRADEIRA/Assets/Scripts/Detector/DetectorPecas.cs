@@ -14,8 +14,6 @@ public class DetectorPecas : MonoBehaviour
 
     private Transform jogador;
     private AudioSource audioSource;
-    private GameObject[] marcadores;
-
     private float tempoProximoBip;
 
     void Start()
@@ -31,14 +29,15 @@ public class DetectorPecas : MonoBehaviour
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
         audioSource.volume = 1f;
-
-        marcadores = GameObject.FindGameObjectsWithTag("PecaDetector");
     }
 
     void Update()
     {
         if (jogador == null || somDetector == null)
             return;
+
+        GameObject[] marcadores =
+            GameObject.FindGameObjectsWithTag("PecaDetector");
 
         Transform marcadorMaisProximo = null;
         float menorDistancia = distanciaMaxima;
@@ -63,12 +62,12 @@ public class DetectorPecas : MonoBehaviour
         if (marcadorMaisProximo == null)
         {
             tempoProximoBip = 0f;
+            audioSource.Stop();
             return;
         }
 
-        float proximidade = 1f - (
-            menorDistancia / distanciaMaxima
-        );
+        float proximidade = 1f -
+            (menorDistancia / distanciaMaxima);
 
         float intervalo = Mathf.Lerp(
             intervaloLonge,
