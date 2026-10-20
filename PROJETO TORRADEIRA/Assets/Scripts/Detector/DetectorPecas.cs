@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DetectorPecas : MonoBehaviour
 {
-    public float distanciaMaxima = 15f;
+    public int distanciaMaxima = 10;
     public float intervaloLonge = 1.5f;
     public float intervaloPerto = 0.12f;
 
