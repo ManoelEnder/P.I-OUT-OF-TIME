@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RadarPecas : MonoBehaviour
 {
@@ -7,12 +8,18 @@ public class RadarPecas : MonoBehaviour
     public float raioRadar = 90f;
     public string tagMarcador = "PecaDetector";
 
+    [Header("Piscar do LED")]
+    public float intervaloPiscar = 0.25f;
+
     private RectTransform ponto;
-    private GameObject marcadorMaisProximo;
+    private Image imagemPonto;
+    private float tempoPiscar;
+    private bool ledLigado = true;
 
     void Start()
     {
         ponto = GetComponent<RectTransform>();
+        imagemPonto = GetComponent<Image>();
 
         if (cameraJogador == null)
             cameraJogador = Camera.main;
@@ -26,10 +33,10 @@ public class RadarPecas : MonoBehaviour
 
     void Update()
     {
-        if (cameraJogador == null || ponto == null)
+        if (cameraJogador == null || ponto == null || imagemPonto == null)
             return;
 
-        marcadorMaisProximo = null;
+        GameObject marcadorMaisProximo = null;
         float menorDistancia = Mathf.Infinity;
 
         GameObject[] marcadores =
@@ -54,29 +61,28 @@ public class RadarPecas : MonoBehaviour
 
         if (marcadorMaisProximo == null)
         {
-            ponto.gameObject.SetActive(false);
+            imagemPonto.enabled = false;
             return;
         }
-
-        ponto.gameObject.SetActive(true);
 
         Vector3 direcao =
             marcadorMaisProximo.transform.position -
             cameraJogador.transform.position;
+
+        direcao.y = 0f;
 
         Vector3 frente = cameraJogador.transform.forward;
         Vector3 direita = cameraJogador.transform.right;
 
         frente.y = 0f;
         direita.y = 0f;
-        direcao.y = 0f;
 
         if (direcao.sqrMagnitude < 0.001f)
             return;
 
+        direcao.Normalize();
         frente.Normalize();
         direita.Normalize();
-        direcao.Normalize();
 
         Vector2 direcaoRadar = new Vector2(
             Vector3.Dot(direcao, direita),
@@ -94,11 +100,21 @@ public class RadarPecas : MonoBehaviour
             circulo.rect.height
         ) / 2f - ponto.rect.width / 2f;
 
-        limite = Mathf.Max(0f, limite);
-
-        float raio = Mathf.Min(raioRadar, limite);
+        float raio = Mathf.Min(
+            raioRadar,
+            Mathf.Max(0f, limite)
+        );
 
         ponto.anchoredPosition =
             direcaoRadar.normalized * raio;
+
+        tempoPiscar -= Time.deltaTime;
+
+        if (tempoPiscar <= 0f)
+        {
+            ledLigado = !ledLigado;
+            imagemPonto.enabled = ledLigado;
+            tempoPiscar = Mathf.Max(0.05f, intervaloPiscar);
+        }
     }
 }
