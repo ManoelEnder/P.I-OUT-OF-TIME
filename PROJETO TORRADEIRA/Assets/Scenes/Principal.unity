@@ -16037,6 +16037,7 @@ GameObject:
   - component: {fileID: 952648851}
   - component: {fileID: 952648853}
   - component: {fileID: 952648852}
+  - component: {fileID: 952648854}
   m_Layer: 0
   m_Name: LinhaRada
   m_TagString: Untagged
@@ -16060,8 +16061,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10, y: 54.181}
-  m_SizeDelta: {x: 6.905, y: 88.638}
+  m_AnchoredPosition: {x: -0.9, y: -0.999}
+  m_SizeDelta: {x: 6.905, y: 241.875}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &952648852
 MonoBehaviour:
@@ -16101,6 +16102,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952648850}
   m_CullTransparentMesh: 1
+--- !u!114 &952648854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952648850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a7d0ca98f89b4c419a0c44c271e9fce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinhaRadar
+  velocidade: 180
 --- !u!4 &971629577 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7815819004429230362, guid: 8452ced58b4943649b2ba55266305b6f, type: 3}
