@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ArmToggle : MonoBehaviour
 {
-    [SerializeField] private GameObject arm;
+    [SerializeField] private GameObject radar;
     [SerializeField] private PhotoCamera photoCamera;
 
     private void Start()
@@ -10,18 +10,18 @@ public class ArmToggle : MonoBehaviour
         if (photoCamera == null)
             photoCamera = FindFirstObjectByType<PhotoCamera>();
 
-        if (arm != null)
-            arm.SetActive(true);
+        if (radar != null)
+            radar.SetActive(true);
     }
 
     private void Update()
     {
         if (photoCamera == null ||
-            arm == null)
+            radar == null)
         {
             return;
         }
 
-        arm.SetActive(!photoCamera.IsCameraMode);
+        radar.SetActive(!photoCamera.IsCameraMode);
     }
 }
