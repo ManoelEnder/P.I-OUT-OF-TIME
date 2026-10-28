@@ -7119,7 +7119,7 @@ Transform:
   m_GameObject: {fileID: 513641464}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37, y: 2, z: -161.15}
+  m_LocalPosition: {x: -17.51, y: 1.24, z: -161.15}
   m_LocalScale: {x: 1, y: 1.278, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15984,6 +15984,11 @@ MonoBehaviour:
   hideMarkerWhenPhotographed: 1
   bobHeight: 0.15
   bobSpeed: 2
+--- !u!1 &940296028 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7961353739284526197, guid: bdb1cbda3fa076749b577d0be9dcd112, type: 3}
+  m_PrefabInstance: {fileID: 299421974}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &948974944
 GameObject:
   m_ObjectHideFlags: 0
@@ -17712,7 +17717,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1110013034
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17775,7 +17780,7 @@ Transform:
   m_GameObject: {fileID: 1110013033}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: -34, y: -2, z: -155}
+  m_LocalPosition: {x: -9.54, y: -2, z: -156.3}
   m_LocalScale: {x: 0, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52625,8 +52630,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137393033}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.008759975, z: -0, w: 0.9999617}
-  m_LocalPosition: {x: -9.23, y: 12.08, z: -148.25969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.571715, y: 0.6192551, z: -157.7051}
   m_LocalScale: {x: 1, y: 0.71, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52635,7 +52640,7 @@ Transform:
   - {fileID: 1320158151}
   - {fileID: 659564936}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 1.004, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2137393037
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -52706,7 +52711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98330d9098850fe48910390db57c3126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArmToggle
-  arm: {fileID: 1339636112}
+  radar: {fileID: 940296028}
   photoCamera: {fileID: 1385445668}
 --- !u!82 &2137393041
 AudioSource:
