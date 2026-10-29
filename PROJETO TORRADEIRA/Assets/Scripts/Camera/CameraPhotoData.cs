@@ -9,7 +9,7 @@ public class CameraPhotoData : MonoBehaviour
     [Header("Preview")]
     [SerializeField] private RawImage photoPreview;
 
-    [Header("Áudio")]
+    [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip shutterSound;
 
@@ -24,17 +24,20 @@ public class CameraPhotoData : MonoBehaviour
     [SerializeField] private float cooldown = 2f;
     [SerializeField] private float previewDuration = 1.3f;
 
-    [Header("Animação: entrada")]
+    [Header("Animacao: entrada")]
     [SerializeField] private float popDuration = 0.18f;
-    [SerializeField, Range(0.5f, 1f)] private float popStartScale = 0.85f;
+    [SerializeField, Range(0.5f, 1f)]
+    private float popStartScale = 0.85f;
 
-    [Header("Animação: movimento para o canto")]
+    [Header("Animacao: movimento para o canto")]
     [SerializeField] private float moveDuration = 0.75f;
     [SerializeField] private float endScale = 0.3f;
     [SerializeField] private float endRotationZ = -12f;
-    [SerializeField] private Vector2 cornerMargin = new Vector2(40f, 40f);
+    [SerializeField]
+    private Vector2 cornerMargin =
+        new Vector2(40f, 40f);
 
-    [Header("Animação: saída")]
+    [Header("Animacao: saida")]
     [SerializeField] private float cornerHoldDuration = 1.5f;
     [SerializeField] private float fadeOutDuration = 0.3f;
 
@@ -53,14 +56,32 @@ public class CameraPhotoData : MonoBehaviour
     public void Initialize()
     {
         photoCount = 0;
-        UpdatePhotoCounter();
 
+        UpdatePhotoCounter();
         StopPreview();
 
         if (photoPreview == null)
             return;
 
         CaptureRestPose();
+        ResetPreviewPose();
+
+        photoPreview.gameObject.SetActive(false);
+    }
+
+    public void RegisterPhotographedLocations(Camera camera)
+    {
+        if (missionSystem != null)
+            missionSystem.RegisterPhoto(camera);
+    }
+
+    public void HidePreviewBeforeCapture()
+    {
+        StopPreview();
+
+        if (photoPreview == null)
+            return;
+
         ResetPreviewPose();
         photoPreview.gameObject.SetActive(false);
     }
@@ -71,8 +92,8 @@ public class CameraPhotoData : MonoBehaviour
             return;
 
         photoCount++;
-        UpdatePhotoCounter();
 
+        UpdatePhotoCounter();
         PlayShutterSound();
         RegisterPhoto(photo);
         PlayPreview(photo);
@@ -110,7 +131,10 @@ public class CameraPhotoData : MonoBehaviour
             return;
 
         StopPreview();
-        previewCoroutine = StartCoroutine(PreviewRoutine(photo));
+
+        previewCoroutine = StartCoroutine(
+            PreviewRoutine(photo)
+        );
     }
 
     private void StopPreview()
@@ -128,6 +152,7 @@ public class CameraPhotoData : MonoBehaviour
         ResetPreviewPose();
 
         photoPreview.texture = photo;
+
         SetPreviewAlpha(0f);
         photoPreview.gameObject.SetActive(true);
 
@@ -136,7 +161,13 @@ public class CameraPhotoData : MonoBehaviour
         yield return Tween(popDuration, t =>
         {
             float eased = EaseOutCubic(t);
-            rect.localScale = Vector3.Lerp(restScale * popStartScale, restScale, eased);
+
+            rect.localScale = Vector3.Lerp(
+                restScale * popStartScale,
+                restScale,
+                eased
+            );
+
             SetPreviewAlpha(eased);
         });
 
@@ -146,34 +177,67 @@ public class CameraPhotoData : MonoBehaviour
         yield return new WaitForSeconds(previewDuration);
 
         Vector3 targetScale = restScale * endScale;
-        Vector2 targetPosition = GetCornerPosition(rect, targetScale);
+
+        Vector2 targetPosition = GetCornerPosition(
+            rect,
+            targetScale
+        );
 
         yield return Tween(moveDuration, t =>
         {
             float eased = Mathf.SmoothStep(0f, 1f, t);
-            rect.anchoredPosition = Vector2.Lerp(restPosition, targetPosition, eased);
-            rect.localScale = Vector3.Lerp(restScale, targetScale, eased);
+
+            rect.anchoredPosition = Vector2.Lerp(
+                restPosition,
+                targetPosition,
+                eased
+            );
+
+            rect.localScale = Vector3.Lerp(
+                restScale,
+                targetScale,
+                eased
+            );
+
             rect.localRotation = Quaternion.Euler(
                 0f,
                 0f,
-                Mathf.Lerp(restRotationZ, endRotationZ, eased)
+                Mathf.Lerp(
+                    restRotationZ,
+                    endRotationZ,
+                    eased
+                )
             );
         });
 
         rect.anchoredPosition = targetPosition;
         rect.localScale = targetScale;
-        rect.localRotation = Quaternion.Euler(0f, 0f, endRotationZ);
 
-        yield return new WaitForSeconds(cornerHoldDuration);
+        rect.localRotation = Quaternion.Euler(
+            0f,
+            0f,
+            endRotationZ
+        );
 
-        yield return Tween(fadeOutDuration, t => SetPreviewAlpha(1f - t));
+        yield return new WaitForSeconds(
+            cornerHoldDuration
+        );
+
+        yield return Tween(
+            fadeOutDuration,
+            t => SetPreviewAlpha(1f - t)
+        );
 
         ResetPreviewPose();
         photoPreview.gameObject.SetActive(false);
+
         previewCoroutine = null;
     }
 
-    private IEnumerator Tween(float duration, Action<float> onProgress)
+    private IEnumerator Tween(
+        float duration,
+        Action<float> onProgress
+    )
     {
         if (duration <= 0f)
         {
@@ -186,7 +250,11 @@ public class CameraPhotoData : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            onProgress(Mathf.Clamp01(elapsed / duration));
+
+            onProgress(
+                Mathf.Clamp01(elapsed / duration)
+            );
+
             yield return null;
         }
 
@@ -203,6 +271,7 @@ public class CameraPhotoData : MonoBehaviour
         restPosition = rect.anchoredPosition;
         restScale = rect.localScale;
         restRotationZ = rect.localEulerAngles.z;
+
         restCaptured = true;
     }
 
@@ -215,36 +284,61 @@ public class CameraPhotoData : MonoBehaviour
 
         rect.anchoredPosition = restPosition;
         rect.localScale = restScale;
-        rect.localRotation = Quaternion.Euler(0f, 0f, restRotationZ);
+
+        rect.localRotation = Quaternion.Euler(
+            0f,
+            0f,
+            restRotationZ
+        );
+
         SetPreviewAlpha(1f);
     }
 
-    private Vector2 GetCornerPosition(RectTransform rect, Vector3 scale)
+    private Vector2 GetCornerPosition(
+        RectTransform rect,
+        Vector3 scale
+    )
     {
-        RectTransform parent = rect.parent as RectTransform;
+        RectTransform parent =
+            rect.parent as RectTransform;
 
         if (parent == null)
             return rect.anchoredPosition;
 
-        Vector2 size = Vector2.Scale(rect.rect.size, scale);
+        Vector2 size = Vector2.Scale(
+            rect.rect.size,
+            scale
+        );
+
         Vector2 halfParent = parent.rect.size * 0.5f;
 
         return new Vector2(
-            halfParent.x - cornerMargin.x - size.x * 0.5f,
-            -halfParent.y + cornerMargin.y + size.y * 0.5f
+            halfParent.x -
+            cornerMargin.x -
+            size.x * 0.5f,
+
+            -halfParent.y +
+            cornerMargin.y +
+            size.y * 0.5f
         );
     }
 
     private float EaseOutCubic(float t)
     {
         float inverse = 1f - t;
-        return 1f - inverse * inverse * inverse;
+
+        return 1f -
+               inverse * inverse * inverse;
     }
 
     private void SetPreviewAlpha(float alpha)
     {
+        if (photoPreview == null)
+            return;
+
         Color color = photoPreview.color;
         color.a = alpha;
+
         photoPreview.color = color;
     }
 }

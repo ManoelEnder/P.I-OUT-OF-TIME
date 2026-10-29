@@ -1,123 +1,182 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using System.Collections;
 
 public class PhotoCamera : MonoBehaviour
 {
     [Header("Cameras")]
-    [SerializeField] private Camera playerCam;
-    [SerializeField] private PhotoCapture photoCapture;
+    public Camera photoCam;
+    public Camera playerCam;
 
-    [Header("Módulos")]
-    [SerializeField] private CameraHUD hud;
-    [SerializeField] private CameraZoom zoom;
+    [Header("HUD")]
+    public GameObject crosshair;
+    public GameObject cameraHUD;
+
+    [Header("Pause")]
+    [SerializeField] private PauseMenu pauseMenu;
+
+    [Header("Zoom")]
+    public float normalFOV = 60f;
+    public float zoomFOV = 40f;
+    public float minZoomFOV = 25f;
+    public float maxZoomFOV = 60f;
+    public float zoomSpeed = 2.5f;
+
+    [Header("Battery")]
     [SerializeField] private CameraBattery battery;
-    [SerializeField] private CameraFlash flash;
 
-    [Header("Transição")]
-    [SerializeField] private float enterTransitionTime = 0.4f;
-    [SerializeField] private float exitTransitionTime = 0.12f;
+    [Header("Flash")]
+    public Image flashImage;
+    public float flashDuration = 0.07f;
+    public float flashFadeDuration = 0.1f;
 
-    [Header("Objetos Temporais")]
-    [SerializeField] private float tempoRevelado = 30f;
+    [Header("Transition")]
+    public float enterTransitionTime = 0.4f;
+    public float exitTransitionTime = 0.12f;
 
-    [Header("Dados da Foto")]
+    [Header("Camera Effects")]
+    [SerializeField] private CameraBlink cameraBlink;
+    [SerializeField] private CameraBlackBorders blackBorders;
+    [SerializeField] private CameraHUDZoom cameraHUDZoom;
+
+    [Header("Temporal Objects")]
+    public float tempoRevelado = 30f;
+
+    [Header("Photo Data")]
     [SerializeField] private CameraPhotoData photoData;
 
-    [Header("Missões")]
-    [SerializeField] private MissionSystem missionSystem;
+    [Header("Superaquecimento")]
+    [SerializeField] private CameraOverheat cameraOverheat;
 
-    private TemporalObjectRevealer temporalRevealer;
-    private Coroutine transitionCoroutine;
+    private CameraPhotoCapture photoCapture;
+    private CameraTemporalController temporalController;
+
+    private float targetFOV;
 
     private bool cameraMode;
     private bool canShoot = true;
     private bool isTransitioning;
+    private bool hasCamera = true;
+
+    private Coroutine transitionCoroutine;
+    private Coroutine pauseRestoreCoroutine;
 
     public bool IsCameraMode => cameraMode;
+    public bool HasCamera => hasCamera;
 
-    private bool CanTakePhoto =>
+    public bool CanLoseCamera =>
+        hasCamera &&
         canShoot &&
-        cameraMode &&
-        !battery.IsEmpty &&
-        !PauseMenu.IsPaused;
+        !isTransitioning;
+
+    private void Awake()
+    {
+        if (battery == null)
+            battery = GetComponent<CameraBattery>();
+
+        if (battery == null)
+        {
+            Debug.LogError(
+                "PhotoCamera precisa de um CameraBattery.",
+                this
+            );
+
+            enabled = false;
+            return;
+        }
+
+        battery.Initialize();
+
+        photoCapture = new CameraPhotoCapture();
+
+        photoCapture.Initialize(
+            photoCam,
+            playerCam,
+            photoData,
+            flashImage,
+            flashDuration,
+            flashFadeDuration
+        );
+
+        temporalController =
+            GetComponent<CameraTemporalController>();
+
+        if (temporalController == null)
+        {
+            temporalController =
+                gameObject.AddComponent<CameraTemporalController>();
+        }
+
+        temporalController.Initialize(tempoRevelado);
+
+        if (cameraOverheat == null)
+            cameraOverheat = GetComponent<CameraOverheat>();
+
+        targetFOV = normalFOV;
+
+        if (playerCam != null)
+            playerCam.fieldOfView = normalFOV;
+    }
 
     private void Start()
     {
-        photoCapture.Initialize();
-        zoom.Initialize(playerCam);
-        battery.Initialize();
-        flash.Initialize();
-        hud.Initialize();
+        if (cameraHUD != null)
+            cameraHUD.SetActive(false);
 
-        temporalRevealer = new TemporalObjectRevealer(
-            this,
-            tempoRevelado,
-            () => cameraMode
-        );
+        if (crosshair != null)
+            crosshair.SetActive(true);
 
-        temporalRevealer.FindAll();
-        temporalRevealer.UpdateVisibility();
+        if (photoCam != null)
+            photoCam.enabled = false;
 
-        if (photoData != null)
-            photoData.Initialize();
+        ResetEffects();
 
-        if (missionSystem == null)
-            Debug.LogWarning("PhotoCamera: MissionSystem não foi atribuído no Inspector.", this);
+        temporalController.SetCameraMode(false);
     }
 
     private void Update()
     {
-        if (PauseMenu.IsPaused)
+        HandleInput();
+
+        if (!cameraMode || isTransitioning)
             return;
 
-        if (Keyboard.current != null &&
-            Keyboard.current.cKey.wasPressedThisFrame)
+        HandleCameraInput();
+
+        battery.Tick(Time.deltaTime);
+
+        if (battery.IsEmpty)
+            CloseCamera();
+    }
+
+    private void HandleInput()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
+            if (cameraMode)
+            {
+                TryExitCameraMode();
+                return;
+            }
+        }
+
+        if (Keyboard.current.cKey.wasPressedThisFrame)
             ToggleCameraMode();
-        }
-
-        if (!cameraMode)
-            return;
-
-        if (!isTransitioning)
-        {
-            HandleZoom();
-            HandleShootInput();
-        }
-
-        HandleBattery();
     }
 
-    public void AddBattery(int amount)
+    private void HandleCameraInput()
     {
-        battery.Add(amount);
-    }
+        HandleZoom();
 
-    public bool CanReceiveBattery()
-    {
-        return battery.CanReceive;
-    }
-
-    public bool IsBatteryFull()
-    {
-        return battery.IsFull;
-    }
-
-    public bool TryExitCameraMode()
-    {
-        if (!cameraMode)
-            return false;
-
-        CloseCamera();
-        return true;
-    }
-
-    private void HandleShootInput()
-    {
-        if (Mouse.current != null &&
+        if (
+            Mouse.current != null &&
             Mouse.current.leftButton.wasPressedThisFrame &&
-            canShoot)
+            canShoot
+        )
         {
             StartCoroutine(TakePhoto());
         }
@@ -130,55 +189,100 @@ public class PhotoCamera : MonoBehaviour
 
         float scroll = Mouse.current.scroll.ReadValue().y;
 
-        zoom.UpdateZoom(playerCam, scroll, Time.deltaTime);
+        if (scroll != 0f)
+        {
+            targetFOV -= scroll * zoomSpeed;
+
+            targetFOV = Mathf.Clamp(
+                targetFOV,
+                minZoomFOV,
+                maxZoomFOV
+            );
+        }
+
+        if (playerCam != null)
+        {
+            playerCam.fieldOfView = Mathf.Lerp(
+                playerCam.fieldOfView,
+                targetFOV,
+                Time.deltaTime * 10f
+            );
+        }
+
         UpdateZoomHUD();
     }
 
     private void UpdateZoomHUD()
     {
-        hud.ApplyZoom(zoom.GetZoomAmount(playerCam));
-    }
+        float currentFOV = playerCam != null
+            ? playerCam.fieldOfView
+            : normalFOV;
 
-    private void HandleBattery()
-    {
-        bool drained = battery.Tick(Time.deltaTime);
+        float zoomAmount = Mathf.InverseLerp(
+            normalFOV,
+            minZoomFOV,
+            currentFOV
+        );
 
-        if (drained && battery.IsEmpty && cameraMode)
-            CloseCamera();
+        zoomAmount = Mathf.Clamp01(zoomAmount);
+
+        if (cameraHUDZoom != null)
+            cameraHUDZoom.ApplyZoom(zoomAmount);
+
+        if (blackBorders != null)
+            blackBorders.SetZoom(zoomAmount);
     }
 
     private void ToggleCameraMode()
     {
-        if (isTransitioning)
+        if (!hasCamera || isTransitioning)
             return;
 
         if (cameraMode)
-        {
             CloseCamera();
-            return;
-        }
-
-        if (!battery.IsEmpty)
+        else
             OpenCamera();
     }
 
     private void OpenCamera()
     {
+        if (
+            !hasCamera ||
+            cameraMode ||
+            isTransitioning ||
+            battery.IsEmpty
+        )
+        {
+            return;
+        }
+
         cameraMode = true;
-        hud.SetCrosshairVisible(false);
-        temporalRevealer.UpdateVisibility();
+
+        DisablePauseMenu();
+
+        if (crosshair != null)
+            crosshair.SetActive(false);
+
+        temporalController.SetCameraMode(true);
+
         StartTransition(true);
     }
 
     private void CloseCamera()
     {
-        if (!cameraMode)
+        if (!cameraMode || isTransitioning)
             return;
 
         cameraMode = false;
-        hud.SetCrosshairVisible(true);
-        temporalRevealer.UpdateVisibility();
+
+        if (crosshair != null)
+            crosshair.SetActive(true);
+
+        temporalController.SetCameraMode(false);
+
         StartTransition(false);
+
+        RestorePauseMenu();
     }
 
     private void StartTransition(bool entering)
@@ -186,46 +290,79 @@ public class PhotoCamera : MonoBehaviour
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 
-        transitionCoroutine = StartCoroutine(CameraTransition(entering));
+        transitionCoroutine =
+            StartCoroutine(PlayTransition(entering));
     }
 
-    private IEnumerator CameraTransition(bool entering)
+    private IEnumerator PlayTransition(bool entering)
     {
         isTransitioning = true;
 
         float startFOV = playerCam != null
             ? playerCam.fieldOfView
-            : zoom.NormalFOV;
+            : normalFOV;
 
-        float target = entering ? zoom.ZoomFOV : zoom.NormalFOV;
-        float duration = entering ? enterTransitionTime : exitTransitionTime;
+        float target = entering
+            ? zoomFOV
+            : normalFOV;
+
+        float duration = entering
+            ? enterTransitionTime
+            : exitTransitionTime;
+
+        duration = Mathf.Max(0.001f, duration);
+
         float time = 0f;
 
         if (entering)
         {
-            photoCapture.SetEnabled(true);
-            hud.Show();
+            if (photoCam != null)
+                photoCam.enabled = true;
+
+            if (cameraHUD != null)
+                cameraHUD.SetActive(true);
+
+            if (blackBorders != null)
+            {
+                blackBorders.SetActive(true);
+                blackBorders.ResetBorders();
+            }
+
+            if (cameraHUDZoom != null)
+                cameraHUDZoom.ResetHUD();
+
+            if (cameraBlink != null)
+                cameraBlink.Play();
         }
 
         while (time < duration)
         {
-            while (PauseMenu.IsPaused)
-                yield return null;
-
             time += Time.deltaTime;
+
+            float progress = Mathf.Clamp01(
+                time / duration
+            );
 
             float smooth = Mathf.SmoothStep(
                 0f,
                 1f,
-                Mathf.Clamp01(time / duration)
+                progress
             );
 
-            float fov = Mathf.Lerp(startFOV, target, smooth);
-
             if (playerCam != null)
-                playerCam.fieldOfView = fov;
+            {
+                playerCam.fieldOfView = Mathf.Lerp(
+                    startFOV,
+                    target,
+                    smooth
+                );
+            }
 
-            zoom.TargetFOV = fov;
+            targetFOV = Mathf.Lerp(
+                startFOV,
+                target,
+                smooth
+            );
 
             if (entering)
                 UpdateZoomHUD();
@@ -236,50 +373,74 @@ public class PhotoCamera : MonoBehaviour
         if (playerCam != null)
             playerCam.fieldOfView = target;
 
-        zoom.TargetFOV = target;
+        targetFOV = target;
 
         if (!entering)
         {
-            photoCapture.SetEnabled(false);
-            hud.Hide();
+            if (photoCam != null)
+                photoCam.enabled = false;
+
+            if (cameraHUD != null)
+                cameraHUD.SetActive(false);
+
+            if (blackBorders != null)
+            {
+                blackBorders.ResetBorders();
+                blackBorders.SetActive(false);
+            }
+
+            if (cameraHUDZoom != null)
+                cameraHUDZoom.ResetHUD();
         }
 
         isTransitioning = false;
+        transitionCoroutine = null;
     }
 
     private IEnumerator TakePhoto()
     {
-        if (!CanTakePhoto)
-            yield break;
-
-        canShoot = false;
-
-        photoCapture.SyncWith(playerCam);
-
-        yield return new WaitForEndOfFrame();
-
-        if (PauseMenu.IsPaused)
+        if (
+            !hasCamera ||
+            !canShoot ||
+            battery.IsEmpty ||
+            !cameraMode ||
+            isTransitioning
+        )
         {
-            canShoot = true;
             yield break;
         }
 
-        temporalRevealer.RevealAtScreenCenter(playerCam);
-        temporalRevealer.UpdateVisibility();
+        canShoot = false;
+
+        photoCapture.PrepareCamera();
+
+        yield return new WaitForEndOfFrame();
+
+        temporalController.Detect(playerCam, this);
+
+        if (photoData != null && playerCam != null)
+            photoData.RegisterPhotographedLocations(playerCam);
 
         Texture2D photo = photoCapture.Capture();
 
-        if (missionSystem != null)
-            missionSystem.RegisterPhoto(playerCam);
+        photoCapture.ProcessPhoto(photo);
 
-        yield return StartCoroutine(flash.Play());
+        if (photo != null && cameraOverheat != null)
+            cameraOverheat.RegisterPhotoHeat();
+
+        yield return StartCoroutine(
+            photoCapture.PlayFlash()
+        );
 
         if (photoData != null)
         {
-            photoData.ProcessPhoto(photo);
+            yield return new WaitForSeconds(
+                photoData.PreviewDuration
+            );
 
-            yield return new WaitForSeconds(photoData.PreviewDuration);
-            yield return new WaitForSeconds(photoData.Cooldown);
+            yield return new WaitForSeconds(
+                photoData.Cooldown
+            );
         }
 
         battery.Use(1);
@@ -288,5 +449,108 @@ public class PhotoCamera : MonoBehaviour
             CloseCamera();
 
         canShoot = true;
+    }
+
+    public bool TryExitCameraMode()
+    {
+        if (!cameraMode)
+            return false;
+
+        if (!isTransitioning)
+            CloseCamera();
+
+        return true;
+    }
+
+    private void DisablePauseMenu()
+    {
+        if (pauseMenu != null)
+            pauseMenu.enabled = false;
+    }
+
+    private void RestorePauseMenu()
+    {
+        if (pauseMenu == null)
+            return;
+
+        if (pauseRestoreCoroutine != null)
+            StopCoroutine(pauseRestoreCoroutine);
+
+        pauseRestoreCoroutine =
+            StartCoroutine(RestorePauseMenuNextFrame());
+    }
+
+    private IEnumerator RestorePauseMenuNextFrame()
+    {
+        yield return null;
+
+        if (pauseMenu != null)
+            pauseMenu.enabled = true;
+
+        pauseRestoreCoroutine = null;
+    }
+
+    private void ResetEffects()
+    {
+        targetFOV = normalFOV;
+
+        if (playerCam != null)
+            playerCam.fieldOfView = normalFOV;
+
+        if (blackBorders != null)
+        {
+            blackBorders.ResetBorders();
+            blackBorders.SetActive(false);
+        }
+
+        if (cameraHUDZoom != null)
+            cameraHUDZoom.ResetHUD();
+    }
+
+    public void AddBattery(int amount)
+    {
+        if (battery != null)
+            battery.Add(amount);
+    }
+
+    public bool CanReceiveBattery()
+    {
+        return battery != null && battery.CanReceive;
+    }
+
+    public bool IsBatteryFull()
+    {
+        return battery != null && battery.IsFull;
+    }
+
+    public void OnCameraLost()
+    {
+        if (!hasCamera)
+            return;
+
+        if (cameraMode)
+            CloseCamera();
+
+        hasCamera = false;
+
+        Debug.Log(
+            "A camera desapareceu devido a uma anomalia temporal."
+        );
+    }
+
+    public void OnCameraRecovered()
+    {
+        hasCamera = true;
+
+        Debug.Log("A camera foi recuperada.");
+    }
+
+    private void OnDestroy()
+    {
+        if (pauseRestoreCoroutine != null)
+            StopCoroutine(pauseRestoreCoroutine);
+
+        if (photoCapture != null)
+            photoCapture.Release();
     }
 }
