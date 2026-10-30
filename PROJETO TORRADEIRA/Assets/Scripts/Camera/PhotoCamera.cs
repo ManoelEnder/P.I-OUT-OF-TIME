@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -33,7 +34,7 @@ public class PhotoCamera : MonoBehaviour
 
     [Header("Transition")]
     public float enterTransitionTime = 0.4f;
-    public float exitTransitionTime = 0.12f;
+    public float exitTransitionTime = 0.35f;
 
     [Header("Camera Effects")]
     [SerializeField] private CameraBlink cameraBlink;
@@ -127,11 +128,10 @@ public class PhotoCamera : MonoBehaviour
         if (crosshair != null)
             crosshair.SetActive(true);
 
-        if (photoCam != null)
+        if (photoCam != null && photoCam != playerCam)
             photoCam.enabled = false;
 
         ResetEffects();
-
         temporalController.SetCameraMode(false);
     }
 
@@ -148,6 +148,30 @@ public class PhotoCamera : MonoBehaviour
 
         if (battery.IsEmpty)
             CloseCamera();
+    }
+
+    private void LateUpdate()
+    {
+        SyncPhotoCamera();
+    }
+
+    private void SyncPhotoCamera()
+    {
+        if (!cameraMode)
+            return;
+
+        if (photoCam == null || playerCam == null)
+            return;
+
+        if (photoCam == playerCam)
+            return;
+
+        photoCam.transform.SetPositionAndRotation(
+            playerCam.transform.position,
+            playerCam.transform.rotation
+        );
+
+        photoCam.fieldOfView = playerCam.fieldOfView;
     }
 
     private void HandleInput()
@@ -265,6 +289,7 @@ public class PhotoCamera : MonoBehaviour
 
         temporalController.SetCameraMode(true);
 
+        SyncPhotoCamera();
         StartTransition(true);
     }
 
@@ -273,16 +298,7 @@ public class PhotoCamera : MonoBehaviour
         if (!cameraMode || isTransitioning)
             return;
 
-        cameraMode = false;
-
-        if (crosshair != null)
-            crosshair.SetActive(true);
-
-        temporalController.SetCameraMode(false);
-
         StartTransition(false);
-
-        RestorePauseMenu();
     }
 
     private void StartTransition(bool entering)
@@ -290,8 +306,9 @@ public class PhotoCamera : MonoBehaviour
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 
-        transitionCoroutine =
-            StartCoroutine(PlayTransition(entering));
+        transitionCoroutine = StartCoroutine(
+            PlayTransition(entering)
+        );
     }
 
     private IEnumerator PlayTransition(bool entering)
@@ -312,11 +329,14 @@ public class PhotoCamera : MonoBehaviour
 
         duration = Mathf.Max(0.001f, duration);
 
+        Coroutine blinkAnimation = null;
         float time = 0f;
 
         if (entering)
         {
-            if (photoCam != null)
+            SyncPhotoCamera();
+
+            if (photoCam != null && photoCam != playerCam)
                 photoCam.enabled = true;
 
             if (cameraHUD != null)
@@ -332,7 +352,12 @@ public class PhotoCamera : MonoBehaviour
                 cameraHUDZoom.ResetHUD();
 
             if (cameraBlink != null)
-                cameraBlink.Play();
+                blinkAnimation = cameraBlink.Play();
+        }
+        else
+        {
+            if (cameraBlink != null)
+                blinkAnimation = cameraBlink.PlayClose();
         }
 
         while (time < duration)
@@ -370,6 +395,9 @@ public class PhotoCamera : MonoBehaviour
             yield return null;
         }
 
+        if (blinkAnimation != null)
+            yield return blinkAnimation;
+
         if (playerCam != null)
             playerCam.fieldOfView = target;
 
@@ -377,7 +405,11 @@ public class PhotoCamera : MonoBehaviour
 
         if (!entering)
         {
-            if (photoCam != null)
+            cameraMode = false;
+
+            temporalController.SetCameraMode(false);
+
+            if (photoCam != null && photoCam != playerCam)
                 photoCam.enabled = false;
 
             if (cameraHUD != null)
@@ -391,6 +423,22 @@ public class PhotoCamera : MonoBehaviour
 
             if (cameraHUDZoom != null)
                 cameraHUDZoom.ResetHUD();
+
+            if (crosshair != null)
+                crosshair.SetActive(true);
+
+            if (cameraBlink != null)
+            {
+                Coroutine revealAnimation =
+                    cameraBlink.PlayReveal();
+
+                if (revealAnimation != null)
+                    yield return revealAnimation;
+
+                cameraBlink.ResetBlink();
+            }
+
+            RestorePauseMenu();
         }
 
         isTransitioning = false;
@@ -412,14 +460,21 @@ public class PhotoCamera : MonoBehaviour
 
         canShoot = false;
 
+        SyncPhotoCamera();
         photoCapture.PrepareCamera();
 
         yield return new WaitForEndOfFrame();
 
+        SyncPhotoCamera();
+
         temporalController.Detect(playerCam, this);
 
         if (photoData != null && playerCam != null)
-            photoData.RegisterPhotographedLocations(playerCam);
+        {
+            photoData.RegisterPhotographedLocations(
+                playerCam
+            );
+        }
 
         Texture2D photo = photoCapture.Capture();
 
@@ -445,7 +500,7 @@ public class PhotoCamera : MonoBehaviour
 
         battery.Use(1);
 
-        if (battery.IsEmpty && cameraMode)
+        if (battery.IsEmpty && cameraMode && !isTransitioning)
             CloseCamera();
 
         canShoot = true;
@@ -454,7 +509,7 @@ public class PhotoCamera : MonoBehaviour
     public bool TryExitCameraMode()
     {
         if (!cameraMode)
-            return false;
+            return isTransitioning;
 
         if (!isTransitioning)
             CloseCamera();
@@ -476,8 +531,9 @@ public class PhotoCamera : MonoBehaviour
         if (pauseRestoreCoroutine != null)
             StopCoroutine(pauseRestoreCoroutine);
 
-        pauseRestoreCoroutine =
-            StartCoroutine(RestorePauseMenuNextFrame());
+        pauseRestoreCoroutine = StartCoroutine(
+            RestorePauseMenuNextFrame()
+        );
     }
 
     private IEnumerator RestorePauseMenuNextFrame()
@@ -505,6 +561,9 @@ public class PhotoCamera : MonoBehaviour
 
         if (cameraHUDZoom != null)
             cameraHUDZoom.ResetHUD();
+
+        if (cameraBlink != null)
+            cameraBlink.ResetBlink();
     }
 
     public void AddBattery(int amount)
@@ -528,21 +587,15 @@ public class PhotoCamera : MonoBehaviour
         if (!hasCamera)
             return;
 
-        if (cameraMode)
-            CloseCamera();
-
         hasCamera = false;
 
-        Debug.Log(
-            "A camera desapareceu devido a uma anomalia temporal."
-        );
+        if (cameraMode && !isTransitioning)
+            CloseCamera();
     }
 
     public void OnCameraRecovered()
     {
         hasCamera = true;
-
-        Debug.Log("A camera foi recuperada.");
     }
 
     private void OnDestroy()
@@ -550,7 +603,6 @@ public class PhotoCamera : MonoBehaviour
         if (pauseRestoreCoroutine != null)
             StopCoroutine(pauseRestoreCoroutine);
 
-        if (photoCapture != null)
-            photoCapture.Release();
+        photoCapture?.Release();
     }
 }
