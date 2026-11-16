@@ -1,0 +1,59 @@
+ROTEIRO DE DUBLAGEM — CUTSCENE DE ABERTURA
+Uma única voz (pesquisador): natural, firme, um pouco cansada.
+Gere um arquivo por fala e salve como Assets/Cutscene/Audio/Voz/voz_01.wav ... voz_18.wav
+(.wav ou .mp3 do ElevenLabs). Depois rode Ferramentas > Cutscene de Abertura > Gerar.
+Entre colchetes: momento em que a fala começa na cutscene e o que aparece na tela.
+
+voz_01 [0:01.0 · voz off, montagem do protótipo]
+Em mil novecentos e setenta e cinco, Steve Sasson montou, num laboratório da Kodak, um protótipo capaz de gravar uma foto em fita magnética.
+
+voz_02 [0:18.0 · retrato no CRT]
+Era o começo da fotografia digital.
+
+voz_03 [0:21.8 · bancada vazia, silhueta]
+Então alguém voltou àquela noite. Destruiu o protótipo,
+
+voz_04 [0:29.0 · logo após o impacto]
+e o futuro perdeu décadas de avanços.
+
+voz_05 [0:33.3 · peça suspensa no tempo]
+Algumas peças ficaram presas no tempo.
+
+voz_06 [0:38.4 · pesquisador olhando para o jogador]
+Se você está ouvindo esta gravação, a câmera que deixei no laboratório chegou até você.
+
+voz_07 [0:44.4 · aponta o esquema]
+Use-a para encontrar essas peças e reconstruir o protótipo.
+
+voz_08 [0:51.6 · visor abre]
+Abra o visor e procure onde a imagem falha.
+
+voz_09 [0:55.0 · mira; obturador em 0:58.3 — deixe uma pausa no fim]
+Quando enxergar uma peça, mire e fotografe.
+
+voz_10 [0:59.6 · coleta]
+Ela vai continuar visível por um tempo. Chegue perto e recolha antes que desapareça.
+
+voz_11 [1:08.8 · medidores]
+O visor gasta bateria e esquenta enquanto está aberto.
+
+voz_12 [1:13.4 · calor recua]
+Feche entre uma busca e outra para economizar carga e deixar a câmera esfriar.
+
+voz_13 [1:22.6 · superaquecendo; ruptura em 1:26.0]
+Se ela superaquecer, vai sumir.
+
+voz_14 [1:28.2 · visor não abre]
+Uma ruptura pode levá-la para outro ponto do laboratório.
+
+voz_15 [1:35.0 · recuperação]
+Encontre a câmera e recolha-a para continuar.
+
+voz_16 [1:40.2 · gravação]
+Traga as peças de volta.
+
+voz_17 [1:41.9 · sabotador aparece no monitor]
+E, se vir alguém nas gravações, preste atenção.
+
+voz_18 [1:45.5 · fim da mensagem, antes do CRT desligar em 1:48.4]
+Eu ainda não sei se aquela pessoa foi embora.
