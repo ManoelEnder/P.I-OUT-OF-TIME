@@ -25,7 +25,9 @@ Estilo a seguir: o mesmo do menu atual (cena `Menu`), montado pela ferramenta
 **Ferramentas › Pixel Art › Montar menu em monitores CRT** (`Assets/Editor/ArtReview/MonitorMenuBuilder.cs`).
 Sem verde, sem laranja/amarelo. Cores: branco, cinzas, vermelho. Tema: protótipo da primeira câmera digital (1975), 100x100, gravação em fita.
 
-## 1. Flashes e fotossensibilidade
+## 1. Flashes e fotossensibilidade — FEITO
+
+> Feito: `FlashSettings` (PlayerPrefs `FlashEnabled`); flashes da câmera, pulso do superaquecimento e piscar do ano na intro respeitam a opção; linha FLASHES nas configurações da pausa (`PauseMenuBuilder.BuildFlashRow`); `PhotosensitivityWarning` na `TelaInicio` ([F] liga/desliga, ENTER continua, bloqueia o "pressione qualquer tecla"). Ferramenta: **Ferramentas › Pixel Art › Adicionar aviso de fotossensibilidade**.
 
 - Criar `FlashSettings` (estático, salvo em `PlayerPrefs`, chave sugerida `FlashEnabled`, padrão ligado).
 - Respeitar a opção em todo flash de tela cheia:
@@ -38,7 +40,9 @@ Sem verde, sem laranja/amarelo. Cores: branco, cinzas, vermelho. Tema: protótip
   Adicionar uma linha "FLASHES  [ LIGADO / DESLIGADO ]" abaixo dos sliders. A lógica dos sliders fica em `Assets/Scripts/Menu/SettingsMenu.cs`.
 - Aviso de fotossensibilidade: primeira coisa que aparece na `TelaInicio`, com texto de aviso, atalho para desligar flashes ali mesmo e "ENTER para continuar".
 
-## 2. Câmeras fotográficas com flash (menu, tela inicial e créditos)
+## 2. Câmeras fotográficas com flash (menu, tela inicial e créditos) — FEITO NO MENU
+
+> Feito no menu: `PhotoFlash` (dispara a cada 6–12 s; luz + quad emissivo + obturador sintetizado; sem flashes = só som + LED) e `MonitorMenuBuilder.BuildPhotoCameras` (3 câmeras de tripé). Falta reaproveitar na tela inicial e nos créditos (seções 3 e 4).
 
 - Câmeras dos anos 70 montadas proceduralmente (tripé, corpo, lente, unidade de flash com refletor), algumas apontadas para o jogador.
 - Script novo (ex.: `PhotoFlash`): dispara a cada 6–12 s; luz forte por ~0,08 s + quad emissivo + som de obturador sintetizado.
