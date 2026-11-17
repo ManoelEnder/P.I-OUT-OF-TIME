@@ -52,6 +52,46 @@ public abstract class QAScenario
             yield return null;
     }
 
+    // Sem janela em foco (batch) o Unity nao segura o Cursor.lockState; nesse caso os testes
+    // conferem a outra metade do pedido do jogo (cursor escondido).
+    private static bool? lockSupported;
+
+    protected static bool CursorLockSupported
+    {
+        get
+        {
+            if (lockSupported == null)
+            {
+                CursorLockMode previous = Cursor.lockState;
+                Cursor.lockState = CursorLockMode.Locked;
+                lockSupported = Cursor.lockState == CursorLockMode.Locked;
+                Cursor.lockState = previous;
+                Debug.Log("QA ambiente segura Cursor.lockState: " + lockSupported);
+            }
+
+            return lockSupported.Value;
+        }
+    }
+
+    // Cursor "do jogo": travado, ou escondido quando o ambiente nao consegue travar.
+    protected static bool CursorCaptured =>
+        CursorLockSupported ? Cursor.lockState == CursorLockMode.Locked : !Cursor.visible;
+
+    // A intro de viagem no tempo da fase congela o jogo; espera o jogo ficar livre por 2 s.
+    protected IEnumerator WaitGameplay()
+    {
+        float end = Time.realtimeSinceStartup + 60f;
+        float free = 0f;
+
+        while (free < 2f && Time.realtimeSinceStartup < end)
+        {
+            free = Time.timeScale > 0f ? free + Time.unscaledDeltaTime : 0f;
+            yield return null;
+        }
+
+        Check(free >= 2f, "jogo liberado depois da intro");
+    }
+
     protected T Require<T>() where T : Object
     {
         T found = Object.FindFirstObjectByType<T>(FindObjectsInactive.Include);
