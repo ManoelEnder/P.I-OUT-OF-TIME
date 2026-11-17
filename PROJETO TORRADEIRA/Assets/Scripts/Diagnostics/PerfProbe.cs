@@ -14,6 +14,7 @@ public class PerfProbe : MonoBehaviour
     private string segment;
     private bool skipFirstFrame;
     private string pendingLoad;
+    private float unloadStart = -1f;
     private string folder;
     private string stamp;
 
@@ -44,12 +45,14 @@ public class PerfProbe : MonoBehaviour
         stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         Directory.CreateDirectory(folder);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
         Debug.Log("PerfProbe ativo: " + folder);
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     public static void Begin(string name)
@@ -74,10 +77,17 @@ public class PerfProbe : MonoBehaviour
         return summary;
     }
 
-    // O quadro em que a cena nova aparece carrega o custo do carregamento sincrono.
+    // Carregamento = da descarga da cena anterior ate o primeiro quadro da nova (Awake/Start inclusos).
+    private void OnSceneUnloaded(Scene scene)
+    {
+        unloadStart = Time.realtimeSinceStartup;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         pendingLoad = "load:" + scene.name;
+        if (unloadStart < 0f)
+            unloadStart = Time.realtimeSinceStartup - Time.unscaledDeltaTime;
     }
 
     private void Update()
@@ -86,8 +96,10 @@ public class PerfProbe : MonoBehaviour
 
         if (pendingLoad != null)
         {
-            Save(PerfStats.Compute(pendingLoad, new[] { ms }), null);
+            float loadMs = (Time.realtimeSinceStartup - unloadStart) * 1000f;
+            Save(PerfStats.Compute(pendingLoad, new[] { loadMs }), null);
             pendingLoad = null;
+            unloadStart = -1f;
             return;
         }
 
@@ -117,7 +129,7 @@ public class PerfProbe : MonoBehaviour
 
         var lines = new List<string>(raw.Count);
         foreach (float ms in raw)
-            lines.Add(ms.ToString("0.000"));
+            lines.Add(ms.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
 
         File.WriteAllLines(Path.Combine(folder, stamp + "_" + summary.Segment.Replace(':', '_') + ".csv"), lines);
     }

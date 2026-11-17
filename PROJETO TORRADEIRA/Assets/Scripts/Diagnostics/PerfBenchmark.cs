@@ -72,6 +72,11 @@ public class PerfBenchmark : MonoBehaviour
         yield return QAInput.Tap(Key.F);
         yield return Wait(1f);
 
+        yield return QAInput.Tap(Key.Escape);
+        yield return ShotLater("pausa", 0.5f);
+        yield return QAInput.Tap(Key.Escape);
+        yield return Wait(0.5f);
+
         CameraOverheat heat = FindAnyObjectByType<CameraOverheat>();
         yield return QAInput.Tap(Key.C);
         yield return Measure("superaquecimento", 60f, Overheat(heat, photo));
@@ -92,7 +97,10 @@ public class PerfBenchmark : MonoBehaviour
     // Mede um trecho enquanto a acao roda; termina no tempo ou quando "done" ficar verdadeiro.
     private IEnumerator Measure(string name, float seconds, IEnumerator action, System.Func<bool> done = null)
     {
+        // A captura (PNG) trava um quadro: tirada antes de comecar a medir.
         Coroutine running = action != null ? StartCoroutine(action) : null;
+        yield return ShotLater(name, 1f);
+        yield return Wait(0.3f);
         PerfProbe.Begin(name);
 
         float end = Time.realtimeSinceStartup + seconds;
@@ -103,6 +111,15 @@ public class PerfBenchmark : MonoBehaviour
 
         if (running != null)
             StopCoroutine(running);
+    }
+
+    // Captura comparavel (mesmo roteiro antes e depois), com HUD e pos-processamento.
+    private static IEnumerator ShotLater(string name, float delay)
+    {
+        yield return Wait(delay);
+
+        if (PerfProbe.Folder != null)
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(PerfProbe.Folder, "shot_" + name.Replace(':', '_') + ".png"));
     }
 
     private IEnumerator ZoomLoop()
