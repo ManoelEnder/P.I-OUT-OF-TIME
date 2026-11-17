@@ -92,6 +92,80 @@ public abstract class QAScenario
         Check(free >= 2f, "jogo liberado depois da intro");
     }
 
+    // Ponto de piso a ~2 m do alvo, com espaco para o corpo e linha de visao (sem depender de NavMesh,
+    // que so cobre o andar do inimigo). Devolve false se nao houver.
+    public static string LastStandFailure = "";
+
+    protected static bool TryFindStandPoint(Collider target, float eyeHeight, float radius, out Vector3 feet)
+    {
+        var why = new System.Text.StringBuilder();
+        Vector3 center = target.bounds.center;
+
+        foreach (float distance in new[] { 2f, 1.6f, 2.4f })
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 dir = Quaternion.Euler(0f, i * 45f, 0f) * Vector3.forward;
+                Vector3 above = center + dir * distance + Vector3.up * 1.5f;
+
+                if (!Physics.Raycast(above, Vector3.down, out RaycastHit floor, 4f, ~0, QueryTriggerInteraction.Ignore))
+                { why.Append(" sem-piso"); continue; }
+
+                feet = floor.point;
+                Collider[] inside = Physics.OverlapCapsule(feet + Vector3.up * (radius + 0.05f), feet + Vector3.up * (eyeHeight - 0.1f), radius, ~0, QueryTriggerInteraction.Ignore);
+                if (inside.Length > 0)
+                { why.Append(" corpo:" + inside[0].name); continue; }
+
+                if (Physics.Linecast(feet + Vector3.up * eyeHeight, center, out RaycastHit block, ~0, QueryTriggerInteraction.Ignore) && !IsPartOf(block.collider, target))
+                { why.Append(" visao:" + block.collider.name); continue; }
+
+                return true;
+            }
+        }
+
+        LastStandFailure = why.ToString();
+        feet = Vector3.zero;
+        return false;
+    }
+
+    protected IEnumerator Approach(Transform player, Camera view, Collider target)
+    {
+        float eye = view.transform.position.y - player.position.y;
+        CharacterController body = player.GetComponent<CharacterController>();
+
+        if (!TryFindStandPoint(target, eye, body != null ? body.radius : 0.4f, out Vector3 feet))
+        {
+            Check(false, "achou ponto com visao para " + target.name + " (" + LastStandFailure.Substring(0, System.Math.Min(300, LastStandFailure.Length)) + ")");
+            yield break;
+        }
+
+        Vector3 flat = target.bounds.center - feet;
+        flat.y = 0f;
+        PerfBenchmark.Teleport(player, feet + Vector3.up * 0.05f, Quaternion.LookRotation(flat).eulerAngles.y);
+        yield return WaitSeconds(0.5f);
+    }
+
+    // Ajusta a mira com o mouse virtual ate o centro da tela cair sobre o alvo.
+    protected IEnumerator Aim(Camera view, Collider target)
+    {
+        for (int i = 0; i < 120; i++)
+        {
+            Ray ray = view.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f) && IsPartOf(hit.collider, target))
+                yield break;
+
+            Vector3 vp = view.WorldToViewportPoint(target.bounds.center);
+            yield return QAInput.Look(new Vector2((vp.x - 0.5f) * 40f, (vp.y - 0.5f) * 40f), 1);
+        }
+
+        Check(false, "mira chegou em " + target.name);
+    }
+
+    private static bool IsPartOf(Collider hit, Collider target)
+    {
+        return hit == target || hit.transform.IsChildOf(target.transform) || target.transform.IsChildOf(hit.transform);
+    }
+
     protected T Require<T>() where T : Object
     {
         T found = Object.FindFirstObjectByType<T>(FindObjectsInactive.Include);
