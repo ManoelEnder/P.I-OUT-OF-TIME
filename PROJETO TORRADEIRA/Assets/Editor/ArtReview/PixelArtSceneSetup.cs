@@ -18,7 +18,7 @@ public static class PixelArtSceneSetup
     private const float Px = 3f;
 
     private static readonly Color HeatRed = new Color(0.92f, 0.2f, 0.25f, 1f);
-    private static readonly Color SparkColor = new Color(0.7f, 1f, 0.85f, 1f);
+    private static readonly Color SparkColor = new Color(1f, 1f, 1f, 1f);
 
     [MenuItem("Ferramentas/Pixel Art/Aplicar padrao na cena aberta")]
     public static void Apply()
@@ -33,6 +33,8 @@ public static class PixelArtSceneSetup
         int particles = FixPieceParticles();
         int renamed = RenameToEnglish();
         OrganizeRoots();
+        int neutral = RemoveGreen();
+        Debug.Log("PixelArtSceneSetup: " + neutral + " cores verdes neutralizadas.");
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
 
@@ -569,6 +571,82 @@ public static class PixelArtSceneSetup
 
         if (roots.TryGetValue("GameManager", out GameObject manager))
             manager.transform.SetSiblingIndex(0);
+    }
+
+    // ---------- Sem verde ----------
+
+    [MenuItem("Ferramentas/Pixel Art/Remover verde da cena aberta")]
+    public static void RemoveGreenMenu()
+    {
+        int count = RemoveGreen();
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        Debug.Log("PixelArtSceneSetup: " + count + " cores verdes neutralizadas.");
+    }
+
+    private static bool IsGreen(Color c)
+    {
+        return c.g > c.r + 0.2f && c.g > c.b + 0.1f;
+    }
+
+    private static Color Neutral(Color c)
+    {
+        float v = Mathf.Max(0.72f, c.grayscale);
+        return new Color(v, v, v, c.a);
+    }
+
+    // Troca qualquer texto, imagem ou luz esverdeada por cinza-claro.
+    public static int RemoveGreen()
+    {
+        int count = 0;
+
+        foreach (Graphic graphic in FindAll<Graphic>())
+        {
+            if (!IsGreen(graphic.color))
+                continue;
+
+            Undo.RecordObject(graphic, "Sem verde");
+            graphic.color = Neutral(graphic.color);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(graphic);
+            count++;
+        }
+
+        foreach (Light light in FindAll<Light>())
+        {
+            if (!IsGreen(light.color))
+                continue;
+
+            Undo.RecordObject(light, "Sem verde");
+            light.color = new Color(0.85f, 0.88f, 0.95f);
+            count++;
+        }
+
+        // Cores serializadas nos componentes da camera.
+        foreach (CameraBattery battery in FindAll<CameraBattery>())
+            count += SetColor(battery, "corNormal", new Color(0.92f, 0.92f, 0.92f, 1f));
+
+        foreach (CameraBlink blink in FindAll<CameraBlink>())
+            count += SetColor(blink, "scanLineColor", new Color(0.95f, 0.95f, 0.95f, 1f));
+
+        foreach (ButtonHoverEffect hover in FindAll<ButtonHoverEffect>())
+        {
+            count += SetColor(hover, "hoverTextColor", Color.white);
+            count += SetColor(hover, "normalTextColor", new Color(0.72f, 0.72f, 0.72f, 1f));
+        }
+
+        return count;
+    }
+
+    private static int SetColor(Object target, string property, Color color)
+    {
+        SerializedObject so = new SerializedObject(target);
+        SerializedProperty prop = so.FindProperty(property);
+
+        if (prop == null || prop.colorValue == color)
+            return 0;
+
+        prop.colorValue = color;
+        so.ApplyModifiedProperties();
+        return 1;
     }
 
     // ---------- Utilitarios ----------

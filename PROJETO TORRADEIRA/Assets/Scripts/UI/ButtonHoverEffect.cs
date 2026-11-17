@@ -15,8 +15,8 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     [Header("Texto")]
     [SerializeField] private TMP_Text label;
-    [SerializeField] private Color normalTextColor = new Color(0.86f, 0.8f, 0.64f, 1f);
-    [SerializeField] private Color hoverTextColor = new Color(0.45f, 1f, 0.55f, 1f);
+    [SerializeField] private Color normalTextColor = new Color(0.72f, 0.72f, 0.72f, 1f);
+    [SerializeField] private Color hoverTextColor = new Color(1f, 1f, 1f, 1f);
     [SerializeField] private string hoverPrefix = "> ";
 
     private Vector3 originalScale;
