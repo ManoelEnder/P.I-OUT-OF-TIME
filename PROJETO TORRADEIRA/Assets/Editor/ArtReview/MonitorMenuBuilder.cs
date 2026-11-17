@@ -23,9 +23,9 @@ public static class MonitorMenuBuilder
     private const float Floor = -1.55f;
     private const float Ceiling = 1.9f;
 
-    // Area da tela no modelo TV.fbx (espaco local; a tela olha para +Z).
-    private static readonly Vector3 TvScreenCenter = new Vector3(-0.06f, 0.40f, 0.186f);
-    private static readonly Vector2 TvScreenSize = new Vector2(0.50f, 0.40f);
+    // Vidro da tela no modelo TV.fbx, medido na malha (espaco local; a tela olha para +Z).
+    private static readonly Vector3 TvScreenCenter = new Vector3(-0.008f, 0.443f, 0.184f);
+    private static readonly Vector2 TvScreenSize = new Vector2(0.672f, 0.49f);
 
     private static readonly Color ScreenDark = new Color(0.07f, 0.075f, 0.08f, 1f);
     private static readonly Color Phosphor = new Color(0.95f, 0.95f, 0.92f, 1f);
@@ -191,20 +191,20 @@ public static class MonitorMenuBuilder
         Transform back = Group(root, "Back_Set");
 
         // Janela alta com luz fria (vai estourar no bloom).
-        Material window = GlowMaterial("MenuWindow", new Color(0.75f, 0.85f, 1f) * 3.2f);
-        GameObject pane = AddQuad(back, new Vector3(1.6f, 1.15f, 6.14f), new Vector2(1.9f, 0.85f), window);
+        Material window = GlowMaterial("MenuWindow", new Color(0.75f, 0.85f, 1f) * 2.2f);
+        GameObject pane = AddQuad(back, new Vector3(0.35f, 1.3f, 6.14f), new Vector2(1.0f, 0.6f), window);
         pane.name = "Window";
         pane.transform.localRotation = Quaternion.identity;
 
         Material metal = MetalMaterial();
-        Box(back, "WindowFrameTop", new Vector3(1.6f, 1.6f, 6.12f), new Vector3(2.05f, 0.08f, 0.1f), metal);
-        Box(back, "WindowFrameBottom", new Vector3(1.6f, 0.70f, 6.12f), new Vector3(2.05f, 0.08f, 0.1f), metal);
-        for (int i = 0; i < 4; i++)
-            Box(back, "WindowBar", new Vector3(0.62f + i * 0.65f, 1.15f, 6.1f), new Vector3(0.05f, 0.9f, 0.05f), metal);
+        Box(back, "WindowFrameTop", new Vector3(0.35f, 1.63f, 6.12f), new Vector3(1.15f, 0.07f, 0.1f), metal);
+        Box(back, "WindowFrameBottom", new Vector3(0.35f, 0.97f, 6.12f), new Vector3(1.15f, 0.07f, 0.1f), metal);
+        for (int i = 0; i < 3; i++)
+            Box(back, "WindowBar", new Vector3(0.02f + i * 0.33f, 1.3f, 6.1f), new Vector3(0.04f, 0.65f, 0.04f), metal);
 
         // Feixe de luz da janela ate o chao.
-        LightShaft(back, new Vector3(1.6f, 1.1f, 6.0f), new Vector3(0.9f, Floor, 3.6f), 1.6f, 0.4f);
-        LightShaft(back, new Vector3(2.2f, 1.1f, 6.0f), new Vector3(1.9f, Floor, 3.9f), 0.9f, 0.3f);
+        LightShaft(back, new Vector3(0.35f, 1.25f, 6.0f), new Vector3(0.55f, Floor, 3.6f), 1.0f, 0.4f);
+        LightShaft(back, new Vector3(0.6f, 1.25f, 6.0f), new Vector3(1.2f, Floor, 4.0f), 0.6f, 0.3f);
 
         // Prateleira alta com monitores estourados de branco, como no fundo da sala.
         Transform shelf = Rack(back, "Rack_Back", new Vector3(-0.9f, Floor, 5.5f), 1.9f, 0.7f, 1.6f, new[] { 0.5f, 1.05f, 1.6f }, 0f);
@@ -220,7 +220,7 @@ public static class MonitorMenuBuilder
         Object.DestroyImmediate(bulb.GetComponent<Collider>());
         bulb.name = "RedBulb";
         bulb.transform.SetParent(back, false);
-        bulb.transform.localPosition = new Vector3(-0.2f, 1.45f, 6.05f);
+        bulb.transform.localPosition = new Vector3(-1.3f, 1.45f, 6.05f);
         bulb.transform.localScale = Vector3.one * 0.12f;
         bulb.GetComponent<MeshRenderer>().sharedMaterial = GlowMaterial("MenuRedBulb", new Color(1f, 0.04f, 0.02f) * 4f);
     }
@@ -324,15 +324,15 @@ public static class MonitorMenuBuilder
         Transform lights = Group(root, "Lights");
 
         // Vermelho forte no fundo, por tras das estantes.
-        Light red = PointLight(lights, "RedBacklight", new Vector3(-0.2f, 1.3f, 5.75f), new Color(1f, 0.04f, 0.02f), 16f, 7f);
+        Light red = PointLight(lights, "RedBacklight", new Vector3(-1.3f, 1.3f, 5.75f), new Color(1f, 0.04f, 0.02f), 16f, 7f);
         red.shadows = LightShadows.Soft;
         PointLight(lights, "RedFill", new Vector3(-2.6f, 0.2f, 3.8f), new Color(1f, 0.04f, 0.02f), 5f, 4.5f);
 
         // Luz fria entrando pela janela.
         GameObject spotGo = new GameObject("WindowLight", typeof(Light));
         spotGo.transform.SetParent(lights, false);
-        spotGo.transform.localPosition = new Vector3(1.6f, 1.3f, 5.9f);
-        spotGo.transform.localRotation = Quaternion.LookRotation(new Vector3(0.9f, Floor, 3.4f) - spotGo.transform.localPosition);
+        spotGo.transform.localPosition = new Vector3(0.35f, 1.4f, 5.9f);
+        spotGo.transform.localRotation = Quaternion.LookRotation(new Vector3(0.55f, Floor, 3.4f) - spotGo.transform.localPosition);
         Light spot = spotGo.GetComponent<Light>();
         spot.type = LightType.Spot;
         spot.color = new Color(0.72f, 0.82f, 1f);
@@ -344,7 +344,7 @@ public static class MonitorMenuBuilder
 
         // Preenchimento bem fraco para os volumes nao sumirem no preto.
         PointLight(lights, "AmbientFill", new Vector3(0.2f, 1.4f, 0.4f), new Color(0.55f, 0.62f, 0.7f), 1.2f, 6f);
-        PointLight(lights, "FloorBounce", new Vector3(0.9f, Floor + 0.4f, 3.4f), new Color(0.7f, 0.8f, 1f), 2.5f, 3.2f);
+        PointLight(lights, "FloorBounce", new Vector3(0.55f, Floor + 0.4f, 3.4f), new Color(0.7f, 0.8f, 1f), 2.5f, 3.2f);
     }
 
     private static Light PointLight(Transform parent, string name, Vector3 position, Color color, float intensity, float range)
@@ -368,11 +368,11 @@ public static class MonitorMenuBuilder
     {
         RectTransform screen = CreateScreenCanvas(tv, "MenuScreen", out CanvasGroup group);
 
-        TextMeshProUGUI header = Text(screen, "Header", "OUT OF TIME", 24f, TextIdle);
+        TextMeshProUGUI header = Text(screen, "Header", "OUT OF TIME", 30f, TextIdle);
         header.alignment = TextAlignmentOptions.Top;
-        Stretch(header.rectTransform, new Vector2(0f, 0f), new Vector2(0f, -22f));
+        Stretch(header.rectTransform, new Vector2(0f, 0f), new Vector2(0f, -30f));
 
-        float y = -78f;
+        float y = -100f;
 
         foreach (Button button in new[] { play, credits, quit })
         {
@@ -386,9 +386,9 @@ public static class MonitorMenuBuilder
             rect.localPosition = Vector3.zero;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
             rect.pivot = new Vector2(0.5f, 1f);
-            rect.sizeDelta = new Vector2(440f, 76f);
+            rect.sizeDelta = new Vector2(580f, 86f);
             rect.anchoredPosition = new Vector2(0f, y);
-            y -= 88f;
+            y -= 104f;
 
             StyleScreenButton(button);
         }
@@ -442,7 +442,7 @@ public static class MonitorMenuBuilder
                 label.fontSharedMaterial = font.material;
             }
 
-            label.fontSize = 64f;
+            label.fontSize = 76f;
             label.alignment = TextAlignmentOptions.Center;
             label.color = TextIdle;
             label.textWrappingMode = TextWrappingModes.NoWrap;
@@ -468,15 +468,15 @@ public static class MonitorMenuBuilder
 
     private static void BuildFeed(Transform tv)
     {
-        GameObject quad = AddQuad(tv, TvScreenCenter + new Vector3(0f, 0f, 0.002f), TvScreenSize, ScreenMaterial("CrtFeed", 1.0f));
+        GameObject quad = AddQuad(tv, TvScreenCenter + new Vector3(0f, 0f, 0.002f), TvScreenSize, ScreenMaterial("CrtFeed", 1.3f));
         quad.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
 
         // Camera de seguranca filmando a propria sala do alto.
         GameObject camGo = new GameObject("SecurityCamera", typeof(Camera));
         camGo.transform.SetParent(tv.root, false);
         Transform set = tv.root;
-        camGo.transform.position = set.TransformPoint(new Vector3(-2.9f, 1.55f, 5.6f));
-        camGo.transform.rotation = Quaternion.LookRotation(set.TransformPoint(new Vector3(0.2f, Floor, 2.0f)) - camGo.transform.position);
+        camGo.transform.position = set.TransformPoint(new Vector3(2.6f, 1.6f, 0.3f));
+        camGo.transform.rotation = Quaternion.LookRotation(set.TransformPoint(new Vector3(-0.5f, -0.8f, 4.5f)) - camGo.transform.position);
 
         Camera feed = camGo.GetComponent<Camera>();
         feed.fieldOfView = 70f;
