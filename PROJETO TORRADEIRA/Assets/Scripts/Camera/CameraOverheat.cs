@@ -35,9 +35,13 @@ public class CameraOverheat : MonoBehaviour
     private float displayedHeat = -1f;
 
     [Header("Cores da barra")]
-    [SerializeField] private Color coolColor = new Color(0.45f, 1f, 0.55f, 1f);
-    [SerializeField] private Color warmColor = new Color(1f, 0.6f, 0.15f, 1f);
-    [SerializeField] private Color hotColor = new Color(1f, 0.15f, 0.1f, 1f);
+    [SerializeField] private Color barraNormal = new Color(0.45f, 1f, 0.55f, 1f);
+    [SerializeField] private Color barraCritica = new Color(0.8f, 1f, 0.95f, 1f);
+
+    [Header("Avisos no radio")]
+    [SerializeField] private RadioMessageUI radioMessageUI;
+    [SerializeField] private string mensagemPerdida = "A câmera sumiu na ruptura. Procure-a pelo laboratório.";
+    [SerializeField] private string mensagemRecuperada = "Câmera recuperada. Deixe esfriar antes de abrir o visor.";
 
     private ChromaticAberration chromatic;
     private LensDistortion distortion;
@@ -171,6 +175,8 @@ public class CameraOverheat : MonoBehaviour
 
         photoCamera.OnCameraLost();
 
+        ShowRadioMessage(mensagemPerdida);
+
         ResetGlitch();
     }
 
@@ -217,6 +223,8 @@ public class CameraOverheat : MonoBehaviour
 
         photoCamera.OnCameraRecovered();
 
+        ShowRadioMessage(mensagemRecuperada);
+
         if (lostCameraInstance != null)
             Destroy(lostCameraInstance);
 
@@ -224,6 +232,18 @@ public class CameraOverheat : MonoBehaviour
 
         UpdateHeatUI();
         ResetGlitch();
+    }
+
+    private void ShowRadioMessage(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+            return;
+
+        if (radioMessageUI == null)
+            radioMessageUI = FindFirstObjectByType<RadioMessageUI>();
+
+        if (radioMessageUI != null)
+            radioMessageUI.ShowMessage(message, null);
     }
 
     private void UpdateHeatUI()
@@ -250,9 +270,12 @@ public class CameraOverheat : MonoBehaviour
         displayedHeat = heat;
         heatBar.fillAmount = heat;
 
-        heatBar.color = heat < 0.6f
-            ? Color.Lerp(coolColor, warmColor, heat / 0.6f)
-            : Color.Lerp(warmColor, hotColor, (heat - 0.6f) / 0.4f);
+        // Paleta fria: o perigo e indicado pelo brilho e pelo aviso, nao por cores quentes.
+        heatBar.color = Color.Lerp(
+            barraNormal,
+            barraCritica,
+            Mathf.InverseLerp(warningThreshold, 1f, heat)
+        );
     }
 
     private void UpdateGlitch()
