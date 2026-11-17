@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (PauseMenu.IsPaused)
+        if (PauseMenu.IsPaused || DefeatController.IsDefeated)
         {
             return;
         }
