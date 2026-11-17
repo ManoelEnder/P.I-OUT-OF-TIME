@@ -12,8 +12,9 @@ public struct PerfSummary
 
     public string ToCsv()
     {
-        return Segment + "," + Frames + "," + AvgFps.ToString("0.0") + "," + Low1Fps.ToString("0.0") + "," +
-               WorstMs.ToString("0.00") + "," + FramesOver16ms;
+        var c = System.Globalization.CultureInfo.InvariantCulture;
+        return Segment + "," + Frames + "," + AvgFps.ToString("0.0", c) + "," + Low1Fps.ToString("0.0", c) + "," +
+               WorstMs.ToString("0.00", c) + "," + FramesOver16ms;
     }
 
     public const string CsvHeader = "segmento,quadros,fps_medio,fps_1pct_low,pior_ms,quadros_acima_16_67ms";

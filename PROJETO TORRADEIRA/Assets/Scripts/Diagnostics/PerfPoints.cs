@@ -20,5 +20,8 @@ public static class PerfPoints
 
     public static readonly Point[] Heavy =
     {
+        new Point("p1", new Vector3(-21.37f, 0.08f, -156.30f), 90.00f),
+        new Point("p2", new Vector3(-21.37f, 0.08f, -146.13f), 90.00f),
+        new Point("p3", new Vector3(-21.37f, 0.08f, -166.47f), 90.00f),
     };
 }
