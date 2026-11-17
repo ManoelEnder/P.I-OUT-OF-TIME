@@ -90,6 +90,7 @@ public static class MonitorMenuBuilder
         BuildBackWall(root);
         BuildCables(root);
         BuildLights(root);
+        BuildPhotoCameras(root);
 
         if (overlay != null)
         {
@@ -339,6 +340,127 @@ public static class MonitorMenuBuilder
         line.shadowCastingMode = ShadowCastingMode.Off;
         line.positionCount = count;
         line.SetPositions(points);
+    }
+
+    // ---------- Cameras fotograficas com flash ----------
+
+    private static void BuildPhotoCameras(Transform root)
+    {
+        Transform cameras = Group(root, "PhotoCameras");
+
+        // Duas apontadas para o jogador (a da esquerda fica atras da TV e so ilumina a sala)
+        // e uma para o prototipo no console.
+        PhotoCamera(cameras, "PhotoCamera_Left", new Vector3(-2.15f, Floor, 3.1f), 1.38f, Vector3.zero);
+        PhotoCamera(cameras, "PhotoCamera_Right", new Vector3(2.75f, Floor, 3.2f), 1.3f, Vector3.zero);
+        PhotoCamera(cameras, "PhotoCamera_Back", new Vector3(-0.05f, Floor, 4.5f), 1.2f, new Vector3(1.0f, Floor + 1.15f, 1.5f));
+    }
+
+    // Camera de tripe dos anos 70 com flash "martelo" ao lado. A frente (-Z) mira em target.
+    private static Transform PhotoCamera(Transform parent, string name, Vector3 position, float height, Vector3 target)
+    {
+        Transform rig = Group(parent, name);
+        rig.localPosition = position;
+        rig.localRotation = Quaternion.Euler(0f, FaceCamera(position - target), 0f);
+
+        Material metal = MetalMaterial();
+        Material chrome = LitMaterial("MenuChassis", "VentMetal", new Color(0.55f, 0.55f, 0.53f), 0.6f, 0.75f, Vector2.one);
+        Material leather = LitMaterial("MenuDarkPlastic", "VentMetal", new Color(0.05f, 0.05f, 0.055f), 0.4f, 0.1f, Vector2.one);
+
+        // Tripe: tres pernas abertas e coluna central.
+        Vector3 head = new Vector3(0f, height, 0f);
+        for (int i = 0; i < 3; i++)
+        {
+            float angle = (90f + i * 120f) * Mathf.Deg2Rad;
+            Vector3 foot = new Vector3(Mathf.Cos(angle) * 0.4f, 0f, Mathf.Sin(angle) * 0.4f);
+            Vector3 leg = head - foot;
+            GameObject legGo = Box(rig, "Leg", (head + foot) * 0.5f, new Vector3(0.025f, leg.magnitude, 0.025f), metal);
+            legGo.transform.localRotation = Quaternion.FromToRotation(Vector3.up, leg.normalized);
+        }
+
+        Box(rig, "Column", head + new Vector3(0f, 0.04f, 0f), new Vector3(0.035f, 0.1f, 0.035f), chrome);
+        Box(rig, "HeadPlate", head + new Vector3(0f, 0.095f, 0f), new Vector3(0.09f, 0.012f, 0.09f), metal);
+
+        // Corpo da camera, inclinado para mirar no alvo.
+        Transform body = Group(rig, "Camera");
+        body.localPosition = head + new Vector3(0f, 0.17f, 0f);
+        Vector3 aim = rig.InverseTransformPoint(setRoot.TransformPoint(target)) - body.localPosition;
+        body.localRotation = Quaternion.LookRotation(-aim.normalized, Vector3.up);
+        body.localScale = Vector3.one * 1.5f;
+
+        Box(body, "Body", Vector3.zero, new Vector3(0.2f, 0.11f, 0.09f), leather);
+        Box(body, "TopPlate", new Vector3(0f, 0.065f, 0f), new Vector3(0.2f, 0.022f, 0.09f), chrome);
+        Box(body, "BottomPlate", new Vector3(0f, -0.06f, 0f), new Vector3(0.2f, 0.012f, 0.09f), chrome);
+        Box(body, "Prism", new Vector3(0f, 0.095f, 0f), new Vector3(0.07f, 0.045f, 0.07f), chrome);
+        Box(body, "Winder", new Vector3(0.07f, 0.082f, 0.01f), new Vector3(0.025f, 0.012f, 0.025f), leather);
+
+        GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Object.DestroyImmediate(lens.GetComponent<Collider>());
+        lens.name = "Lens";
+        lens.transform.SetParent(body, false);
+        lens.transform.localPosition = new Vector3(0f, 0f, -0.09f);
+        lens.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        lens.transform.localScale = new Vector3(0.07f, 0.05f, 0.07f);
+        lens.GetComponent<MeshRenderer>().sharedMaterial = leather;
+
+        GameObject ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Object.DestroyImmediate(ring.GetComponent<Collider>());
+        ring.name = "FocusRing";
+        ring.transform.SetParent(body, false);
+        ring.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+        ring.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        ring.transform.localScale = new Vector3(0.076f, 0.012f, 0.076f);
+        ring.GetComponent<MeshRenderer>().sharedMaterial = chrome;
+
+        GameObject glass = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Object.DestroyImmediate(glass.GetComponent<Collider>());
+        glass.name = "Glass";
+        glass.transform.SetParent(body, false);
+        glass.transform.localPosition = new Vector3(0f, 0f, -0.141f);
+        glass.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        glass.transform.localScale = new Vector3(0.055f, 0.002f, 0.055f);
+        glass.GetComponent<MeshRenderer>().sharedMaterial = LitMaterial("MenuLensGlass", "VentMetal", new Color(0.02f, 0.03f, 0.05f), 0.95f, 0.9f, Vector2.one);
+
+        // Flash "martelo": suporte ao lado, cabo vertical e cabeca com refletor.
+        Box(body, "FlashBracket", new Vector3(0.14f, -0.06f, 0f), new Vector3(0.1f, 0.012f, 0.04f), chrome);
+        Box(body, "FlashHandle", new Vector3(0.19f, 0.04f, 0f), new Vector3(0.04f, 0.2f, 0.045f), leather);
+        Box(body, "FlashHead", new Vector3(0.19f, 0.18f, -0.005f), new Vector3(0.13f, 0.075f, 0.07f), leather);
+        Box(body, "Reflector", new Vector3(0.19f, 0.18f, -0.038f), new Vector3(0.12f, 0.064f, 0.006f), chrome);
+
+        GameObject tube = AddQuad(body, new Vector3(0.19f, 0.18f, -0.043f), new Vector2(0.105f, 0.05f), GlowMaterial("MenuFlash", Color.white));
+        tube.name = "FlashTube";
+
+        GameObject led = Box(body, "ReadyLed", new Vector3(0.235f, 0.222f, -0.03f), Vector3.one * 0.012f, GlowMaterial("MenuLed", Color.white));
+        led.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+
+        GameObject lightGo = new GameObject("FlashLight", typeof(Light));
+        lightGo.transform.SetParent(body, false);
+        lightGo.transform.localPosition = new Vector3(0.19f, 0.18f, -0.08f);
+        lightGo.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        Light flash = lightGo.GetComponent<Light>();
+        flash.type = LightType.Spot;
+        flash.color = new Color(0.95f, 0.97f, 1f);
+        flash.intensity = 0f;
+        flash.range = 10f;
+        flash.spotAngle = 110f;
+        flash.innerSpotAngle = 60f;
+        flash.shadows = LightShadows.None;
+        flash.enabled = false;
+
+        AudioSource audio = body.gameObject.AddComponent<AudioSource>();
+        audio.playOnAwake = false;
+        audio.spatialBlend = 0.7f;
+        audio.minDistance = 1.5f;
+        audio.maxDistance = 15f;
+
+        PhotoFlash photo = body.gameObject.AddComponent<PhotoFlash>();
+        SerializedObject so = new SerializedObject(photo);
+        so.FindProperty("flashLight").objectReferenceValue = flash;
+        so.FindProperty("flashRenderer").objectReferenceValue = tube.GetComponent<Renderer>();
+        so.FindProperty("readyLed").objectReferenceValue = led.GetComponent<Renderer>();
+        so.FindProperty("audioSource").objectReferenceValue = audio;
+        so.ApplyModifiedPropertiesWithoutUndo();
+
+        return rig;
     }
 
     // ---------- Luzes ----------
