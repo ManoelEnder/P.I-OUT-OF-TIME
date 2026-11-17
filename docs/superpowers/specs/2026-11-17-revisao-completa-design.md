@@ -72,7 +72,7 @@ Deixar o jogo da câmera temporal (terror/ficção científica num laboratório 
 ### Etapa 2 — Organização e limpeza
 - Estrutura alvo em `Assets/`: `Scenes/`, `Scripts/<Sistema>/` (Camera, Enemy, Missions, UI, Menu, Player, Album...), `Prefabs/`, `Art/` (Models, Textures, Materials, Sprites/UI), `Audio/`, `Cutscene/`, `Fonts/`, `Settings/` (pipeline e volumes), `ThirdParty/` (pacotes intactos por dentro), `Editor/`, `Resources/`.
 - Mover só com `AssetDatabase.MoveAsset` (preserva GUID e `.meta`); revalidar com a auditoria depois de cada lote.
-- Remover apenas o que o mapa de referências mostrar sem uso **e** não for carregado por nome: candidatos já vistos são `_Recovery/`, a cena `Sample-CRT` do pacote CRT, pacotes de terceiros sem nenhuma dependência (por exemplo os de banheiro, se confirmado) e as cenas fora do build. Cenas pessoais (`Jullya`, `CenaLabFut`, `Tutorial`, `TestScene`) e a cutscene que não estiver no fluxo ficam preservadas e listadas como dúvida, a menos que o autor autorize.
+- Remover apenas o que o mapa de referências mostrar sem uso **e** não for carregado por nome: candidatos já vistos são `_Recovery/`, a cena `Sample-CRT` do pacote CRT, pacotes de terceiros sem nenhuma dependência (por exemplo os de banheiro, se confirmado) e as cenas fora do build. As cenas `Jullya`, `CenaLabFut`, `Tutorial`, `TestScene` e `Radio` são removidas (autorizado). A `IntroCutscene` desenhada em código fica preservada fora do build.
 
 ### Etapa 3 — Desempenho
 - Medir a linha de base na build de desenvolvimento com o Profiler (CPU, GPU, memória, carregamentos) e identificar o gargalo de cada trecho.
@@ -102,5 +102,5 @@ Deixar o jogo da câmera temporal (terror/ficção científica num laboratório 
 
 ## Perguntas em aberto para o autor
 
-1. Qual cutscene é a oficial: a de vídeo (`IntroCutsceneVideo`, que o menu chama hoje) ou a desenhada em código (`IntroCutscene`, descrita no LEIAME)? A outra seria preservada fora do fluxo.
-2. As cenas pessoais e de rascunho (`Jullya`, `CenaLabFut`, `Tutorial`, `TestScene`, `Radio`) podem ser removidas, ou ficam?
+1. ~~Qual cutscene é a oficial?~~ **Respondido: a de vídeo** (`IntroCutsceneVideo`). A `IntroCutscene` desenhada em código sai do build e fica preservada no projeto; o LEIAME passa a dizer isso.
+2. ~~Cenas pessoais e de rascunho?~~ **Respondido: podem ser removidas** (`Jullya`, `CenaLabFut`, `Tutorial`, `TestScene`, `Radio`), junto com o que só elas usam, depois de conferir no mapa de referências que nada do fluxo depende delas. `Radio` sai do build.
