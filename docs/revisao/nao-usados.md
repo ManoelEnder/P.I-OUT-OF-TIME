@@ -1,23 +1,18 @@
 # Assets sem uso (candidatos à remoção)
 
-Usados: 753 · Sem uso: 575 (575,6 MB)
+Usados: 763 · Sem uso: 527 (223,2 MB)
 
 Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, caminhos citados nas ferramentas de editor e referências das configurações do projeto.
 
 | Pasta | Arquivos | Tamanho |
 |---|---:|---:|
-| `Assets/ThirdParty/dirty-public-toilet` | 10 | 174,6 MB |
-| `Assets/ThirdParty/Leather sofa` | 16 | 106,2 MB |
 | `Assets/Sounds/Casual & Relaxing Game Music` | 4 | 63,4 MB |
-| `Assets/ThirdParty/ArmsModel` | 9 | 52,8 MB |
 | `Assets/Prefabs/Maps` | 39 | 48,7 MB |
 | `Assets/ThirdParty/Abandoned Office` | 28 | 39,0 MB |
 | `Assets/ThirdParty/QuickOutline` | 7 | 30,7 MB |
-| `Assets/ThirdParty/sink` | 10 | 14,8 MB |
 | `Assets/ThirdParty/CautionTape` | 8 | 9,9 MB |
 | `Assets/Prefabs/Mat` | 10 | 5,9 MB |
 | `Assets/Prefabs/Lamps` | 1 | 5,5 MB |
-| `Assets/_Recovery` | 3 | 4,3 MB |
 | `Assets/Sounds/Ambient` | 1 | 3,2 MB |
 | `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly` | 7 | 2,9 MB |
 | `Assets/Prefabs/CenterTable` | 5 | 2,7 MB |
@@ -25,22 +20,19 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 | `Assets/TextMesh Pro/Shaders` | 20 | 1,2 MB |
 | `Assets/Textures` | 5 | 1,2 MB |
 | `Assets/TextMesh Pro` | 2 | 1,1 MB |
-| `Assets/Prefabs/UI` | 10 | 1,0 MB |
+| `Assets/Prefabs/UI` | 12 | 1,0 MB |
 | `Assets/TextMesh Pro/Fonts` | 6 | 0,9 MB |
 | `Assets/Ilumisoft/RadarSystem` | 7 | 0,8 MB |
+| `Assets/Sounds/Radio` | 5 | 0,7 MB |
 | `Assets/ThirdParty/kenney_fantasy-ui-borders (1)` | 285 | 0,4 MB |
 | `Assets/Scenes/Principal` | 14 | 0,4 MB |
 | `Assets/Prefabs/Radar` | 3 | 0,3 MB |
 | `Assets/ThirdParty/Easy Collider` | 4 | 0,3 MB |
 | `Assets/Prefabs/Player` | 1 | 0,2 MB |
 | `Assets/Plugins/Demigiant` | 2 | 0,2 MB |
-| `Assets/Scenes/CenaLabFut` | 2 | 0,2 MB |
 | `Assets/Prefabs/camera` | 4 | 0,2 MB |
-| `Assets/Sounds/Radio` | 2 | 0,2 MB |
 | `Assets/Sounds/Player` | 1 | 0,1 MB |
 | `Assets/Scripts/Settings` | 16 | 0,1 MB |
-| `Assets/Scenes` | 1 | 0,1 MB |
-| `Assets/ThirdParty/window-blinds` | 1 | 0,0 MB |
 | `Assets/Materials` | 9 | 0,0 MB |
 | `Assets/Shaders` | 2 | 0,0 MB |
 | `Assets/Prefabs/Battery` | 1 | 0,0 MB |
@@ -49,7 +41,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 | `Assets/TextMesh Pro/Sprites` | 2 | 0,0 MB |
 | `Assets/Materials/Menu` | 2 | 0,0 MB |
 | `Assets` | 3 | 0,0 MB |
-| `Assets/Scenes/Radio` | 1 | 0,0 MB |
 | `Assets/Rendering` | 1 | 0,0 MB |
 | `Assets/UI` | 2 | 0,0 MB |
 | `Assets/Scenes/Credits` | 1 | 0,0 MB |
@@ -57,6 +48,8 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 ## Carregado por nome — conferir antes de remover
 
 - `Assets/Scripts/UI/StartScreenCrt.cs:76` SceneManager.LoadScene(menuSceneName);
+- `Assets/Scripts/Diagnostics/PerfBenchmark.cs:36` SceneManager.LoadScene("IntroCutsceneVideo");
+- `Assets/Scripts/Diagnostics/PerfBenchmark.cs:40` SceneManager.LoadScene("Principal");
 - `Assets/Scripts/Enemy/DefeatController.cs:118` SceneManager.LoadScene(menuSceneName);
 - `Assets/Scripts/Missions/MissionSystem.cs:195` SceneManager.LoadScene(finalSceneName);
 - `Assets/Scripts/Missions/MissionSystem.cs:214` SceneManager.LoadScene(finalSceneName);
@@ -74,9 +67,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 
 ## Lista completa
 
-- `Assets/_Recovery/0 (1).unity`
-- `Assets/_Recovery/0 (2).unity`
-- `Assets/_Recovery/0.unity`
 - `Assets/Animation/ArmController.controller`
 - `Assets/Animation/IdleArm.anim`
 - `Assets/Cutscene/LEIAME.md`
@@ -171,15 +161,15 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/Prefabs/UI/Design sem nome (3).png`
 - `Assets/Prefabs/UI/Design sem nome (4).png`
 - `Assets/Prefabs/UI/Design sem nome.png`
+- `Assets/Prefabs/UI/Inserir um subtítulo (1) 1.png`
 - `Assets/Prefabs/UI/Inserir um subtítulo (1).png`
+- `Assets/Prefabs/UI/Inserir um subtítulo (2) 1.png`
 - `Assets/Prefabs/UI/Inserir um subtítulo (2).png`
 - `Assets/Prefabs/UI/Inserir um subtítulo.png`
 - `Assets/Prefabs/UI/—Pngtree—camera rec screen and focus_8285811.png`
 - `Assets/Prefabs/UI/Texto do seu parágrafo 1.png`
 - `Assets/Prefabs/UI/Texto do seu parágrafo.png`
 - `Assets/Rendering/UI_Renderer.asset`
-- `Assets/Scenes/CenaLabFut/LightingData.asset`
-- `Assets/Scenes/CenaLabFut/ReflectionProbe-0.exr`
 - `Assets/Scenes/Credits/GlobalVolume Profile.asset`
 - `Assets/Scenes/Principal/CamVolume Profile.asset`
 - `Assets/Scenes/Principal/Global Volume Profile.asset`
@@ -195,11 +185,9 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/Scenes/Principal/NavMesh-Vent_CT_A.asset`
 - `Assets/Scenes/Principal/Post Process Volume Profile.asset`
 - `Assets/Scenes/Principal/TimeTravelBlur Profile.asset`
-- `Assets/Scenes/Radio/GlobalVolume Profile.asset`
 - `Assets/Scenes/TelaInicio/Global Volume Profile 1.asset`
 - `Assets/Scenes/TelaInicio/Global Volume Profile 2.asset`
 - `Assets/Scenes/TelaInicio/Global Volume Profile.asset`
-- `Assets/Scenes/TestScene.unity`
 - `Assets/Scripts/Settings/DefaultVolumeProfile.asset`
 - `Assets/Scripts/Settings/HDRP Balanced.asset`
 - `Assets/Scripts/Settings/HDRP High Fidelity.asset`
@@ -224,7 +212,10 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/Sounds/Casual & Relaxing Game Music/Mystery.wav`
 - `Assets/Sounds/Casual & Relaxing Game Music/Space Walk.wav`
 - `Assets/Sounds/Player/freesound_community-concrete-footsteps-1-6265.mp3`
+- `Assets/Sounds/Radio/Dublagemarthur-_1_.mp3`
+- `Assets/Sounds/Radio/Dublagemarthur-_2_.mp3`
 - `Assets/Sounds/Radio/Dublagemarthur-_3_.mp3`
+- `Assets/Sounds/Radio/Dublagemarthur-_4_.mp3`
 - `Assets/Sounds/Radio/jullya-diellyy_s-Vídeo-25_08_2026-_1_.mp3`
 - `Assets/TextMesh Pro/Fonts/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat`
 - `Assets/TextMesh Pro/Fonts/Fonts & Materials/LiberationSans SDF - Outline.mat`
@@ -289,15 +280,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/ThirdParty/Abandoned Office/textures/wooddesk_d.png`
 - `Assets/ThirdParty/Abandoned Office/textures/wooddesk_n.png`
 - `Assets/ThirdParty/Abandoned Office/textures/wooddesk_r.png`
-- `Assets/ThirdParty/ArmsModel/animation-first-person-arms-male.fbx`
-- `Assets/ThirdParty/ArmsModel/textures/_mr__FPArms_Male1_SMTH.png`
-- `Assets/ThirdParty/ArmsModel/textures/_nflip__FPArms_Male1_NRM.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_AO.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_DIF.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_MET.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_NRM.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_SMTH.png`
-- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_SPC.png`
 - `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Albedo.png`
 - `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Metalness.png`
 - `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Normal.png`
@@ -313,16 +295,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/ThirdParty/CautionTape/textures/CautionTape_Normal_.png`
 - `Assets/ThirdParty/CautionTape/textures/CautionTape_Roughness.png`
 - `Assets/ThirdParty/CautionTape/textures/CautionTape_Specular.png`
-- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/SM_Toilet.fbx`
-- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_BaseColor.tga`
-- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_Normal.tga`
-- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_OcclusionRoughnessMetallic.tga`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_BaseColor.tga.png`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_Normal.tga.png`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_OcclusionRoughnessMetallic.png`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_BaseColor.png`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_Normal.png`
-- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_OcclusionRoughnessMetallic.png`
 - `Assets/ThirdParty/Easy Collider/Documentation.pdf`
 - `Assets/ThirdParty/Easy Collider/Metarials/Box.mat`
 - `Assets/ThirdParty/Easy Collider/Prefabs/Demo.prefab`
@@ -612,22 +584,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Vector/fantasy-ui-borders.svg`
 - `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Visit Kenney.url`
 - `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Visit Patreon.url`
-- `Assets/ThirdParty/Leather sofa/Materials/Material.004_Base_color.mat`
-- `Assets/ThirdParty/Leather sofa/Materials/Material.004_Roughness.mat`
-- `Assets/ThirdParty/Leather sofa/Sofa.fbx`
-- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Base_color.png`
-- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Mixed_AO.png`
-- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Normal_OpenGL.png`
-- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Roughness.png`
-- `Assets/ThirdParty/Leather sofa/Textures/vintage/source/DVD.fbx`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/license.txt`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/scene.bin`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/scene.gltf`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_baseColor.jpeg`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_metallicRoughness.png`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_normal.png`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/wire_135110008_baseColor.png`
-- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/wire_135110008_metallicRoughness.png`
 - `Assets/ThirdParty/QuickOutline/hanging_light.glb`
 - `Assets/ThirdParty/QuickOutline/Readme.txt`
 - `Assets/ThirdParty/QuickOutline/Samples/Materials/Plane.mat`
@@ -635,17 +591,6 @@ Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, cam
 - `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutline/LightingData.asset`
 - `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutline/ReflectionProbe-0.exr`
 - `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutlineSettings.lighting`
-- `Assets/ThirdParty/sink/sink/sink.fbx`
-- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_BaseColor.png`
-- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Height.png`
-- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Metallic.png`
-- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Normal.png`
-- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Roughness.png`
-- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_BaseColor.png`
-- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Metallic.png`
-- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Normal.png`
-- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Roughness.png`
-- `Assets/ThirdParty/window-blinds/0a8416973193455b964db13c84a90d7e/blinds.3DS`
 - `Assets/UI/crosshair117.png`
 - `Assets/UI/hand_closed.png`
 - `Assets/UIInputActions.inputactions`

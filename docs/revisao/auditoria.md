@@ -1,6 +1,6 @@
 # Auditoria das cenas do build
 
-Cenas auditadas: 8 · Total de itens: 448
+Cenas auditadas: 6 · Total de itens: 429
 
 ## Scripts faltando (Missing Script) (0)
 
@@ -8,7 +8,7 @@ Cenas auditadas: 8 · Total de itens: 448
 ## Prefabs sem asset (0)
 
 
-## Referências vazias ou quebradas em componentes do jogo (448)
+## Referências vazias ou quebradas em componentes do jogo (429)
 
 - `TelaInicio/Main Camera : CameraLensEffect.postProcessVolume`
 - `TelaInicio/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
@@ -274,24 +274,6 @@ Cenas auditadas: 8 · Total de itens: 448
 - `Menu/MenuSet/Lights/RecordingSignLight : MenuBlinker.targetText`
 - `Menu/MenuSet/Lights/WindowLight : MenuBlinker.targetRenderer`
 - `Menu/MenuSet/Lights/WindowLight : MenuBlinker.targetText`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[0].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[1].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[2].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[3].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[4].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[5].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[6].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[7].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[8].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[9].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[10].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[11].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[12].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[13].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[14].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[15].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[16].clip`
-- `IntroCutscene/Diretor : IntroCutsceneDirector.lines.Array.data[17].clip`
 - `Principal/GameManager : MissionUIController.photoCamera`
 - `Principal/Systems/PauseMenu : PauseMenu.armsObject`
 - `Principal/Environment/Map/ruined-office-furniture/monitor2_98/monitor2_98_Material__27_0 : PhotoLocation.marker`
@@ -323,6 +305,7 @@ Cenas auditadas: 8 · Total de itens: 448
 - `Principal/DefeatCanvas/DefeatPanel/RetryButton : ButtonHoverEffect.audioSource`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.hoverSound`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.audioSource`
+- `Victory TEMP/Canvas/BackBttn : ButtonHoverEffect.label`
 - `Credits/Canvas/BackBttn : ButtonHoverEffect.label`
 - `Credits/CreditsManager : CreditsController.onCreditsFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument`
 - `Credits/CreditsManager : CreditsController.onEscapePressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument`
@@ -456,5 +439,3 @@ Cenas auditadas: 8 · Total de itens: 448
 - `Credits/MenuSet/Lights/RecordingSignLight : MenuBlinker.targetText`
 - `Credits/MenuSet/Lights/WindowLight : MenuBlinker.targetRenderer`
 - `Credits/MenuSet/Lights/WindowLight : MenuBlinker.targetText`
-- `Radio/Dublagem : CenaNarrativa.controleDoJogador`
-- `Victory TEMP/Canvas/BackBttn : ButtonHoverEffect.label`

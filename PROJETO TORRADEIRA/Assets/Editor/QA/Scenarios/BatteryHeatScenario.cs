@@ -16,6 +16,7 @@ public class BatteryHeatScenario : QAScenario
         var placed = Object.FindObjectsByType<BatteryPickup>(FindObjectsSortMode.None)
             .ToDictionary(b => b, b => b.transform.position);
         yield return WaitGameplay();
+        DisableEnemy();
 
         // Pilhas ficam onde o level design colocou (nao caem atraves do piso).
         foreach (var pair in placed)

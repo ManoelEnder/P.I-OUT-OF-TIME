@@ -202,7 +202,7 @@ public abstract class QAScenario
         for (int i = 0; i < 120; i++)
         {
             Ray ray = view.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            if (Physics.Raycast(ray, out RaycastHit hit, 5f) && IsPartOf(hit.collider, target))
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f, ~0, QueryTriggerInteraction.Ignore) && IsPartOf(hit.collider, target))
                 yield break;
 
             Vector3 vp = view.WorldToViewportPoint(target.bounds.center);
@@ -210,13 +210,22 @@ public abstract class QAScenario
         }
 
         Ray last = view.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        string seen = Physics.Raycast(last, out RaycastHit h, 5f) ? h.collider.name + " a " + h.distance.ToString("0.00") + "m" : "nada";
+        string seen = Physics.Raycast(last, out RaycastHit h, 5f, ~0, QueryTriggerInteraction.Ignore) ? h.collider.name + " a " + h.distance.ToString("0.00") + "m" : "nada";
         Check(false, "mira chegou em " + target.name + " (centro da tela acerta: " + seen + ")");
     }
 
     private static bool IsPartOf(Collider hit, Collider target)
     {
         return hit == target || hit.transform.IsChildOf(target.transform) || target.transform.IsChildOf(hit.transform);
+    }
+
+    // Cenarios que nao testam o inimigo tiram ele da fase: se ele alcancar o jogador, a derrota
+    // congela o jogo e o cenario falha por outro motivo.
+    protected static void DisableEnemy()
+    {
+        TemporalEraserController enemy = Object.FindFirstObjectByType<TemporalEraserController>();
+        if (enemy != null)
+            enemy.gameObject.SetActive(false);
     }
 
     protected T Require<T>() where T : Object

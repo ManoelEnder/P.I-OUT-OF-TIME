@@ -11,6 +11,7 @@ public class AlbumScenario : QAScenario
     {
         yield return LoadScene("Principal");
         yield return WaitGameplay();
+        DisableEnemy();
 
         PhotoCamera photo = Require<PhotoCamera>();
         CameraPhotoData data = Require<CameraPhotoData>();
