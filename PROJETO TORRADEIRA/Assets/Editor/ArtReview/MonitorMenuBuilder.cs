@@ -36,6 +36,8 @@ public static class MonitorMenuBuilder
 
     private static TMP_FontAsset font;
     private static Camera menuCamera;
+    private static Transform prototypeLens;
+    private static Transform setRoot;
 
     [MenuItem("Ferramentas/Pixel Art/Montar menu em monitores CRT")]
     public static void Build()
@@ -79,12 +81,13 @@ public static class MonitorMenuBuilder
         Vector3 forward = Vector3.ProjectOnPlane(menuCamera.transform.forward, Vector3.up).normalized;
         set.transform.SetPositionAndRotation(menuCamera.transform.position, Quaternion.LookRotation(forward, Vector3.up));
         Transform root = set.transform;
+        setRoot = root;
 
         BuildRoom(root);
+        BuildConsole(root);
         BuildLeftRack(root, play, credits, quit);
         BuildRightRack(root);
         BuildBackWall(root);
-        BuildConsole(root);
         BuildCables(root);
         BuildLights(root);
 
@@ -144,14 +147,17 @@ public static class MonitorMenuBuilder
         Transform scope = Device(rack, "Oscilloscope", new Vector3(-0.32f, 0.49f, -0.08f), new Vector3(0.5f, 0.3f, 0.5f));
         AddQuad(scope, new Vector3(-0.06f, 0.02f, -0.251f), new Vector2(0.24f, 0.18f), ScreenMaterial("CrtStaticSmall", 0.8f)).AddComponent<CrtNoiseScreen>();
         Led(scope, new Vector3(0.15f, 0.06f, -0.252f), "08.5", 0.55f);
+        LedRow(scope, new Vector3(0.08f, -0.09f, -0.252f), 4, 0.035f, LedRed, MenuBlinker.Mode.Random, 0.6f);
 
         Transform counter = Device(rack, "Counter", new Vector3(0.36f, 0.49f, -0.05f), new Vector3(0.48f, 0.18f, 0.5f));
-        Led(counter, new Vector3(0f, 0f, -0.252f), "-01975", 0.7f);
+        Led(counter, new Vector3(0f, 0.02f, -0.252f), "-01975", 0.7f);
+        LedRow(counter, new Vector3(-0.15f, -0.06f, -0.252f), 6, 0.06f, Color.white, MenuBlinker.Mode.Random, 0.35f);
 
         // Prateleira de baixo: modulos com contadores vermelhos.
         Transform module = Device(rack, "Module", new Vector3(-0.15f, 0.13f, -0.05f), new Vector3(1.0f, 0.22f, 0.55f));
         Led(module, new Vector3(-0.25f, 0f, -0.277f), "47093", 0.75f);
         Led(module, new Vector3(0.25f, 0f, -0.277f), "00:17", 0.75f);
+        LedRow(module, new Vector3(-0.45f, -0.08f, -0.277f), 12, 0.075f, LedRed, MenuBlinker.Mode.Random, 0.5f);
     }
 
     // ---------- Estante da direita: camera de seguranca ----------
@@ -166,8 +172,7 @@ public static class MonitorMenuBuilder
         Transform staticTv = Tv(rack, "Monitor_Static", new Vector3(0.05f, 0.33f, 0f), 0.85f);
         StaticScreen(staticTv, 0.8f);
 
-        Device(rack, "Recorder", new Vector3(-0.38f, 0.40f, -0.1f), new Vector3(0.4f, 0.16f, 0.45f));
-        Led(rack.Find("Recorder"), new Vector3(0f, 0f, -0.227f), "REC", 0.6f);
+        TapeDeck(rack, new Vector3(0f, 0.08f, -0.1f));
 
         // TV extra no pedestal, cortada pela borda da tela.
         GameObject standModel = AssetDatabase.LoadAssetAtPath<GameObject>(PsxFolder + "TVSet/TVStand.fbx");
@@ -222,7 +227,21 @@ public static class MonitorMenuBuilder
         bulb.transform.SetParent(back, false);
         bulb.transform.localPosition = new Vector3(-1.3f, 1.45f, 6.05f);
         bulb.transform.localScale = Vector3.one * 0.12f;
-        bulb.GetComponent<MeshRenderer>().sharedMaterial = GlowMaterial("MenuRedBulb", new Color(1f, 0.04f, 0.02f) * 4f);
+        bulb.GetComponent<MeshRenderer>().sharedMaterial = GlowMaterial("MenuLed", Color.white);
+        Blinker(bulb, MenuBlinker.Mode.Pulse, 2.6f, 0.5f, bulb.GetComponent<Renderer>(), new Color(1f, 0.04f, 0.02f) * 4f, new Color(1f, 0.04f, 0.02f) * 0.8f);
+
+        // Luminoso "GRAVANDO" piscando, como luz de estudio.
+        Transform sign = Box(back, "RecordingSign", new Vector3(1.75f, 1.42f, 6.1f), new Vector3(0.62f, 0.16f, 0.06f), GlowMaterial("MenuLed", Color.white)).transform;
+        Blinker(sign.gameObject, MenuBlinker.Mode.Blink, 1.4f, 0.65f, sign.GetComponent<Renderer>(), new Color(1f, 0.05f, 0.03f) * 3f, new Color(0.25f, 0.02f, 0.01f));
+        WallText(back, "RecordingLabel", new Vector3(1.75f, 1.42f, 6.065f), "GRAVANDO", 0.9f, new Color(0.04f, 0f, 0f));
+
+        // Placa pintada na parede.
+        WallText(back, "LabSign", new Vector3(1.75f, 1.17f, 6.14f), "LAB 1975", 1.8f, new Color(0.75f, 0.74f, 0.7f));
+        WallText(back, "LabSub", new Vector3(1.75f, 1.02f, 6.14f), "PROJETO: CAMERA DIGITAL", 0.9f, new Color(0.6f, 0.6f, 0.58f));
+        WallText(back, "LabWarn", new Vector3(1.75f, 0.92f, 6.14f), "NAO EXPOR A FITA A LUZ", 0.7f, new Color(0.6f, 0.08f, 0.06f));
+
+        // LEDs na lateral da estante do fundo.
+        LedRow(shelf, new Vector3(0.93f, 0.7f, -0.36f), 8, 0.05f, LedRed, MenuBlinker.Mode.Random, 0.4f, true);
     }
 
     // ---------- Primeiro plano: console ----------
@@ -236,13 +255,17 @@ public static class MonitorMenuBuilder
         Material metal = MetalMaterial();
         Box(console, "Body", new Vector3(0f, 0.52f, 0f), new Vector3(1.0f, 1.04f, 0.7f), metal);
 
-        Transform top = Box(console, "Panel", new Vector3(0f, 1.08f, 0.05f), new Vector3(1.0f, 0.06f, 0.62f), metal).transform;
+        Transform top = Group(console, "Panel");
+        top.localPosition = new Vector3(0f, 1.07f, -0.2f);
         top.localRotation = Quaternion.Euler(-18f, 0f, 0f);
+        Box(top, "Plate", Vector3.zero, new Vector3(1.0f, 0.05f, 0.32f), metal);
+        LedRow(top, new Vector3(-0.42f, 0.03f, -0.05f), 10, 0.07f, LedRed, MenuBlinker.Mode.Random, 0.45f);
 
-        Transform dial = Device(console, "Dials", new Vector3(-0.2f, 1.13f, 0.02f), new Vector3(0.35f, 0.05f, 0.22f));
-        dial.localRotation = Quaternion.Euler(-18f, 0f, 0f);
         Led(console, new Vector3(0.22f, 0.86f, -0.352f), "-01005", 0.7f);
         Led(console, new Vector3(-0.22f, 0.86f, -0.352f), "88:04", 0.7f);
+        LedRow(console, new Vector3(-0.4f, 0.72f, -0.352f), 12, 0.07f, Color.white, MenuBlinker.Mode.Random, 0.3f);
+
+        BuildPrototype(console, new Vector3(0.05f, 1.04f, 0.15f));
 
         // Luz fria fraca vinda do monitor ao lado, para o console nao sumir no preto.
         PointLight(console, "ConsoleGlow", new Vector3(-0.3f, 1.5f, -0.6f), new Color(0.75f, 0.82f, 0.95f), 1.4f, 2.2f);
@@ -256,6 +279,7 @@ public static class MonitorMenuBuilder
         Material cable = UnlitMaterial("MenuCable", new Color(0.015f, 0.015f, 0.018f));
 
         float y = Floor + 0.015f;
+        Cable(cables, cable, 0.03f, new Vector3(0.95f, y, 1.75f), new Vector3(1.3f, y, 2.2f), new Vector3(0.9f, y, 2.6f), new Vector3(1.1f, y, 2.95f));
         Cable(cables, cable, 0.025f, new Vector3(-0.6f, y, 2.2f), new Vector3(0.1f, y, 3.2f), new Vector3(0.7f, y, 3.4f), new Vector3(1.2f, y, 3.5f));
         Cable(cables, cable, 0.02f, new Vector3(-1.1f, y, 2.3f), new Vector3(-0.9f, y, 3.8f), new Vector3(-0.3f, y, 4.6f), new Vector3(-0.6f, y, 5.6f));
         Cable(cables, cable, 0.03f, new Vector3(1.4f, y, 3.4f), new Vector3(1.9f, y, 4.4f), new Vector3(1.3f, y, 5.2f), new Vector3(2.2f, y, 6.1f));
@@ -326,7 +350,12 @@ public static class MonitorMenuBuilder
         // Vermelho forte no fundo, por tras das estantes.
         Light red = PointLight(lights, "RedBacklight", new Vector3(-1.3f, 1.3f, 5.75f), new Color(1f, 0.04f, 0.02f), 16f, 7f);
         red.shadows = LightShadows.Soft;
+        Blinker(red.gameObject, MenuBlinker.Mode.Pulse, 2.6f, 0.5f, null, Color.white, Color.white, red, red.intensity * 0.45f);
         PointLight(lights, "RedFill", new Vector3(-2.6f, 0.2f, 3.8f), new Color(1f, 0.04f, 0.02f), 5f, 4.5f);
+
+        // Luz do luminoso GRAVANDO.
+        Light sign = PointLight(lights, "RecordingSignLight", new Vector3(1.75f, 1.42f, 5.85f), new Color(1f, 0.05f, 0.03f), 3f, 2.2f);
+        Blinker(sign.gameObject, MenuBlinker.Mode.Blink, 1.4f, 0.65f, null, Color.white, Color.white, sign, 0f);
 
         // Luz fria entrando pela janela.
         GameObject spotGo = new GameObject("WindowLight", typeof(Light));
@@ -341,6 +370,7 @@ public static class MonitorMenuBuilder
         spot.spotAngle = 62f;
         spot.innerSpotAngle = 30f;
         spot.shadows = LightShadows.Soft;
+        Blinker(spotGo, MenuBlinker.Mode.Flicker, 1.5f, 0.5f, null, Color.white, Color.white, spot, spot.intensity * 0.2f);
 
         // Preenchimento bem fraco para os volumes nao sumirem no preto.
         PointLight(lights, "AmbientFill", new Vector3(0.2f, 1.4f, 0.4f), new Color(0.55f, 0.62f, 0.7f), 1.2f, 6f);
@@ -396,6 +426,15 @@ public static class MonitorMenuBuilder
         SetLabel(play, "PLAY");
         SetLabel(credits, "CREDITS");
         SetLabel(quit, "QUIT");
+
+        TextMeshProUGUI footer = Text(screen, "Footer", "PROTOTIPO CCD 100x100 // 1975", 24f, new Color(0.5f, 0.5f, 0.48f));
+        footer.alignment = TextAlignmentOptions.Bottom;
+        Stretch(footer.rectTransform, new Vector2(0f, 26f), Vector2.zero);
+
+        TextMeshProUGUI rec = Text(screen, "Rec", "[REC]", 24f, LedRed);
+        rec.alignment = TextAlignmentOptions.TopRight;
+        Stretch(rec.rectTransform, Vector2.zero, new Vector2(-30f, -30f));
+        Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
 
         AddCanvasOverlay(screen);
 
@@ -468,18 +507,18 @@ public static class MonitorMenuBuilder
 
     private static void BuildFeed(Transform tv)
     {
-        GameObject quad = AddQuad(tv, TvScreenCenter + new Vector3(0f, 0f, 0.002f), TvScreenSize, ScreenMaterial("CrtFeed", 1.3f));
+        GameObject quad = AddQuad(tv, TvScreenCenter + new Vector3(0f, 0f, 0.002f), TvScreenSize, GrayFeedMaterial());
         quad.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
 
-        // Camera de seguranca filmando a propria sala do alto.
-        GameObject camGo = new GameObject("SecurityCamera", typeof(Camera));
-        camGo.transform.SetParent(tv.root, false);
-        Transform set = tv.root;
-        camGo.transform.position = set.TransformPoint(new Vector3(2.6f, 1.6f, 0.3f));
-        camGo.transform.rotation = Quaternion.LookRotation(set.TransformPoint(new Vector3(-0.5f, -0.8f, 4.5f)) - camGo.transform.position);
+        // O que o prototipo "ve": camera na ponta da lente, imagem 100x100 em tons de cinza.
+        GameObject camGo = new GameObject("PrototypeView", typeof(Camera));
+        camGo.transform.SetParent(setRoot, false);
+
+        if (prototypeLens != null)
+            camGo.transform.SetPositionAndRotation(prototypeLens.position, prototypeLens.rotation);
 
         Camera feed = camGo.GetComponent<Camera>();
-        feed.fieldOfView = 70f;
+        feed.fieldOfView = 55f;
         feed.nearClipPlane = 0.05f;
         feed.farClipPlane = 20f;
         feed.enabled = false;
@@ -488,6 +527,9 @@ public static class MonitorMenuBuilder
         CrtCameraFeed component = quad.AddComponent<CrtCameraFeed>();
         SerializedObject so = new SerializedObject(component);
         so.FindProperty("feedCamera").objectReferenceValue = feed;
+        so.FindProperty("width").intValue = 100;
+        so.FindProperty("height").intValue = 100;
+        so.FindProperty("framesPerSecond").floatValue = 6f;
         so.ApplyModifiedPropertiesWithoutUndo();
 
         RectTransform overlay = CreateScreenCanvas(tv, "Overlay", out _, 0.004f);
@@ -495,9 +537,19 @@ public static class MonitorMenuBuilder
         Object.DestroyImmediate(overlay.Find("Background").gameObject);
         AddCanvasOverlay(overlay);
 
-        TextMeshProUGUI rec = Text(overlay, "Rec", "CAM 03  REC", 26f, LedRed);
-        rec.alignment = TextAlignmentOptions.TopLeft;
-        Stretch(rec.rectTransform, new Vector2(24f, 0f), new Vector2(0f, -18f));
+        TextMeshProUGUI label = Text(overlay, "Label", "CCD 100x100", 26f, Phosphor);
+        label.alignment = TextAlignmentOptions.TopLeft;
+        Stretch(label.rectTransform, new Vector2(28f, 0f), new Vector2(0f, -22f));
+
+        TextMeshProUGUI rec = Text(overlay, "Rec", "[REC]", 26f, LedRed);
+        rec.alignment = TextAlignmentOptions.TopRight;
+        Stretch(rec.rectTransform, Vector2.zero, new Vector2(-28f, -22f));
+        Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
+
+        TextMeshProUGUI tape = Text(overlay, "Tape", "GRAVANDO NA FITA 00s", 24f, Phosphor);
+        tape.alignment = TextAlignmentOptions.Bottom;
+        Stretch(tape.rectTransform, new Vector2(0f, 24f), Vector2.zero);
+        tape.gameObject.AddComponent<TapeRecordingText>();
 
         ScreenLight(tv, new Color(0.85f, 0.9f, 1f), 1.4f);
     }
@@ -643,6 +695,197 @@ public static class MonitorMenuBuilder
         text.alignment = TextAlignmentOptions.Center;
         text.textWrappingMode = TextWrappingModes.NoWrap;
         text.rectTransform.sizeDelta = new Vector2(0.5f, 0.12f);
+    }
+
+    // Prototipo de 1975: caixa de metal do tamanho de uma torradeira, lente de cinema,
+    // placas de circuito expostas e gravador de fita cassete acoplado.
+    private static void BuildPrototype(Transform console, Vector3 localPosition)
+    {
+        Transform proto = Group(console, "Prototype_1975");
+        proto.localPosition = localPosition;
+
+        proto.localScale = Vector3.one * 1.4f;
+
+        // A lente aponta para o centro da sala, onde cai a luz da janela.
+        Vector3 here = setRoot.InverseTransformPoint(proto.position);
+        Vector3 aim = new Vector3(0.1f, here.y, 4.6f) - here;
+        proto.rotation = Quaternion.LookRotation(-setRoot.TransformDirection(aim.normalized), Vector3.up);
+
+        // Luminaria de bancada iluminando o prototipo.
+        GameObject lampGo = new GameObject("DeskLamp", typeof(Light));
+        lampGo.transform.SetParent(console, false);
+        lampGo.transform.position = proto.position + Vector3.up * 0.9f + setRoot.forward * -0.2f;
+        lampGo.transform.rotation = Quaternion.LookRotation(proto.position - lampGo.transform.position);
+        Light lamp = lampGo.GetComponent<Light>();
+        lamp.type = LightType.Spot;
+        lamp.color = new Color(0.85f, 0.88f, 0.95f);
+        lamp.intensity = 6f;
+        lamp.range = 2.5f;
+        lamp.spotAngle = 55f;
+        lamp.innerSpotAngle = 25f;
+        lamp.shadows = LightShadows.Soft;
+
+        Material chassis = LitMaterial("MenuChassis", "VentMetal", new Color(0.55f, 0.55f, 0.53f), 0.6f, 0.75f, Vector2.one);
+        Material dark = LitMaterial("MenuDarkPlastic", "VentMetal", new Color(0.05f, 0.05f, 0.055f), 0.4f, 0.1f, Vector2.one);
+        Material board = LitMaterial("MenuCircuit", "VentMetal", new Color(0.12f, 0.06f, 0.04f), 0.5f, 0.2f, Vector2.one);
+
+        Box(proto, "Chassis", new Vector3(0f, 0.1f, 0f), new Vector3(0.24f, 0.2f, 0.34f), chassis);
+        Box(proto, "FrontPlate", new Vector3(0f, 0.1f, -0.172f), new Vector3(0.22f, 0.18f, 0.008f), dark);
+        Box(proto, "Handle", new Vector3(0f, 0.235f, 0f), new Vector3(0.03f, 0.02f, 0.22f), dark);
+        Box(proto, "HandleA", new Vector3(0f, 0.215f, -0.1f), new Vector3(0.03f, 0.03f, 0.02f), dark);
+        Box(proto, "HandleB", new Vector3(0f, 0.215f, 0.1f), new Vector3(0.03f, 0.03f, 0.02f), dark);
+
+        // Lente.
+        GameObject barrel = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Object.DestroyImmediate(barrel.GetComponent<Collider>());
+        barrel.name = "Lens";
+        barrel.transform.SetParent(proto, false);
+        barrel.transform.localPosition = new Vector3(0.04f, 0.11f, -0.215f);
+        barrel.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        barrel.transform.localScale = new Vector3(0.075f, 0.045f, 0.075f);
+        barrel.GetComponent<MeshRenderer>().sharedMaterial = dark;
+
+        GameObject glass = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Object.DestroyImmediate(glass.GetComponent<Collider>());
+        glass.name = "Glass";
+        glass.transform.SetParent(proto, false);
+        glass.transform.localPosition = new Vector3(0.04f, 0.11f, -0.261f);
+        glass.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        glass.transform.localScale = new Vector3(0.055f, 0.002f, 0.055f);
+        glass.GetComponent<MeshRenderer>().sharedMaterial = LitMaterial("MenuLensGlass", "VentMetal", new Color(0.02f, 0.03f, 0.05f), 0.95f, 0.9f, Vector2.one);
+
+        // Ponto de onde sai a imagem do feed (+Z para fora da lente).
+        prototypeLens = Group(proto, "LensView");
+        prototypeLens.localPosition = new Vector3(0.04f, 0.11f, -0.27f);
+        prototypeLens.localRotation = Quaternion.Euler(8f, 180f, 0f);
+
+        // Placas de circuito expostas em cima, com chips.
+        Box(proto, "BoardA", new Vector3(-0.04f, 0.205f, -0.06f), new Vector3(0.12f, 0.006f, 0.14f), board);
+        Box(proto, "BoardB", new Vector3(0.06f, 0.205f, 0.09f), new Vector3(0.09f, 0.006f, 0.12f), board);
+        for (int i = 0; i < 4; i++)
+            Box(proto, "Chip", new Vector3(-0.07f + (i % 2) * 0.05f, 0.212f, -0.1f + (i / 2) * 0.06f), new Vector3(0.03f, 0.008f, 0.018f), dark);
+
+        // Gravador de fita acoplado na lateral.
+        Box(proto, "TapeUnit", new Vector3(-0.15f, 0.07f, 0.04f), new Vector3(0.06f, 0.14f, 0.22f), dark);
+        Box(proto, "Cassette", new Vector3(-0.182f, 0.08f, 0.04f), new Vector3(0.006f, 0.08f, 0.13f), LitMaterial("MenuCassette", "VentMetal", new Color(0.7f, 0.68f, 0.62f), 0.3f, 0f, Vector2.one));
+
+        // LED de gravacao na frente.
+        GameObject tally = Box(proto, "TallyLed", new Vector3(-0.07f, 0.17f, -0.178f), new Vector3(0.016f, 0.016f, 0.008f), GlowMaterial("MenuLed", Color.white));
+        Blinker(tally, MenuBlinker.Mode.Blink, 1f, 0.5f, tally.GetComponent<Renderer>(), LedRed * 4f, new Color(0.15f, 0.01f, 0.01f));
+
+        Light tallyLight = PointLight(proto, "TallyGlow", new Vector3(-0.07f, 0.17f, -0.22f), new Color(1f, 0.05f, 0.03f), 0.4f, 0.4f);
+        Blinker(tallyLight.gameObject, MenuBlinker.Mode.Blink, 1f, 0.5f, null, Color.white, Color.white, tallyLight, 0f);
+
+        Led(proto, new Vector3(-0.02f, 0.05f, -0.178f), "01", 0.45f);
+    }
+
+    // Deck de fita cassete com dois rolos girando.
+    private static void TapeDeck(Transform rack, Vector3 localPosition)
+    {
+        Transform deck = Device(rack, "TapeDeck", localPosition, new Vector3(0.62f, 0.2f, 0.42f));
+        Material dark = LitMaterial("MenuDarkPlastic", "VentMetal", new Color(0.05f, 0.05f, 0.055f), 0.4f, 0.1f, Vector2.one);
+        Material reelMat = LitMaterial("MenuReel", "VentMetal", new Color(0.6f, 0.6f, 0.58f), 0.6f, 0.8f, Vector2.one);
+
+        Box(deck, "Window", new Vector3(-0.1f, 0.01f, -0.212f), new Vector3(0.3f, 0.13f, 0.004f), dark);
+
+        foreach (float x in new[] { -0.18f, -0.02f })
+        {
+            Transform reel = Group(deck, "Reel");
+            reel.localPosition = new Vector3(x, 0.01f, -0.216f);
+
+            GameObject disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            Object.DestroyImmediate(disc.GetComponent<Collider>());
+            disc.name = "Disc";
+            disc.transform.SetParent(reel, false);
+            disc.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            disc.transform.localScale = new Vector3(0.09f, 0.003f, 0.09f);
+            disc.GetComponent<MeshRenderer>().sharedMaterial = reelMat;
+
+            // Raios para dar para ver o giro.
+            Box(reel, "Spoke", new Vector3(0f, 0f, -0.004f), new Vector3(0.08f, 0.012f, 0.004f), dark);
+            Box(reel, "Spoke", new Vector3(0f, 0f, -0.004f), new Vector3(0.012f, 0.08f, 0.004f), dark);
+
+            MenuSpin spin = reel.gameObject.AddComponent<MenuSpin>();
+            SerializedObject so = new SerializedObject(spin);
+            so.FindProperty("axis").vector3Value = Vector3.forward;
+            so.FindProperty("degreesPerSecond").floatValue = x < -0.1f ? -140f : -190f;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        Led(deck, new Vector3(0.18f, 0.03f, -0.212f), "TAPE", 0.55f);
+        LedRow(deck, new Vector3(0.12f, -0.05f, -0.212f), 4, 0.04f, LedRed, MenuBlinker.Mode.Blink, 0.5f);
+    }
+
+    // Fileira de LEDs piscando. vertical = coluna em vez de linha.
+    private static void LedRow(Transform parent, Vector3 start, int count, float spacing, Color color, MenuBlinker.Mode mode, float period, bool vertical = false)
+    {
+        Material led = GlowMaterial("MenuLed", Color.white);
+        Color on = color * 3f;
+        Color off = new Color(color.r * 0.08f, color.g * 0.08f, color.b * 0.08f, 1f);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 offset = vertical ? new Vector3(0f, -i * spacing, 0f) : new Vector3(i * spacing, 0f, 0f);
+            GameObject dot = Box(parent, "Led", start + offset, Vector3.one * 0.014f, led);
+            dot.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+            Blinker(dot, mode, period * Random.Range(0.7f, 1.3f), 0.55f, dot.GetComponent<Renderer>(), on, off);
+        }
+    }
+
+    private static void Blinker(GameObject go, MenuBlinker.Mode mode, float period, float duty, Renderer renderer, Color on, Color off, Light light = null, float lightMin = 0f, TMP_Text text = null)
+    {
+        MenuBlinker blinker = go.AddComponent<MenuBlinker>();
+        SerializedObject so = new SerializedObject(blinker);
+        so.FindProperty("mode").enumValueIndex = (int)mode;
+        so.FindProperty("period").floatValue = period;
+        so.FindProperty("duty").floatValue = duty;
+        so.FindProperty("targetRenderer").objectReferenceValue = renderer;
+        so.FindProperty("onColor").colorValue = on;
+        so.FindProperty("offColor").colorValue = off;
+        so.FindProperty("targetLight").objectReferenceValue = light;
+        so.FindProperty("lightMin").floatValue = lightMin;
+        so.FindProperty("targetText").objectReferenceValue = text;
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    // Texto pintado na parede do fundo (olha para a camera, -Z).
+    private static void WallText(Transform parent, string name, Vector3 localPosition, string value, float size, Color color)
+    {
+        GameObject go = new GameObject(name, typeof(TextMeshPro));
+        go.transform.SetParent(parent, false);
+        go.transform.localPosition = localPosition;
+
+        TextMeshPro text = go.GetComponent<TextMeshPro>();
+        if (font != null)
+        {
+            text.font = font;
+            text.fontSharedMaterial = font.material;
+        }
+
+        text.text = value;
+        text.fontSize = size;
+        text.color = color;
+        text.alignment = TextAlignmentOptions.Center;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.rectTransform.sizeDelta = new Vector2(2f, 0.4f);
+    }
+
+    private static Material GrayFeedMaterial()
+    {
+        Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(MaterialFolder + "/CrtGrayFeed.shader");
+        string path = MaterialFolder + "/CrtGrayFeed.mat";
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+
+        if (material == null)
+        {
+            material = new Material(shader);
+            AssetDatabase.CreateAsset(material, path);
+        }
+
+        material.shader = shader;
+        material.SetFloat("_Brightness", 1.35f);
+        EditorUtility.SetDirty(material);
+        return material;
     }
 
     private static void LightShaft(Transform parent, Vector3 from, Vector3 to, float width, float strength)
