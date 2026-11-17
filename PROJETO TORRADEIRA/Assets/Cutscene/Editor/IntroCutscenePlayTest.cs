@@ -82,13 +82,13 @@ public static class IntroCutscenePlayTest
             case 0 when now - phaseStart > 2.0:
                 var play = Object.FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None)
                     .FirstOrDefault(b => new SerializedObject(b).FindProperty("m_OnClick.m_PersistentCalls.m_Calls") is SerializedProperty calls &&
-                        Enumerable.Range(0, calls.arraySize).Any(i => calls.GetArrayElementAtIndex(i).FindPropertyRelative("m_Arguments.m_StringArgument").stringValue == "IntroCutscene"));
+                        Enumerable.Range(0, calls.arraySize).Any(i => calls.GetArrayElementAtIndex(i).FindPropertyRelative("m_Arguments.m_StringArgument").stringValue.StartsWith("IntroCutscene")));
                 if (play == null) { Log("FALHA: botão Jogar não encontrado"); Stop(); return; }
                 Log("clicando em: " + play.name);
                 play.onClick.Invoke();
                 step = 1;
                 break;
-            case 1 when scene == "IntroCutscene":
+            case 1 when scene.StartsWith("IntroCutscene"):
                 cutsceneStart = now;
                 var loads = 0;
                 SceneManager.sceneLoaded += (s, m) => { if (s.name == "Principal") Log($"Principal carregada (carga nº {++loads})"); };

@@ -66,6 +66,7 @@ public static class IntroCutsceneBuilder
         {
             Log("início: " + cmd);
             if (cmd.StartsWith("build")) Build();
+            else if (cmd.StartsWith("videoscene")) IntroVideoSceneBuilder.Build();
             else if (cmd.StartsWith("preview")) Export(null);
             else if (cmd.StartsWith("frames"))
                 Export(cmd.Substring(6).Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(s => float.Parse(s, System.Globalization.CultureInfo.InvariantCulture)).ToArray());
