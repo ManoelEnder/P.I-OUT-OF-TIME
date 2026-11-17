@@ -16,8 +16,8 @@ public class CameraBattery : MonoBehaviour
     [SerializeField] private int rechargeLimit = 3;
 
     [Header("Cores")]
-    [SerializeField] private Color normalColor = new Color(0.45f, 1f, 0.55f, 1f);
-    [SerializeField] private Color lowColor = new Color(1f, 0.55f, 0.15f, 1f);
+    [SerializeField] private Color corNormal = new Color(0.45f, 1f, 0.55f, 1f);
+    [SerializeField] private Color corBaixa = new Color(0.8f, 1f, 0.95f, 1f);
     [SerializeField] private int lowThreshold = 2;
 
     private int currentBattery;
@@ -84,7 +84,7 @@ public class CameraBattery : MonoBehaviour
             ? 0.35f + 0.65f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 6f))
             : 1f;
 
-        Color color = IsLow ? lowColor : normalColor;
+        Color color = IsLow ? corBaixa : corNormal;
         color.a = alpha;
 
         foreach (Image bar in batteryBars)
@@ -120,7 +120,7 @@ public class CameraBattery : MonoBehaviour
         if (batteryBars == null)
             return;
 
-        Color color = IsLow ? lowColor : normalColor;
+        Color color = IsLow ? corBaixa : corNormal;
 
         // O HUD pode ter menos barras que cargas: cada barra representa uma fracao da bateria.
         int litBars = Mathf.CeilToInt(

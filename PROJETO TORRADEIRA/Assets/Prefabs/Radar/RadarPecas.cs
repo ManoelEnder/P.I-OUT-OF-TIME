@@ -16,6 +16,10 @@ public class RadarPecas : MonoBehaviour
     private float tempoPiscar;
     private bool ledLigado = true;
 
+    // Os marcadores so somem (SetActive false); a lista e atualizada uma vez por segundo.
+    private GameObject[] marcadores = new GameObject[0];
+    private float proximaBusca;
+
     void Start()
     {
         ponto = GetComponent<RectTransform>();
@@ -39,8 +43,11 @@ public class RadarPecas : MonoBehaviour
         GameObject marcadorMaisProximo = null;
         float menorDistancia = Mathf.Infinity;
 
-        GameObject[] marcadores =
-            GameObject.FindGameObjectsWithTag(tagMarcador);
+        if (Time.unscaledTime >= proximaBusca)
+        {
+            marcadores = GameObject.FindGameObjectsWithTag(tagMarcador);
+            proximaBusca = Time.unscaledTime + 1f;
+        }
 
         foreach (GameObject marcador in marcadores)
         {

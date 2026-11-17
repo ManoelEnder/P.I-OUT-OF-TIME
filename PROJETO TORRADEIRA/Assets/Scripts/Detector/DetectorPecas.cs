@@ -12,6 +12,16 @@ public class DetectorPecas : MonoBehaviour
 
     public AudioClip somDetector;
 
+    [Header("Bipe")]
+    [Tooltip("Gera um bipe curto. Desligue para usar o Som Detector (precisa ser um clipe curto).")]
+    public bool usarBipSintetizado = true;
+    public float frequenciaBip = 1400f;
+    public float duracaoBip = 0.07f;
+    [Tooltip("Pitch quando a peca esta encostada (1 = longe).")]
+    public float pitchPerto = 1.5f;
+
+    private AudioClip bip;
+
     private Transform jogador;
     private AudioSource audioSource;
     private float tempoProximoBip;
@@ -32,13 +42,19 @@ public class DetectorPecas : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
 
         audioSource.playOnAwake = false;
+        audioSource.loop = false;
         audioSource.spatialBlend = 0f;
+
+        if (usarBipSintetizado || somDetector == null)
+            bip = CriarBip();
         audioSource.volume = 1f;
     }
 
     void Update()
     {
-        if (jogador == null || somDetector == null)
+        AudioClip som = bip != null ? bip : somDetector;
+
+        if (jogador == null || som == null)
             return;
 
         if (Time.unscaledTime >= proximaBuscaMarcadores)
@@ -96,9 +112,38 @@ public class DetectorPecas : MonoBehaviour
 
         if (tempoProximoBip <= 0f)
         {
-            audioSource.PlayOneShot(somDetector, volume);
+            // Um bipe por vez: Play reinicia a fonte em vez de empilhar copias do som.
+            audioSource.clip = som;
+            audioSource.volume = volume;
+            audioSource.pitch = Mathf.Lerp(1f, pitchPerto, proximidade);
+            audioSource.Play();
             tempoProximoBip = intervalo;
         }
+    }
+
+    private AudioClip CriarBip()
+    {
+        int taxa = UnityEngine.AudioSettings.outputSampleRate > 0 ? UnityEngine.AudioSettings.outputSampleRate : 44100;
+        int amostras = Mathf.Max(1, Mathf.RoundToInt(taxa * duracaoBip));
+        float[] dados = new float[amostras];
+
+        for (int i = 0; i < amostras; i++)
+        {
+            float t = (float)i / taxa;
+            float envelope = Mathf.Min(1f, i / (taxa * 0.004f)) * (1f - (float)i / amostras);
+            float onda = Mathf.Sin(2f * Mathf.PI * frequenciaBip * t) >= 0f ? 1f : -1f;
+            dados[i] = onda * envelope * 0.5f;
+        }
+
+        AudioClip clip = AudioClip.Create("BipDetector", amostras, 1, taxa, false);
+        clip.SetData(dados, 0);
+        return clip;
+    }
+
+    private void OnDestroy()
+    {
+        if (bip != null)
+            Destroy(bip);
     }
 
     public void DesativarMarcador(GameObject marcador)

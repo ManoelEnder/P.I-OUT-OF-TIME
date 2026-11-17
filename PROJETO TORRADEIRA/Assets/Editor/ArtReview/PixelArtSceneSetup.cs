@@ -16,7 +16,7 @@ public static class PixelArtSceneSetup
 
     private static readonly Color Beige = new Color(0.86f, 0.80f, 0.64f, 1f);
     private static readonly Color Phosphor = new Color(0.45f, 1f, 0.55f, 1f);
-    private static readonly Color Danger = new Color(1f, 0.35f, 0.15f, 1f);
+    private static readonly Color Danger = new Color(0.8f, 1f, 0.95f, 1f);
 
     [MenuItem("Ferramentas/Pixel Art/Aplicar padrao na cena aberta")]
     public static void Apply()
