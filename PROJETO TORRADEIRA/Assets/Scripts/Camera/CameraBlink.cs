@@ -30,7 +30,7 @@ public class CameraBlink : MonoBehaviour
     [Header("Efeito CRT")]
     [SerializeField] private float slitHalfHeight = 3f;
     [SerializeField] private float pixelStep = 4f;
-    [SerializeField] private Color scanLineColor = new Color(0.85f, 1f, 0.9f, 1f);
+    [SerializeField] private Color scanLineColor = new Color(0.95f, 0.95f, 0.95f, 1f);
 
     private Image scanLine;
 

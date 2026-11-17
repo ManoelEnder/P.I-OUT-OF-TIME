@@ -16,7 +16,7 @@ public class CameraBattery : MonoBehaviour
     [SerializeField] private int rechargeLimit = 3;
 
     [Header("Cores")]
-    [SerializeField] private Color corNormal = new Color(0.45f, 1f, 0.55f, 1f);
+    [SerializeField] private Color corNormal = new Color(0.92f, 0.92f, 0.92f, 1f);
     [SerializeField] private Color corBaixa = new Color(0.9f, 0.18f, 0.22f, 1f);
     [SerializeField] private int lowThreshold = 2;
 

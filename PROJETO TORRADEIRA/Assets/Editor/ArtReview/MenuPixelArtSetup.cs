@@ -16,7 +16,7 @@ public static class MenuPixelArtSetup
     // 1 pixel da arte = 4 unidades de UI nos botoes e paineis.
     private const float PixelScale = 0.25f;
 
-    private static readonly Color Phosphor = new Color(0.45f, 1f, 0.55f, 1f);
+    private static readonly Color Phosphor = new Color(1f, 1f, 1f, 1f);
     private static readonly Color PhosphorShadow = new Color(0.04f, 0.16f, 0.08f, 1f);
     private static readonly Color Beige = new Color(0.86f, 0.8f, 0.64f, 1f);
     private static readonly Color BeigeDark = new Color(0.63f, 0.58f, 0.46f, 1f);
