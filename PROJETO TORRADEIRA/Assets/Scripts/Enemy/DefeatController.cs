@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class DefeatController : MonoBehaviour
 {
@@ -11,24 +13,45 @@ public class DefeatController : MonoBehaviour
     [Header("Respawn")]
     [SerializeField] private Transform currentSpawnPoint;
 
+    [Header("Scene")]
+    [SerializeField] private string menuSceneName = "Menu";
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onRetry;
+
     private bool isDefeated;
+
+    // Outros scripts (movimento, camera) param enquanto a tela de derrota esta aberta.
+    public static bool IsDefeated { get; private set; }
 
     private void Start()
     {
+        IsDefeated = false;
+
         if (defeatPanel != null)
         {
             defeatPanel.SetActive(false);
         }
     }
 
-    public void TriggerDefeat()
+    private void OnDestroy()
     {
         if (isDefeated)
+        {
+            IsDefeated = false;
+            Time.timeScale = 1f;
+        }
+    }
+
+    public void TriggerDefeat()
+    {
+        if (isDefeated || PauseMenu.IsPaused)
         {
             return;
         }
 
         isDefeated = true;
+        IsDefeated = true;
 
         ShowDefeatPanel();
     }
@@ -76,11 +99,23 @@ public class DefeatController : MonoBehaviour
         }
 
         isDefeated = false;
+        IsDefeated = false;
 
         if (defeatPanel != null)
         {
             defeatPanel.SetActive(false);
         }
+
+        onRetry?.Invoke();
+    }
+
+    public void GoToMenu()
+    {
+        Time.timeScale = 1f;
+        isDefeated = false;
+        IsDefeated = false;
+
+        SceneManager.LoadScene(menuSceneName);
     }
 
     public void SetSpawnPoint(Transform spawnPoint)

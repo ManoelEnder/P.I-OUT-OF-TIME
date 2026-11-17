@@ -66,7 +66,11 @@ Sem verde, sem laranja/amarelo. Cores: branco, cinzas, vermelho. Tema: protótip
 - Fazer os créditos rolarem dentro do canvas da TV principal (mesma sala).
 - A cada nome/bloco: flash de uma câmera + a TV do protótipo congela um "snapshot" 100x100 em cinza (adicionar um `Snapshot(holdSeconds)` no `CrtCameraFeed`).
 
-## 5. Inimigo (TemporalEraser) — ativar e completar
+## 5. Inimigo (TemporalEraser) — ativar e completar — FEITO
+
+> Feito com **Ferramentas › Inimigo › Montar TemporalEraser** (`Assets/Editor/Enemy/TemporalEraserBuilder.cs`): FBX em Humanoid, `Assets/Animation/Enemy/TemporalEraser.controller` (Walk), modelo no lugar da cápsula (pivô no pé, escala 1, material cinza "apagado" porque o FBX não tem texturas), `TemporalEraserPresence` (velocidade da animação segue o agente, drone e passos sintetizados, glitch que treme/some; sem flashes só treme), `AttackTrigger` com Rigidbody cinemático, `PlayerSpawn` na posição inicial do jogador, `DefeatManager` + `DefeatCanvas` ("VOCÊ FOI APAGADO DO TEMPO", TENTAR DE NOVO / MENU). TENTAR DE NOVO devolve o jogador ao `PlayerSpawn` e o inimigo ao ponto inicial. Testado em play mode (batch): perseguição → derrota → tentar de novo.
+>
+> Para o autor decidir: a animação anda a 0,85 m/s, mas o inimigo anda a 2 m/s (patrulha) e 4 m/s (perseguição), então as pernas ficam aceleradas (limitado a 2,2x). Baixar as velocidades no `TemporalEraserController` deixa o passo natural. Mover o `PlayerSpawn` se o respawn tiver que ser em outro lugar (ou usar `DefeatController.SetSpawnPoint` em checkpoints).
 
 Levantado na cena `Principal`:
 - GameObject `TemporalEraser` existe mas está **inativo**; é só uma cápsula (MeshFilter/MeshRenderer/CapsuleCollider), com `NavMeshAgent`, `TemporalEraserController` e `TemporalEraserVision` (referências de `player` e `vision` já preenchidas).

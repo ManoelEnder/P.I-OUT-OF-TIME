@@ -34,9 +34,17 @@ public class TemporalEraserController : MonoBehaviour
     private float searchTimer;
     private int currentSearchAttempt;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
+    public bool IsChasing => currentState == State.Chasing;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
 
         if (vision == null)
             vision = GetComponent<TemporalEraserVision>();
@@ -205,6 +213,19 @@ public class TemporalEraserController : MonoBehaviour
         agent.isStopped = false;
 
         SetRoamingDestination();
+    }
+
+    // Chamado no "tentar de novo": volta ao ponto inicial e esquece o jogador.
+    public void ResetToStart()
+    {
+        if (agent == null || !agent.isActiveAndEnabled)
+            return;
+
+        agent.Warp(startPosition);
+        transform.rotation = startRotation;
+
+        if (agent.isOnNavMesh)
+            ReturnToRoaming();
     }
 
     private void SetRoamingDestination()
