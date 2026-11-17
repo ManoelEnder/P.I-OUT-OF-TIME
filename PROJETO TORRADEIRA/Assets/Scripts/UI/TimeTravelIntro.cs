@@ -317,11 +317,11 @@ public class TimeTravelIntro : MonoBehaviour
         Color mainColor =
             yearOriginalColor;
 
+        // Sem flashes: o ano troca de numero, mas nao pisca.
         mainColor.a =
-            Random.Range(
-                flickerAmount,
-                1f
-            );
+            FlashSettings.Enabled
+                ? Random.Range(flickerAmount, 1f)
+                : yearOriginalColor.a;
 
         yearText.color =
             mainColor;

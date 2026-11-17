@@ -12,6 +12,10 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private TMP_Text brightnessPercentageText;
     [SerializeField] private TMP_Text sensitivityPercentageText;
 
+    [Header("Flashes (fotossensibilidade)")]
+    [SerializeField] private Button flashToggleButton;
+    [SerializeField] private TMP_Text flashValueText;
+
     private AudioSettings audioSettings;
     private BrightnessSettings brightnessSettings;
     private SensitivitySettings sensitivitySettings;
@@ -37,7 +41,25 @@ public class SettingsMenu : MonoBehaviour
         brightnessSlider.onValueChanged.AddListener(ChangeBrightness);
         sensitivitySlider.onValueChanged.AddListener(ChangeSensitivity);
 
+        if (flashToggleButton != null)
+        {
+            flashToggleButton.onClick.RemoveAllListeners();
+            flashToggleButton.onClick.AddListener(ToggleFlashes);
+        }
+
         UpdateInterface();
+    }
+
+    public void ToggleFlashes()
+    {
+        FlashSettings.Toggle();
+        UpdateFlashText();
+    }
+
+    private void UpdateFlashText()
+    {
+        if (flashValueText != null)
+            flashValueText.text = "[ " + FlashSettings.Label + " ]";
     }
 
     private void ConfigureSlider(Slider slider)
@@ -92,6 +114,8 @@ public class SettingsMenu : MonoBehaviour
 
         sensitivityPercentageText.text =
             Mathf.RoundToInt(sensitivitySettings.Sensitivity * 100f) + "%";
+
+        UpdateFlashText();
     }
 
     public void ResetSettings()
@@ -99,6 +123,7 @@ public class SettingsMenu : MonoBehaviour
         audioSettings.ResetVolume();
         brightnessSettings.ResetBrightness();
         sensitivitySettings.ResetSensitivity();
+        FlashSettings.Enabled = true;
 
         UpdateInterface();
     }
