@@ -64,6 +64,12 @@ public class PerfBenchmark : MonoBehaviour
         float cooldown = data != null ? data.Cooldown + 0.15f : 1f;
         yield return Measure("fotos_sequencia", cooldown * 10f + 1f, Photos(10, cooldown, photo));
 
+        // 10 fotos seguidas superaquecem a camera (mecanica do jogo); recupera para medir o resto com camera.
+        CameraOverheat heat = FindAnyObjectByType<CameraOverheat>();
+        if (heat != null && heat.IsCameraLost)
+            heat.RecoverCamera();
+        yield return Wait(1f);
+
         yield return QAInput.Tap(Key.C);
         yield return Wait(1f);
         yield return QAInput.Tap(Key.F);
@@ -77,7 +83,6 @@ public class PerfBenchmark : MonoBehaviour
         yield return QAInput.Tap(Key.Escape);
         yield return Wait(0.5f);
 
-        CameraOverheat heat = FindAnyObjectByType<CameraOverheat>();
         yield return QAInput.Tap(Key.C);
         yield return Measure("superaquecimento", 60f, Overheat(heat, photo));
 
