@@ -34,9 +34,21 @@ public class CameraOverheat : MonoBehaviour
     private bool configurationErrorLogged;
     private float displayedHeat = -1f;
 
-    [Header("Cores da barra")]
-    [SerializeField] private Color barraNormal = new Color(0.45f, 1f, 0.55f, 1f);
-    [SerializeField] private Color barraCritica = new Color(0.8f, 1f, 0.95f, 1f);
+    [Header("Barra")]
+    [Tooltip("A cor vem do sprite (vinho ao vermelho); aqui so o brilho.")]
+    [SerializeField] private Color barraNormal = Color.white;
+    [SerializeField] private Color barraCritica = new Color(1f, 0.55f, 0.55f, 1f);
+    [SerializeField, Min(1)] private int segmentosBarra = 10;
+
+    [Header("Som de aquecimento")]
+    [SerializeField, Range(0f, 1f)] private float volumeAquecimento = 0.22f;
+    [SerializeField] private float pitchFrio = 0.6f;
+    [SerializeField] private float pitchQuente = 1.9f;
+    [SerializeField, Range(0f, 1f)] private float volumeRuptura = 0.35f;
+
+    private AudioSource heatAudio;
+    private AudioClip heatLoop;
+    private AudioClip ruptureClip;
 
     [Header("Avisos no radio")]
     [SerializeField] private RadioMessageUI radioMessageUI;
@@ -73,10 +85,13 @@ public class CameraOverheat : MonoBehaviour
 
         UpdateHeatUI();
         ResetGlitch();
+        SetupHeatAudio();
     }
 
     private void Update()
     {
+        UpdateHeatSound();
+
         if (cameraLost || photoCamera == null)
             return;
 
@@ -175,6 +190,14 @@ public class CameraOverheat : MonoBehaviour
 
         photoCamera.OnCameraLost();
 
+        if (heatAudio != null)
+        {
+            heatAudio.volume = 0f;
+
+            if (ruptureClip != null)
+                heatAudio.PlayOneShot(ruptureClip, volumeRuptura);
+        }
+
         ShowRadioMessage(mensagemPerdida);
 
         ResetGlitch();
@@ -234,6 +257,90 @@ public class CameraOverheat : MonoBehaviour
         ResetGlitch();
     }
 
+    private void SetupHeatAudio()
+    {
+        heatAudio = gameObject.AddComponent<AudioSource>();
+        heatAudio.playOnAwake = false;
+        heatAudio.loop = true;
+        heatAudio.spatialBlend = 0f;
+        heatAudio.volume = 0f;
+
+        heatLoop = CreateChargeLoop();
+        ruptureClip = CreateRuptureClip();
+
+        heatAudio.clip = heatLoop;
+        heatAudio.Play();
+    }
+
+    private void UpdateHeatSound()
+    {
+        if (heatAudio == null)
+            return;
+
+        float heat = HeatPercent;
+
+        bool audible =
+            !cameraLost &&
+            !PauseMenu.IsPaused &&
+            Time.timeScale > 0f &&
+            photoCamera != null &&
+            photoCamera.IsCameraMode;
+
+        float target = audible
+            ? volumeAquecimento * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.1f, 1f, heat))
+            : 0f;
+
+        heatAudio.volume = Mathf.MoveTowards(heatAudio.volume, target, Time.unscaledDeltaTime * 0.8f);
+        heatAudio.pitch = Mathf.Lerp(pitchFrio, pitchQuente, heat);
+    }
+
+    // Zumbido de capacitor carregando: loop de 1 s com frequencias inteiras (sem estalo na emenda).
+    private static AudioClip CreateChargeLoop()
+    {
+        int rate = UnityEngine.AudioSettings.outputSampleRate > 0 ? UnityEngine.AudioSettings.outputSampleRate : 44100;
+        float[] data = new float[rate];
+
+        for (int i = 0; i < rate; i++)
+        {
+            float t = (float)i / rate;
+            float tone =
+                Mathf.Sin(2f * Mathf.PI * 330f * t) * 0.55f +
+                Mathf.Sin(2f * Mathf.PI * 660f * t) * 0.25f +
+                Mathf.Sin(2f * Mathf.PI * 990f * t) * 0.1f;
+            float flutter = 0.75f + 0.25f * Mathf.Sin(2f * Mathf.PI * 12f * t);
+            data[i] = tone * flutter * 0.5f;
+        }
+
+        AudioClip clip = AudioClip.Create("HeatChargeLoop", rate, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
+    }
+
+    // Estalo eletrico curto para a ruptura.
+    private static AudioClip CreateRuptureClip()
+    {
+        int rate = UnityEngine.AudioSettings.outputSampleRate > 0 ? UnityEngine.AudioSettings.outputSampleRate : 44100;
+        int length = Mathf.RoundToInt(rate * 0.6f);
+        float[] data = new float[length];
+        System.Random random = new System.Random(7);
+        float held = 0f;
+
+        for (int i = 0; i < length; i++)
+        {
+            float t = (float)i / length;
+
+            if (i % 6 == 0)
+                held = (float)(random.NextDouble() * 2.0 - 1.0);
+
+            float sweep = Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(900f, 120f, t) * i / rate);
+            data[i] = (held * 0.6f + sweep * 0.4f) * Mathf.Pow(1f - t, 2f) * 0.8f;
+        }
+
+        AudioClip clip = AudioClip.Create("HeatRupture", length, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
+    }
+
     private void ShowRadioMessage(string message)
     {
         if (string.IsNullOrEmpty(message))
@@ -268,9 +375,11 @@ public class CameraOverheat : MonoBehaviour
             return;
 
         displayedHeat = heat;
-        heatBar.fillAmount = heat;
 
-        // Paleta fria: o perigo e indicado pelo brilho e pelo aviso, nao por cores quentes.
+        // Barra em segmentos inteiros, como um medidor analogico.
+        int segments = Mathf.Max(1, segmentosBarra);
+        heatBar.fillAmount = Mathf.Ceil(heat * segments - 0.001f) / segments;
+
         heatBar.color = Color.Lerp(
             barraNormal,
             barraCritica,
@@ -342,5 +451,11 @@ public class CameraOverheat : MonoBehaviour
     private void OnDestroy()
     {
         ResetGlitch();
+
+        if (heatLoop != null)
+            Destroy(heatLoop);
+
+        if (ruptureClip != null)
+            Destroy(ruptureClip);
     }
 }
