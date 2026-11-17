@@ -58,7 +58,9 @@ Sem verde, sem laranja/amarelo. Cores: branco, cinzas, vermelho. Tema: protótip
 - Refazer com a mesma sala do menu: TV principal com "OUT OF TIME" e "PRESSIONE QUALQUER TECLA" piscando; câmeras com flash; antes disso, o aviso de fotossensibilidade.
 - Sugestão: generalizar o `MonitorMenuBuilder` com um modo (Menu / TelaInicial / Créditos) que muda só o conteúdo da TV principal.
 
-## 4. Créditos (`Assets/Scenes/Credits.unity`)
+## 4. Créditos (`Assets/Scenes/Credits.unity`) — FEITO
+
+> Feito: modo `Credits` no `MonitorMenuBuilder` (**Ferramentas › Pixel Art › Montar creditos em monitores CRT**). Os créditos rolam dentro da TV principal (o `CreditsController` existente foi religado ao novo conteúdo; ESC e o fim continuam indo para o `Menu`). `CreditsSnapshots`: quando cada nome chega ao meio, uma câmera dispara e a TV do protótipo congela a imagem 100x100 (`CrtCameraFeed.Snapshot`) com "FOTO 01/02/03". Nos créditos as câmeras não disparam sozinhas. Para adicionar nomes, editar o array `Credits` no builder e rodar a ferramenta de novo.
 
 - Script atual: `Assets/Scripts/Credits/CreditsController.cs` (rola `creditsContent`, ESC volta, evento ao terminar). Os nomes atuais estão nos textos da cena.
 - Fazer os créditos rolarem dentro do canvas da TV principal (mesma sala).

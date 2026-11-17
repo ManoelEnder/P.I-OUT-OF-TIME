@@ -41,7 +41,7 @@ public static class MonitorMenuBuilder
     private static PhotoFlash playerFacingCamera;
 
     // O que a TV principal mostra; o resto da sala e igual nas tres cenas.
-    public enum Mode { Menu, Start }
+    public enum Mode { Menu, Start, Credits }
 
     private static Mode mode;
 
@@ -57,6 +57,12 @@ public static class MonitorMenuBuilder
         Build(Mode.Start);
     }
 
+    [MenuItem("Ferramentas/Pixel Art/Montar creditos em monitores CRT")]
+    public static void BuildCredits()
+    {
+        Build(Mode.Credits);
+    }
+
     public static void Build(Mode buildMode)
     {
         mode = buildMode;
@@ -64,7 +70,7 @@ public static class MonitorMenuBuilder
 
         if (menuCamera == null)
         {
-            Debug.LogError("MonitorMenuBuilder: abra a cena " + (mode == Mode.Start ? "TelaInicio" : "Menu") + " (nenhuma camera encontrada).");
+            Debug.LogError("MonitorMenuBuilder: abra a cena " + (mode == Mode.Start ? "TelaInicio" : mode == Mode.Credits ? "Credits" : "Menu") + " (nenhuma camera encontrada).");
             return;
         }
 
@@ -119,6 +125,11 @@ public static class MonitorMenuBuilder
 
         if (mode == Mode.Start)
             SetupStartScene();
+        else if (mode == Mode.Credits)
+            SetupCreditsScene();
+
+        if (mode != Mode.Menu)
+            FrameLikeMenu();
 
         ConfigureCamera();
         ConfigureAtmosphere();
@@ -170,11 +181,6 @@ public static class MonitorMenuBuilder
                      "detectives_office_in_noir_style", "camera_canon_eos_400d", "camera_canon_eos_400d (1)" })
             Deactivate(old);
 
-        // Mesmo enquadramento da camera do menu: sem rolagem, leve inclinacao para baixo.
-        Undo.RecordObject(menuCamera.transform, "Tela inicial");
-        menuCamera.transform.rotation = setRoot.rotation * Quaternion.Euler(3.6f, 0f, 0f);
-        Undo.RecordObject(menuCamera, "Tela inicial");
-        menuCamera.fieldOfView = 60f;
 
         foreach (StartScreenManager manager in Object.FindObjectsByType<StartScreenManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
@@ -211,6 +217,167 @@ public static class MonitorMenuBuilder
         so.FindProperty("prompt").objectReferenceValue = startPrompt;
         so.FindProperty("shutter").objectReferenceValue = playerFacingCamera;
         so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    // Mesmo enquadramento da camera do menu: sem rolagem, leve inclinacao para baixo.
+    private static void FrameLikeMenu()
+    {
+        Undo.RecordObject(menuCamera.transform, "Camera");
+        menuCamera.transform.rotation = setRoot.rotation * Quaternion.Euler(3.6f, 0f, 0f);
+        Undo.RecordObject(menuCamera, "Camera");
+        menuCamera.fieldOfView = 60f;
+    }
+
+    // ---------- Creditos ----------
+
+    private static readonly System.Collections.Generic.List<PhotoFlash> photoCameras = new System.Collections.Generic.List<PhotoFlash>();
+    private static RectTransform creditsViewport;
+    private static RectTransform creditsContent;
+    private static readonly System.Collections.Generic.List<RectTransform> creditEntries = new System.Collections.Generic.List<RectTransform>();
+
+    // Nomes e funcoes (vindos do texto antigo da cena Credits).
+    private static readonly string[,] Credits =
+    {
+        { "MANOEL SCHEIDT ENDER", "PROGRAMADOR E GAME DESIGNER" },
+        { "JÚLLYA DIELLY MARTINS MONTEIRO", "PROGRAMADORA E GAME DESIGNER" },
+        { "GABRIEL PAMPLONA", "SONOPLASTA E PROGRAMADOR" },
+    };
+
+    private static void BuildCreditsScreen(Transform tv)
+    {
+        RectTransform screen = CreateScreenCanvas(tv, "CreditsScreen_TV", out CanvasGroup group);
+
+        GameObject viewportGo = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
+        viewportGo.transform.SetParent(screen, false);
+        creditsViewport = (RectTransform)viewportGo.transform;
+        Stretch(creditsViewport, new Vector2(90f, 56f), new Vector2(-30f, -56f));
+
+        GameObject contentGo = new GameObject("Content", typeof(RectTransform));
+        contentGo.transform.SetParent(creditsViewport, false);
+        creditsContent = (RectTransform)contentGo.transform;
+        creditsContent.anchorMin = new Vector2(0f, 1f);
+        creditsContent.anchorMax = new Vector2(1f, 1f);
+        creditsContent.pivot = new Vector2(0.5f, 1f);
+
+        creditEntries.Clear();
+        float y = 0f;
+
+        CreditLine(creditsContent, "Title", "OUT OF TIME", 52f, Phosphor, ref y, 90f);
+        CreditLine(creditsContent, "Header", "CRÉDITOS", 26f, TextIdle, ref y, 110f);
+        CreditLine(creditsContent, "Section", "DESENVOLVEDORES", 24f, LedRed, ref y, 80f);
+
+        for (int i = 0; i < Credits.GetLength(0); i++)
+        {
+            GameObject entryGo = new GameObject("Credit_" + (i + 1), typeof(RectTransform));
+            entryGo.transform.SetParent(creditsContent, false);
+            RectTransform entry = (RectTransform)entryGo.transform;
+            PlaceRow(entry, y, 150f);
+
+            float inner = 0f;
+            TextMeshProUGUI name = CreditLine(entry, "Name", Credits[i, 0], 30f, Phosphor, ref inner, 50f);
+            name.enableAutoSizing = true;
+            name.fontSizeMin = 20f;
+            name.fontSizeMax = 30f;
+            CreditLine(entry, "Role", Credits[i, 1], 22f, TextIdle, ref inner, 40f);
+
+            creditEntries.Add(entry);
+            y += 150f;
+        }
+
+        y += 60f;
+        CreditLine(creditsContent, "Thanks", "OBRIGADO POR JOGAR", 34f, Phosphor, ref y, 70f);
+        CreditLine(creditsContent, "End", "LAB 1975 // FIM DA FITA", 22f, TextIdle, ref y, 50f);
+
+        // Comeca abaixo da tela e sobe; o CreditsController termina quando y >= altura.
+        creditsContent.sizeDelta = new Vector2(0f, y);
+        creditsContent.anchoredPosition = new Vector2(0f, -(TvScreenSize.y * 1000f - 112f));
+
+        TextMeshProUGUI back = Text(screen, "BackHint", "[ESC] VOLTAR", 20f, new Color(0.5f, 0.5f, 0.48f));
+        back.alignment = TextAlignmentOptions.BottomLeft;
+        Stretch(back.rectTransform, new Vector2(90f, 22f), Vector2.zero);
+
+        TextMeshProUGUI rec = Text(screen, "Rec", "[REC]", 24f, LedRed);
+        rec.alignment = TextAlignmentOptions.TopRight;
+        Stretch(rec.rectTransform, Vector2.zero, new Vector2(-30f, -22f));
+        Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
+
+        AddCanvasOverlay(screen);
+        AddScreenGlow(tv, screen, group);
+    }
+
+    private static TextMeshProUGUI CreditLine(RectTransform parent, string name, string value, float size, Color color, ref float y, float height)
+    {
+        TextMeshProUGUI text = Text(parent, name, value, size, color);
+        text.alignment = TextAlignmentOptions.Center;
+        PlaceRow(text.rectTransform, y, height);
+        y += height;
+        return text;
+    }
+
+    private static void PlaceRow(RectTransform rect, float y, float height)
+    {
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.sizeDelta = new Vector2(0f, height);
+        rect.anchoredPosition = new Vector2(0f, -y);
+    }
+
+    // Desliga a UI 2D antiga e liga o CreditsController existente ao rolo dentro da TV.
+    private static void SetupCreditsScene()
+    {
+        Deactivate("Canvas");
+
+        CreditsController controller = Object.FindFirstObjectByType<CreditsController>(FindObjectsInactive.Include);
+
+        if (controller == null)
+        {
+            Debug.LogError("MonitorMenuBuilder: CreditsController nao encontrado na cena Credits.");
+            return;
+        }
+
+        SerializedObject so = new SerializedObject(controller);
+        so.FindProperty("creditsContent").objectReferenceValue = creditsContent;
+        so.FindProperty("scrollSpeed").floatValue = 38f;
+        so.FindProperty("endDelay").floatValue = 3f;
+        so.ApplyModifiedProperties();
+
+        CreditsSnapshots snapshots = controller.GetComponent<CreditsSnapshots>();
+        if (snapshots == null)
+            snapshots = Undo.AddComponent<CreditsSnapshots>(controller.gameObject);
+
+        TMP_Text feedLabel = null;
+        foreach (TMP_Text text in setRoot.GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (text.name == "Label" && text.transform.parent != null && text.transform.parent.name == "Overlay")
+                feedLabel = text;
+        }
+
+        // Primeiro a camera do fundo (aparece no feed do prototipo), depois as que miram o jogador.
+        photoCameras.Sort((a, b) => Rank(a).CompareTo(Rank(b)));
+
+        SerializedObject snap = new SerializedObject(snapshots);
+        snap.FindProperty("viewport").objectReferenceValue = creditsViewport;
+        snap.FindProperty("feed").objectReferenceValue = setRoot.GetComponentInChildren<CrtCameraFeed>(true);
+        snap.FindProperty("feedLabel").objectReferenceValue = feedLabel;
+
+        SerializedProperty entries = snap.FindProperty("entries");
+        entries.arraySize = creditEntries.Count;
+        for (int i = 0; i < creditEntries.Count; i++)
+            entries.GetArrayElementAtIndex(i).objectReferenceValue = creditEntries[i];
+
+        SerializedProperty cams = snap.FindProperty("cameras");
+        cams.arraySize = photoCameras.Count;
+        for (int i = 0; i < photoCameras.Count; i++)
+            cams.GetArrayElementAtIndex(i).objectReferenceValue = photoCameras[i];
+
+        snap.ApplyModifiedProperties();
+    }
+
+    private static int Rank(PhotoFlash camera)
+    {
+        string rig = camera.transform.parent != null ? camera.transform.parent.name : "";
+        return rig.EndsWith("Back") ? 0 : rig.EndsWith("Right") ? 1 : 2;
     }
 
     // ---------- Sala ----------
@@ -250,6 +417,8 @@ public static class MonitorMenuBuilder
         Transform tv = Tv(rack, "Monitor_Menu", new Vector3(0f, 0.87f, 0f), 1.75f);
         if (mode == Mode.Start)
             BuildStartScreen(tv);
+        else if (mode == Mode.Credits)
+            BuildCreditsScreen(tv);
         else
             BuildMenuScreen(tv, play, credits, quit);
 
@@ -455,6 +624,7 @@ public static class MonitorMenuBuilder
 
     private static void BuildPhotoCameras(Transform root)
     {
+        photoCameras.Clear();
         Transform cameras = Group(root, "PhotoCameras");
 
         // Duas apontadas para o jogador (a da esquerda fica atras da TV e so ilumina a sala)
@@ -564,6 +734,8 @@ public static class MonitorMenuBuilder
 
         PhotoFlash photo = body.gameObject.AddComponent<PhotoFlash>();
         SerializedObject so = new SerializedObject(photo);
+        so.FindProperty("autoFire").boolValue = mode != Mode.Credits;
+        photoCameras.Add(photo);
         so.FindProperty("flashLight").objectReferenceValue = flash;
         so.FindProperty("flashRenderer").objectReferenceValue = tube.GetComponent<Renderer>();
         so.FindProperty("readyLed").objectReferenceValue = led.GetComponent<Renderer>();
