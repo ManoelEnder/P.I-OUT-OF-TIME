@@ -19,7 +19,7 @@ public static class TemporalEraserBuilder
     private const string WalkPath = "Assets/Prefabs/Enemy/Walking (2).fbx";
     private const string ControllerFolder = "Assets/Animation/Enemy";
     private const string ControllerPath = ControllerFolder + "/TemporalEraser.controller";
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
 
     private const float ModelHeight = 1.95f;
 
@@ -231,11 +231,11 @@ public static class TemporalEraserBuilder
 
     private static Material ErasedMaterial()
     {
-        const string folder = "Assets/Materials/Enemy";
+        const string folder = "Assets/Art/Materials/Enemy";
         const string path = folder + "/TemporalEraser.mat";
 
         if (!AssetDatabase.IsValidFolder(folder))
-            AssetDatabase.CreateFolder("Assets/Materials", "Enemy");
+            AssetDatabase.CreateFolder("Assets/Art/Materials", "Enemy");
 
         Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
         if (material == null)

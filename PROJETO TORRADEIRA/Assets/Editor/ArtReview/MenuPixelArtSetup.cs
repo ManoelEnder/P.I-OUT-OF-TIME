@@ -9,8 +9,8 @@ using UnityEngine.UI;
 // Recria o menu principal em pixel art e aplica o mesmo estilo aos botoes da cena aberta.
 public static class MenuPixelArtSetup
 {
-    private const string ArtFolder = "Assets/UI/PixelArt/";
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    private const string ArtFolder = "Assets/Art/UI/PixelArt/";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
     private const string MenuProfilePath = "Assets/Scenes/Menu/MenuVolume.asset";
 
     // 1 pixel da arte = 4 unidades de UI nos botoes e paineis.

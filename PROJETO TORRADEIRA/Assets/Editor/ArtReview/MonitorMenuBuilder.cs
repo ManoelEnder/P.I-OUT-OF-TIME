@@ -13,9 +13,9 @@ public static class MonitorMenuBuilder
 {
     private const string PsxFolder = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/";
     private const string TexFolder = "Assets/ThirdParty/Facility-7 Genetics/Level Textures/";
-    private const string ArtFolder = "Assets/UI/PixelArt/";
-    private const string MaterialFolder = "Assets/Materials/Menu";
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    private const string ArtFolder = "Assets/Art/UI/PixelArt/";
+    private const string MaterialFolder = "Assets/Art/Materials/Menu";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
     private const string MenuProfilePath = "Assets/Scenes/Menu/MenuVolume.asset";
     private const string SetName = "MenuSet";
 
@@ -1483,7 +1483,7 @@ public static class MonitorMenuBuilder
     private static Material LoadOrCreate(string name, string shader)
     {
         if (!AssetDatabase.IsValidFolder(MaterialFolder))
-            AssetDatabase.CreateFolder("Assets/Materials", "Menu");
+            AssetDatabase.CreateFolder("Assets/Art/Materials", "Menu");
 
         string path = MaterialFolder + "/" + name + ".mat";
         Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
