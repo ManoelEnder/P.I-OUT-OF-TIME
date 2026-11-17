@@ -1,0 +1,651 @@
+# Assets sem uso (candidatos à remoção)
+
+Usados: 753 · Sem uso: 575 (575,6 MB)
+
+Raízes: cenas habilitadas no build, pastas `Resources` e `Editor`, scripts, caminhos citados nas ferramentas de editor e referências das configurações do projeto.
+
+| Pasta | Arquivos | Tamanho |
+|---|---:|---:|
+| `Assets/ThirdParty/dirty-public-toilet` | 10 | 174,6 MB |
+| `Assets/ThirdParty/Leather sofa` | 16 | 106,2 MB |
+| `Assets/Sounds/Casual & Relaxing Game Music` | 4 | 63,4 MB |
+| `Assets/ThirdParty/ArmsModel` | 9 | 52,8 MB |
+| `Assets/Prefabs/Maps` | 39 | 48,7 MB |
+| `Assets/ThirdParty/Abandoned Office` | 28 | 39,0 MB |
+| `Assets/ThirdParty/QuickOutline` | 7 | 30,7 MB |
+| `Assets/ThirdParty/sink` | 10 | 14,8 MB |
+| `Assets/ThirdParty/CautionTape` | 8 | 9,9 MB |
+| `Assets/Prefabs/Mat` | 10 | 5,9 MB |
+| `Assets/Prefabs/Lamps` | 1 | 5,5 MB |
+| `Assets/_Recovery` | 3 | 4,3 MB |
+| `Assets/Sounds/Ambient` | 1 | 3,2 MB |
+| `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly` | 7 | 2,9 MB |
+| `Assets/Prefabs/CenterTable` | 5 | 2,7 MB |
+| `Assets/Animation` | 2 | 2,1 MB |
+| `Assets/TextMesh Pro/Shaders` | 20 | 1,2 MB |
+| `Assets/Textures` | 5 | 1,2 MB |
+| `Assets/TextMesh Pro` | 2 | 1,1 MB |
+| `Assets/Prefabs/UI` | 10 | 1,0 MB |
+| `Assets/TextMesh Pro/Fonts` | 6 | 0,9 MB |
+| `Assets/Ilumisoft/RadarSystem` | 7 | 0,8 MB |
+| `Assets/ThirdParty/kenney_fantasy-ui-borders (1)` | 285 | 0,4 MB |
+| `Assets/Scenes/Principal` | 14 | 0,4 MB |
+| `Assets/Prefabs/Radar` | 3 | 0,3 MB |
+| `Assets/ThirdParty/Easy Collider` | 4 | 0,3 MB |
+| `Assets/Prefabs/Player` | 1 | 0,2 MB |
+| `Assets/Plugins/Demigiant` | 2 | 0,2 MB |
+| `Assets/Scenes/CenaLabFut` | 2 | 0,2 MB |
+| `Assets/Prefabs/camera` | 4 | 0,2 MB |
+| `Assets/Sounds/Radio` | 2 | 0,2 MB |
+| `Assets/Sounds/Player` | 1 | 0,1 MB |
+| `Assets/Scripts/Settings` | 16 | 0,1 MB |
+| `Assets/Scenes` | 1 | 0,1 MB |
+| `Assets/ThirdParty/window-blinds` | 1 | 0,0 MB |
+| `Assets/Materials` | 9 | 0,0 MB |
+| `Assets/Shaders` | 2 | 0,0 MB |
+| `Assets/Prefabs/Battery` | 1 | 0,0 MB |
+| `Assets/Scenes/TelaInicio` | 3 | 0,0 MB |
+| `Assets/Cutscene` | 2 | 0,0 MB |
+| `Assets/TextMesh Pro/Sprites` | 2 | 0,0 MB |
+| `Assets/Materials/Menu` | 2 | 0,0 MB |
+| `Assets` | 3 | 0,0 MB |
+| `Assets/Scenes/Radio` | 1 | 0,0 MB |
+| `Assets/Rendering` | 1 | 0,0 MB |
+| `Assets/UI` | 2 | 0,0 MB |
+| `Assets/Scenes/Credits` | 1 | 0,0 MB |
+
+## Carregado por nome — conferir antes de remover
+
+- `Assets/Scripts/UI/StartScreenCrt.cs:76` SceneManager.LoadScene(menuSceneName);
+- `Assets/Scripts/Enemy/DefeatController.cs:118` SceneManager.LoadScene(menuSceneName);
+- `Assets/Scripts/Missions/MissionSystem.cs:195` SceneManager.LoadScene(finalSceneName);
+- `Assets/Scripts/Missions/MissionSystem.cs:214` SceneManager.LoadScene(finalSceneName);
+- `Assets/Scripts/Managers/ChangeScene.cs:8` SceneManager.LoadScene(sceneName);
+- `Assets/Cutscene/Scripts/IntroCutsceneDirector.cs:203` SceneManager.LoadScene(nextScene);
+- `Assets/Scripts/Missions/ColectableItem.cs:71` SceneManager.LoadScene(nomeDaCena);
+- `Assets/Cutscene/Scripts/IntroVideoCutscene.cs:39` SceneManager.LoadScene(nextScene);
+- `Assets/Cutscene/Scripts/IntroVideoCutscene.cs:94` SceneManager.LoadScene(nextScene);
+- `Assets/Scripts/Player/NPCMissao.cs:170` SceneManager.LoadScene(nomeCenaMenu);
+- `Assets/Scripts/UI/StartScreenHandler.cs:35` SceneManager.LoadScene(menuSceneName);
+- `Assets/Scripts/Radio/CenaNarrativa.cs:345` SceneManager.LoadScene(cenaDoJogo);
+- `Assets/ThirdParty/QuickOutline/Scripts/Outline.cs:89` outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+- `Assets/ThirdParty/QuickOutline/Scripts/Outline.cs:90` outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+- `Assets/Scripts/Menu/PauseMenu.cs:252` SceneManager.LoadScene(mainMenuSceneName);
+
+## Lista completa
+
+- `Assets/_Recovery/0 (1).unity`
+- `Assets/_Recovery/0 (2).unity`
+- `Assets/_Recovery/0.unity`
+- `Assets/Animation/ArmController.controller`
+- `Assets/Animation/IdleArm.anim`
+- `Assets/Cutscene/LEIAME.md`
+- `Assets/Cutscene/Roteiro_Dublagem.txt`
+- `Assets/Ilumisoft/RadarSystem/Demo/Demo.unity`
+- `Assets/Ilumisoft/RadarSystem/Demo/Materials/Blue.mat`
+- `Assets/Ilumisoft/RadarSystem/Demo/Materials/Red.mat`
+- `Assets/Ilumisoft/RadarSystem/Documentation.pdf`
+- `Assets/Ilumisoft/RadarSystem/Prefabs/Locatable Icon.prefab`
+- `Assets/Ilumisoft/RadarSystem/Textures/Locatable Icon Circle.png`
+- `Assets/Ilumisoft/RadarSystem/Textures/Locatable Icon Diamond.png`
+- `Assets/Input Action Reference.inputactions`
+- `Assets/Materials/Battery.mat`
+- `Assets/Materials/Floor.mat`
+- `Assets/Materials/FundoMenu.mat`
+- `Assets/Materials/grunge-dusty-noise-grainy-texture-background_1008660-1715.mat`
+- `Assets/Materials/Invisible.mat`
+- `Assets/Materials/Menu/CrtFeed.mat`
+- `Assets/Materials/Menu/MenuRedBulb.mat`
+- `Assets/Materials/MFV.mat`
+- `Assets/Materials/pixil-frame-0 (18).mat`
+- `Assets/Materials/ShaderCartoon.mat`
+- `Assets/Materials/Wall.mat`
+- `Assets/New Universal Render Pipeline Asset_Renderer.asset`
+- `Assets/Plugins/Demigiant/DOTween/DOTween.XML`
+- `Assets/Plugins/Demigiant/DOTween/readme.txt`
+- `Assets/Prefabs/Battery/Battery (1).prefab`
+- `Assets/Prefabs/camera/action_camera.fbx`
+- `Assets/Prefabs/camera/FotoPrefab.prefab`
+- `Assets/Prefabs/camera/FotoPrefab2.prefab`
+- `Assets/Prefabs/camera/fototeste.prefab`
+- `Assets/Prefabs/CenterTable/Material_Height.png`
+- `Assets/Prefabs/CenterTable/Material_Metallic.png`
+- `Assets/Prefabs/CenterTable/Material_Normal_OpenGL.png`
+- `Assets/Prefabs/CenterTable/Material_Roughness.png`
+- `Assets/Prefabs/CenterTable/Materials/Material_Metallic.mat`
+- `Assets/Prefabs/Lamps/ceiling_lamp.glb`
+- `Assets/Prefabs/Maps/isometric_office(3).glb`
+- `Assets/Prefabs/Maps/LAB2.fbx`
+- `Assets/Prefabs/Maps/Materials/green_shader.004.mat`
+- `Assets/Prefabs/Maps/Materials/green_shader.005.mat`
+- `Assets/Prefabs/Maps/Materials/initialShadingGroup.004.mat`
+- `Assets/Prefabs/Maps/Materials/lambert6SG.001.mat`
+- `Assets/Prefabs/Maps/Materials/yellow_shader.002.mat`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/source/ElectricLab_2.glb`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_0_0.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_1_1@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_1_1@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_1_1@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_10_10.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_11_11@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_11_11@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_11_11@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_12_12.jpeg`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_13_13.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_14_14@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_14_14@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_14_14@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_15_15.jpeg`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_16_16.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_17_17@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_17_17@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_17_17@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_18_18.jpeg`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_2_2.jpeg`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_3_3.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_4_4.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_5_5@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_5_5@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_5_5@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_6_6.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_7_7.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_8_8@channels=B.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_8_8@channels=G.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_8_8@channels=R.png`
+- `Assets/Prefabs/Maps/women-in-tradesin-the-classroom-school-lab/textures/Image_9_9.png`
+- `Assets/Prefabs/Mat/source/Mat/Materials/T_Mat_AO.mat`
+- `Assets/Prefabs/Mat/source/Mat/Materials/T_Mat_BC.mat`
+- `Assets/Prefabs/Mat/source/Mat/Materials/T_Mat_N.mat`
+- `Assets/Prefabs/Mat/source/Mat/T_Mat_AO.png`
+- `Assets/Prefabs/Mat/source/Mat/T_Mat_BC.png`
+- `Assets/Prefabs/Mat/source/Mat/T_Mat_N.png`
+- `Assets/Prefabs/Mat/textures/T_Mat_AO.png`
+- `Assets/Prefabs/Mat/textures/T_Mat_BC.png`
+- `Assets/Prefabs/Mat/textures/T_Mat_N.png`
+- `Assets/Prefabs/Mat/textures/T_Mat_R.png`
+- `Assets/Prefabs/Player/Apenas Retopologia Snufkin.fbx`
+- `Assets/Prefabs/Radar/Design sem nome (15).png`
+- `Assets/Prefabs/Radar/Design sem nome (16).png`
+- `Assets/Prefabs/Radar/Radar.prefab`
+- `Assets/Prefabs/UI/a (1).png`
+- `Assets/Prefabs/UI/Design sem nome (3).png`
+- `Assets/Prefabs/UI/Design sem nome (4).png`
+- `Assets/Prefabs/UI/Design sem nome.png`
+- `Assets/Prefabs/UI/Inserir um subtítulo (1).png`
+- `Assets/Prefabs/UI/Inserir um subtítulo (2).png`
+- `Assets/Prefabs/UI/Inserir um subtítulo.png`
+- `Assets/Prefabs/UI/—Pngtree—camera rec screen and focus_8285811.png`
+- `Assets/Prefabs/UI/Texto do seu parágrafo 1.png`
+- `Assets/Prefabs/UI/Texto do seu parágrafo.png`
+- `Assets/Rendering/UI_Renderer.asset`
+- `Assets/Scenes/CenaLabFut/LightingData.asset`
+- `Assets/Scenes/CenaLabFut/ReflectionProbe-0.exr`
+- `Assets/Scenes/Credits/GlobalVolume Profile.asset`
+- `Assets/Scenes/Principal/CamVolume Profile.asset`
+- `Assets/Scenes/Principal/Global Volume Profile.asset`
+- `Assets/Scenes/Principal/NavMesh-Floor_A.asset`
+- `Assets/Scenes/Principal/NavMesh-Floor_B.asset`
+- `Assets/Scenes/Principal/NavMesh-Floor_B_Stairs_0.asset`
+- `Assets/Scenes/Principal/NavMesh-Navigation.asset`
+- `Assets/Scenes/Principal/NavMesh-Object_8.asset`
+- `Assets/Scenes/Principal/NavMesh-Stairs_B.asset`
+- `Assets/Scenes/Principal/NavMesh-Stairs_Cargo_Deliver.asset`
+- `Assets/Scenes/Principal/NavMesh-Stairs_Cargo_To_B.asset`
+- `Assets/Scenes/Principal/NavMesh-Stairs_Center_Curve.asset`
+- `Assets/Scenes/Principal/NavMesh-Vent_CT_A.asset`
+- `Assets/Scenes/Principal/Post Process Volume Profile.asset`
+- `Assets/Scenes/Principal/TimeTravelBlur Profile.asset`
+- `Assets/Scenes/Radio/GlobalVolume Profile.asset`
+- `Assets/Scenes/TelaInicio/Global Volume Profile 1.asset`
+- `Assets/Scenes/TelaInicio/Global Volume Profile 2.asset`
+- `Assets/Scenes/TelaInicio/Global Volume Profile.asset`
+- `Assets/Scenes/TestScene.unity`
+- `Assets/Scripts/Settings/DefaultVolumeProfile.asset`
+- `Assets/Scripts/Settings/HDRP Balanced.asset`
+- `Assets/Scripts/Settings/HDRP High Fidelity.asset`
+- `Assets/Scripts/Settings/HDRP Performant.asset`
+- `Assets/Scripts/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset`
+- `Assets/Scripts/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset`
+- `Assets/Scripts/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset`
+- `Assets/Scripts/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset`
+- `Assets/Scripts/Settings/SampleSceneProfile.asset`
+- `Assets/Scripts/Settings/SkyandFogSettingsProfile.asset`
+- `Assets/Scripts/Settings/URP-Balanced.asset`
+- `Assets/Scripts/Settings/URP-Balanced-Renderer.asset`
+- `Assets/Scripts/Settings/URP-HighFidelity.asset`
+- `Assets/Scripts/Settings/URP-HighFidelity-Renderer.asset`
+- `Assets/Scripts/Settings/URP-Performant.asset`
+- `Assets/Scripts/Settings/URP-Performant-Renderer.asset`
+- `Assets/Shaders/MAT_GroundFog.mat`
+- `Assets/Shaders/SG_GroundFog.shadergraph`
+- `Assets/Sounds/Ambient/soul_serenity_sounds-ambient-noise-236388.mp3`
+- `Assets/Sounds/Casual & Relaxing Game Music/Forest.wav`
+- `Assets/Sounds/Casual & Relaxing Game Music/Happy.wav`
+- `Assets/Sounds/Casual & Relaxing Game Music/Mystery.wav`
+- `Assets/Sounds/Casual & Relaxing Game Music/Space Walk.wav`
+- `Assets/Sounds/Player/freesound_community-concrete-footsteps-1-6265.mp3`
+- `Assets/Sounds/Radio/Dublagemarthur-_3_.mp3`
+- `Assets/Sounds/Radio/jullya-diellyy_s-Vídeo-25_08_2026-_1_.mp3`
+- `Assets/TextMesh Pro/Fonts/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat`
+- `Assets/TextMesh Pro/Fonts/Fonts & Materials/LiberationSans SDF - Outline.mat`
+- `Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt`
+- `Assets/TextMesh Pro/Fonts/oldnewspapertypes/OldNewspaperTypes SDF.asset`
+- `Assets/TextMesh Pro/Fonts/oldnewspapertypes/OldNewspaperTypes.ttf`
+- `Assets/TextMesh Pro/Fonts/TeachersStudent-Regular SDF.asset`
+- `Assets/TextMesh Pro/Huge Smile SDF.asset`
+- `Assets/TextMesh Pro/Privilege People SDF.asset`
+- `Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl`
+- `Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP LIT.shadergraph`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP UNLIT.shadergraph`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile-2-Pass.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Surface.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-URP Lit.shadergraph`
+- `Assets/TextMesh Pro/Shaders/TMP_SDF-URP Unlit.shadergraph`
+- `Assets/TextMesh Pro/Shaders/TMPro.cginc`
+- `Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc`
+- `Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc`
+- `Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc`
+- `Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt`
+- `Assets/TextMesh Pro/Sprites/EmojiOne.json`
+- `Assets/Textures/grunge-dusty-noise-grainy-texture-background_1008660-1715.jpg`
+- `Assets/Textures/images.png`
+- `Assets/Textures/mfv.png`
+- `Assets/Textures/PixelRenderTexture.renderTexture`
+- `Assets/Textures/pixil-frame-0 (18).png`
+- `Assets/ThirdParty/Abandoned Office/ruined-office-furniture.blend`
+- `Assets/ThirdParty/Abandoned Office/ruined-office-furniture.gltf`
+- `Assets/ThirdParty/Abandoned Office/textures/books_low_DefaultMaterial_BaseColor.png`
+- `Assets/ThirdParty/Abandoned Office/textures/books_low_DefaultMaterial_Normal.png`
+- `Assets/ThirdParty/Abandoned Office/textures/books_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/boxes_low_DefaultMaterial_BaseColor.png`
+- `Assets/ThirdParty/Abandoned Office/textures/boxes_low_DefaultMaterial_Normal.png`
+- `Assets/ThirdParty/Abandoned Office/textures/boxes_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/chairs_low_DefaultMaterial_BaseColor.png`
+- `Assets/ThirdParty/Abandoned Office/textures/chairs_low_DefaultMaterial_Normal.png`
+- `Assets/ThirdParty/Abandoned Office/textures/chairs_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/computers_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/computerslow_Material _25_BaseColor.png`
+- `Assets/ThirdParty/Abandoned Office/textures/computerslow_Material _25_Normal.png`
+- `Assets/ThirdParty/Abandoned Office/textures/filecabinets_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/filingcabinet_grey.png`
+- `Assets/ThirdParty/Abandoned Office/textures/filingcabinet_n.png`
+- `Assets/ThirdParty/Abandoned Office/textures/filingcabinet_white.png`
+- `Assets/ThirdParty/Abandoned Office/textures/metaldesk_d.png`
+- `Assets/ThirdParty/Abandoned Office/textures/metaldesk_n.png`
+- `Assets/ThirdParty/Abandoned Office/textures/metaldesk_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/RGB Alpha.png`
+- `Assets/ThirdParty/Abandoned Office/textures/shelf_d.png`
+- `Assets/ThirdParty/Abandoned Office/textures/shelf_n.png`
+- `Assets/ThirdParty/Abandoned Office/textures/shelf_r.png`
+- `Assets/ThirdParty/Abandoned Office/textures/wooddesk_d.png`
+- `Assets/ThirdParty/Abandoned Office/textures/wooddesk_n.png`
+- `Assets/ThirdParty/Abandoned Office/textures/wooddesk_r.png`
+- `Assets/ThirdParty/ArmsModel/animation-first-person-arms-male.fbx`
+- `Assets/ThirdParty/ArmsModel/textures/_mr__FPArms_Male1_SMTH.png`
+- `Assets/ThirdParty/ArmsModel/textures/_nflip__FPArms_Male1_NRM.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_AO.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_DIF.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_MET.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_NRM.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_SMTH.png`
+- `Assets/ThirdParty/ArmsModel/textures/FPArms_Male1_SPC.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Albedo.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Metalness.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Normal.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/bathroom set/TEXTURE/Banyo_Seti_Roughness.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/textures/Banyo_Seti_Metalness.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/textures/Banyo_Seti_Roughness.png`
+- `Assets/ThirdParty/bathroom-cleaning-props-set-low-poly/textures/internal_ground_ao_texture.jpeg`
+- `Assets/ThirdParty/CautionTape/textures/_mr__CautionTape_Roughness.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_AlbedoTransparency.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_AmbientOcclusion.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_Emission.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_Metallic.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_Normal_.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_Roughness.png`
+- `Assets/ThirdParty/CautionTape/textures/CautionTape_Specular.png`
+- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/SM_Toilet.fbx`
+- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_BaseColor.tga`
+- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_Normal.tga`
+- `Assets/ThirdParty/dirty-public-toilet/SM_Toilet/Toilet_lambert3_OcclusionRoughnessMetallic.tga`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_BaseColor.tga.png`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_Normal.tga.png`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert1_OcclusionRoughnessMetallic.png`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_BaseColor.png`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_Normal.png`
+- `Assets/ThirdParty/dirty-public-toilet/textures/Toilet_lambert3_OcclusionRoughnessMetallic.png`
+- `Assets/ThirdParty/Easy Collider/Documentation.pdf`
+- `Assets/ThirdParty/Easy Collider/Metarials/Box.mat`
+- `Assets/ThirdParty/Easy Collider/Prefabs/Demo.prefab`
+- `Assets/ThirdParty/Easy Collider/Scene/Demo.unity`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/License.txt`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Border/panel-border-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider Fade/divider-fade-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Divider/divider-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Panel/panel-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent border/panel-transparent-border-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Default/Transparent center/panel-transparent-center-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Border/panel-border-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider Fade/divider-fade-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Divider/divider-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Panel/panel-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent border/panel-transparent-border-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-000.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-001.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-002.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-003.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-004.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-005.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-006.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-007.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-008.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-009.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-010.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-011.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-012.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-013.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-014.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-015.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-016.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-017.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-018.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-019.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-020.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-021.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-022.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-023.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-024.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-025.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-026.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-027.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-028.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-029.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-030.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/PNG/Double/Transparent center/panel-transparent-center-031.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Preview.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Sample.png`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Vector/fantasy-ui-borders.svg`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Visit Kenney.url`
+- `Assets/ThirdParty/kenney_fantasy-ui-borders (1)/Visit Patreon.url`
+- `Assets/ThirdParty/Leather sofa/Materials/Material.004_Base_color.mat`
+- `Assets/ThirdParty/Leather sofa/Materials/Material.004_Roughness.mat`
+- `Assets/ThirdParty/Leather sofa/Sofa.fbx`
+- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Base_color.png`
+- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Mixed_AO.png`
+- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Normal_OpenGL.png`
+- `Assets/ThirdParty/Leather sofa/Textures/Material.004_Roughness.png`
+- `Assets/ThirdParty/Leather sofa/Textures/vintage/source/DVD.fbx`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/license.txt`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/scene.bin`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/scene.gltf`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_baseColor.jpeg`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_metallicRoughness.png`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/objects_from_Echo_of_the_Past_Cupboard_normal.png`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/wire_135110008_baseColor.png`
+- `Assets/ThirdParty/Leather sofa/vintage_globe/textures/wire_135110008_metallicRoughness.png`
+- `Assets/ThirdParty/QuickOutline/hanging_light.glb`
+- `Assets/ThirdParty/QuickOutline/Readme.txt`
+- `Assets/ThirdParty/QuickOutline/Samples/Materials/Plane.mat`
+- `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutline.unity`
+- `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutline/LightingData.asset`
+- `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutline/ReflectionProbe-0.exr`
+- `Assets/ThirdParty/QuickOutline/Samples/Scenes/QuickOutlineSettings.lighting`
+- `Assets/ThirdParty/sink/sink/sink.fbx`
+- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_BaseColor.png`
+- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Height.png`
+- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Metallic.png`
+- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Normal.png`
+- `Assets/ThirdParty/sink/sink/textures/sink_DefaultMaterial_Roughness.png`
+- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_BaseColor.png`
+- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Metallic.png`
+- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Normal.png`
+- `Assets/ThirdParty/sink/textures/sink_DefaultMaterial_Roughness.png`
+- `Assets/ThirdParty/window-blinds/0a8416973193455b964db13c84a90d7e/blinds.3DS`
+- `Assets/UI/crosshair117.png`
+- `Assets/UI/hand_closed.png`
+- `Assets/UIInputActions.inputactions`
