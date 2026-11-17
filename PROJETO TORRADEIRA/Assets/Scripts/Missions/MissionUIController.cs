@@ -25,6 +25,12 @@ public class MissionUIController : MonoBehaviour
 
     private bool isVisible;
 
+    [Header("Camera")]
+    [SerializeField] private PhotoCamera photoCamera;
+
+    // Com o visor aberto o painel e a dica do TAB somem para nao cobrir o HUD da camera.
+    private bool hiddenByCamera;
+
     private void Awake()
     {
         if (missionPanel == null)
@@ -53,6 +59,11 @@ public class MissionUIController : MonoBehaviour
 
     private void Update()
     {
+        UpdateCameraVisibility();
+
+        if (hiddenByCamera)
+            return;
+
         if (Keyboard.current == null)
             return;
 
@@ -170,11 +181,32 @@ public class MissionUIController : MonoBehaviour
         HideMissions();
     }
 
+    private void UpdateCameraVisibility()
+    {
+        if (photoCamera == null)
+            photoCamera = FindFirstObjectByType<PhotoCamera>();
+
+        bool cameraOpen =
+            photoCamera != null &&
+            (photoCamera.IsCameraMode || photoCamera.IsTransitioning);
+
+        if (cameraOpen == hiddenByCamera)
+            return;
+
+        hiddenByCamera = cameraOpen;
+
+        if (missionPanel != null)
+            missionPanel.gameObject.SetActive(!cameraOpen);
+
+        if (tabHint != null)
+            tabHint.gameObject.SetActive(!cameraOpen && !isVisible);
+    }
+
     private void SetHintVisible(bool visible)
     {
         if (tabHint == null)
             return;
 
-        tabHint.gameObject.SetActive(visible);
+        tabHint.gameObject.SetActive(visible && !hiddenByCamera);
     }
 }
