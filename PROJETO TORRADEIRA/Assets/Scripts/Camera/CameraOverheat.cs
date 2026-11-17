@@ -397,7 +397,7 @@ public class CameraOverheat : MonoBehaviour
 
         float pulse = 0f;
 
-        if (HeatPercent >= 0.65f)
+        if (HeatPercent >= 0.65f && FlashSettings.Enabled)
         {
             pulse = Mathf.Pow(
                 Mathf.Max(

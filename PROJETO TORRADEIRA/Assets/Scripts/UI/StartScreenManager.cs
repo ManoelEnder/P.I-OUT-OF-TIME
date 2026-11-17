@@ -59,7 +59,7 @@ public class StartScreenManager : MonoBehaviour
 
     private void OnInputEvent(InputEventPtr eventPtr, InputDevice device)
     {
-        if (hasStarted)
+        if (hasStarted || PhotosensitivityWarning.BlocksInput)
             return;
 
         foreach (var control in device.allControls)

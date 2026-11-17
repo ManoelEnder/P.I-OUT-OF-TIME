@@ -76,7 +76,7 @@ public class CameraPhotoCapture : MonoBehaviour
 
     public IEnumerator PlayFlash()
     {
-        if (flashImage == null)
+        if (flashImage == null || !FlashSettings.Enabled)
             yield break;
 
         flashImage.gameObject.SetActive(true);

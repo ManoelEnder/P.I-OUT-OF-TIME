@@ -11,7 +11,7 @@ public class StartScreenHandler : MonoBehaviour
 
     private void Update()
     {
-        if (hasStarted) return;
+        if (hasStarted || PhotosensitivityWarning.BlocksInput) return;
 
         // Detecta qualquer tecla do teclado
         if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)

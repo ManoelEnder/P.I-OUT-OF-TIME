@@ -21,7 +21,7 @@ public class CameraFlash : MonoBehaviour
 
     public IEnumerator Play()
     {
-        if (flashImage == null)
+        if (flashImage == null || !FlashSettings.Enabled)
             yield break;
 
         flashImage.gameObject.SetActive(true);

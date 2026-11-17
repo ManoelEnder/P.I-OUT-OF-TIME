@@ -253,6 +253,124 @@ public static class PauseMenuBuilder
                 value.color = Phosphor;
             }
         }
+
+        BuildFlashRow(panel, font);
+    }
+
+    // Linha "FLASHES  [ LIGADO / DESLIGADO ]" abaixo dos sliders (fotossensibilidade).
+    private static void BuildFlashRow(GameObject panel, TMP_FontAsset font)
+    {
+        Slider lowest = null;
+
+        foreach (Slider slider in panel.GetComponentsInChildren<Slider>(true))
+        {
+            if (lowest == null ||
+                ((RectTransform)slider.transform).anchoredPosition.y <
+                ((RectTransform)lowest.transform).anchoredPosition.y)
+                lowest = slider;
+        }
+
+        if (lowest == null)
+            return;
+
+        RectTransform reference = (RectTransform)lowest.transform;
+        Transform parent = reference.parent;
+        Transform existing = parent.Find("Flashes");
+        GameObject row;
+
+        if (existing != null)
+        {
+            row = existing.gameObject;
+        }
+        else
+        {
+            row = new GameObject("Flashes", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            Undo.RegisterCreatedObjectUndo(row, "Configuracoes");
+            row.layer = parent.gameObject.layer;
+            row.transform.SetParent(parent, false);
+        }
+
+        // Mesmo espacamento entre os sliders, uma linha abaixo do ultimo.
+        float spacing = 60f;
+        Slider[] sliders = panel.GetComponentsInChildren<Slider>(true);
+        if (sliders.Length > 1)
+        {
+            float top = float.MinValue;
+            foreach (Slider s in sliders)
+                top = Mathf.Max(top, ((RectTransform)s.transform).anchoredPosition.y);
+            spacing = (top - reference.anchoredPosition.y) / (sliders.Length - 1);
+        }
+
+        RectTransform rect = (RectTransform)row.transform;
+        Undo.RecordObject(rect, "Configuracoes");
+        rect.anchorMin = reference.anchorMin;
+        rect.anchorMax = reference.anchorMax;
+        rect.pivot = reference.pivot;
+        rect.sizeDelta = new Vector2(reference.sizeDelta.x, 40f);
+        rect.anchoredPosition = reference.anchoredPosition - new Vector2(0f, spacing);
+        rect.localScale = Vector3.one;
+
+        // A dica "[ESC] Voltar" desce para nao ficar em cima da linha nova.
+        RectTransform hint = panel.transform.Find("BackHint") as RectTransform;
+        if (hint != null && hint.parent == parent)
+        {
+            Undo.RecordObject(hint, "Configuracoes");
+            hint.anchoredPosition = new Vector2(hint.anchoredPosition.x, rect.anchoredPosition.y - 60f);
+        }
+
+        Image hit = row.GetComponent<Image>();
+        Undo.RecordObject(hit, "Configuracoes");
+        hit.sprite = null;
+        hit.color = new Color(0f, 0f, 0f, 0f);
+        hit.raycastTarget = true;
+
+        Button button = row.GetComponent<Button>();
+        Undo.RecordObject(button, "Configuracoes");
+        button.transition = Selectable.Transition.None;
+
+        TextMeshProUGUI label = Child<TextMeshProUGUI>(row.transform, "Name");
+        SetFont(label, font);
+        label.text = "FLASHES";
+        label.fontSize = 24f;
+        label.color = TextIdle;
+        label.alignment = TextAlignmentOptions.MidlineRight;
+        label.raycastTarget = false;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
+        RectTransform labelRect = label.rectTransform;
+        labelRect.anchorMin = labelRect.anchorMax = new Vector2(0f, 0.5f);
+        labelRect.pivot = new Vector2(1f, 0.5f);
+        labelRect.sizeDelta = new Vector2(260f, 40f);
+        labelRect.anchoredPosition = new Vector2(-24f, 0f);
+
+        TextMeshProUGUI value = Child<TextMeshProUGUI>(row.transform, "Value");
+        SetFont(value, font);
+        value.text = "[ LIGADO ]";
+        value.fontSize = 24f;
+        value.color = Phosphor;
+        value.alignment = TextAlignmentOptions.MidlineLeft;
+        value.raycastTarget = false;
+        value.textWrappingMode = TextWrappingModes.NoWrap;
+        Stretch(value.rectTransform, Vector2.zero, Vector2.zero);
+
+        ButtonHoverEffect hover = row.GetComponent<ButtonHoverEffect>();
+        if (hover == null)
+            hover = Undo.AddComponent<ButtonHoverEffect>(row);
+
+        SerializedObject hoverSo = new SerializedObject(hover);
+        hoverSo.FindProperty("hoverScale").floatValue = 1f;
+        hoverSo.FindProperty("label").objectReferenceValue = label;
+        hoverSo.FindProperty("normalTextColor").colorValue = TextIdle;
+        hoverSo.FindProperty("hoverTextColor").colorValue = Phosphor;
+        hoverSo.FindProperty("hoverPrefix").stringValue = "> ";
+        hoverSo.ApplyModifiedProperties();
+
+        foreach (SettingsMenu menu in Object.FindObjectsByType<SettingsMenu>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            SerializedObject so = new SerializedObject(menu);
+            so.FindProperty("flashToggleButton").objectReferenceValue = button;
+            so.FindProperty("flashValueText").objectReferenceValue = value;
+            so.ApplyModifiedProperties();
+        }
     }
 
     private static void BuildControls(GameObject panel, TMP_FontAsset font)
