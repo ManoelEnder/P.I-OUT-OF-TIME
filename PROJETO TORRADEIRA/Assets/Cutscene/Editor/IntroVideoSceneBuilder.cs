@@ -20,7 +20,7 @@ public static class IntroVideoSceneBuilder
     {
         var clip = AssetDatabase.LoadAssetAtPath<VideoClip>(ClipPath);
         if (clip == null) throw new FileNotFoundException("Vídeo não encontrado: " + ClipPath);
-        var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Font/VCR_OSD_MONO SDF.asset");
+        var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/VCR_OSD_MONO SDF.asset");
 
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 

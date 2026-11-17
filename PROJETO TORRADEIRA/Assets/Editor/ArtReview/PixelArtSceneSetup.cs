@@ -10,9 +10,9 @@ using UnityEngine.UI;
 // particulas das pecas, fonte VCR e hierarquia em ingles. Pode ser executado de novo.
 public static class PixelArtSceneSetup
 {
-    private const string ArtFolder = "Assets/UI/PixelArt/";
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
-    private const string ParticleMaterialPath = "Assets/Materials/GlitchParticleMaterial.mat";
+    private const string ArtFolder = "Assets/Art/UI/PixelArt/";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
+    private const string ParticleMaterialPath = "Assets/Art/Materials/GlitchParticleMaterial.mat";
 
     // Escala da arte: 1 pixel do sprite = 3 unidades de UI.
     private const float Px = 3f;

@@ -7,8 +7,8 @@ using UnityEngine.UI;
 // Refaz o menu de pausa como um terminal CRT, no mesmo estilo do menu principal.
 public static class PauseMenuBuilder
 {
-    private const string ArtFolder = "Assets/UI/PixelArt/";
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    private const string ArtFolder = "Assets/Art/UI/PixelArt/";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
 
     private static readonly Color ScreenBlack = new Color(0.03f, 0.03f, 0.035f, 0.96f);
     private static readonly Color Phosphor = new Color(1f, 1f, 1f, 1f);

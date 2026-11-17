@@ -6,7 +6,7 @@ using UnityEngine;
 // Coloca o aviso de fotossensibilidade na cena aberta (deve ser a TelaInicio).
 public static class PhotosensitivityWarningSetup
 {
-    private const string PixelFontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
 
     [MenuItem("Ferramentas/Pixel Art/Adicionar aviso de fotossensibilidade")]
     public static void Add()

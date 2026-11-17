@@ -50,3 +50,41 @@ Não aparecem em nenhuma cena do build, mas podem ser material da equipe para a 
 
 - `Ferramentas › QA › Limpar projeto` (`Assets/Editor/QA/ProjectCleanup.cs`): refaz a lista do build e só apaga o que o mapa de referências confirma sem uso.
 - `Ferramentas › QA › Mapa de referencias`: gera `nao-usados.md`.
+
+## Movidos (reorganização de pastas)
+
+Feito com `Ferramentas › QA › Reorganizar pastas` (`AssetDatabase.MoveAsset`: GUID e `.meta` preservados, cenas e prefabs continuam ligados). Os caminhos citados nas ferramentas de montagem foram atualizados no mesmo commit; o teste `ToolPathsCheck` confere que todos existem.
+
+| De | Para |
+|---|---|
+| `Assets/Sounds/` | `Assets/Audio/` |
+| `Assets/Font/` | `Assets/Fonts/` |
+| `Assets/Materials/` | `Assets/Art/Materials/` |
+| `Assets/Textures/` | `Assets/Art/Textures/` |
+| `Assets/UI/` | `Assets/Art/UI/` |
+| `Assets/Shaders/` | `Assets/Art/Shaders/` |
+| `Assets/Scripts/Settings/` (pipeline e volumes) | `Assets/Settings/Pipeline/` |
+| `Assets/New Universal Render Pipeline Asset_Renderer.asset` | `Assets/Settings/Pipeline/` |
+| `Assets/Rendering/UI_Renderer.asset` | `Assets/Settings/Rendering/` |
+| `Assets/DefaultVolumeProfile.asset` | `Assets/Settings/` |
+| `Assets/*.inputactions` (3 arquivos) | `Assets/Settings/Input/` |
+| `Assets/Scripts/Optimization/AutomaticLODTools.cs` (ferramenta de editor) | `Assets/Editor/Optimization/` |
+
+Intocados de propósito: `ThirdParty/*` por dentro, `Plugins`, `TextMesh Pro`, `Resources`, `Ilumisoft`, `Cutscene` (já organizada por tipo), `Animation`, `Prefabs`, `Scenes`, `Scripts/<Sistema>`.
+
+### Estrutura final de `Assets/`
+
+```
+Art/          Materials, Textures, UI (PixelArt), Shaders
+Audio/        sons e músicas
+Animation/    controladores e clipes
+Cutscene/     arte, áudio, vídeo e scripts da abertura
+Editor/       ferramentas de montagem (ArtReview, Enemy, Optimization) e QA
+Fonts/        VCR OSD Mono
+Prefabs/      prefabs por sistema
+Resources/    (carregados em tempo de execução)
+Scenes/       cenas do jogo e dados de cada uma
+Scripts/      código do jogo por sistema (Camera, Enemy, Menu, Missions, UI, Diagnostics...)
+Settings/     Pipeline (URP), Rendering, Input, volume padrão
+ThirdParty/   pacotes de terceiros
+```

@@ -20,7 +20,7 @@ public static class IntroCutsceneBuilder
     const string ArtDir = Root + "/Art";
     const string SfxDir = Root + "/Audio/Efeitos";
     const string VoiceDir = Root + "/Audio/Voz";
-    const string FontPath = "Assets/Font/VCR_OSD_MONO SDF.asset";
+    const string FontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
     const string RTPath = Root + "/TelaPixelada_640x360.renderTexture";
     public const string ScenePath = "Assets/Scenes/IntroCutscene.unity";
     const string RequestPath = "Temp/IntroCutscene.request";
@@ -296,7 +296,7 @@ public static class IntroCutsceneBuilder
         d.cam = cam; d.overlay = overlay; d.fade = fade; d.subtitle = subtitle; d.skipHint = skip; d.subtitleBack = subBackSr;
         AudioSource Src(string n) { var a = new GameObject(n).AddComponent<AudioSource>(); a.transform.SetParent(dirGo.transform); a.playOnAwake = false; return a; }
         d.voice = Src("Voz"); d.music = Src("Trilha"); d.ambience = Src("Ambiente"); d.sfx = Src("Efeitos");
-        d.music.clip = Clip("Assets/Sounds/Casual & Relaxing Game Music/Darkness.wav");
+        d.music.clip = Clip("Assets/Audio/Casual & Relaxing Game Music/Darkness.wav");
         d.ambience.clip = Sfx("amb_lab");
         d.duration = 112f;
         d.nextScene = "Principal";
@@ -362,10 +362,10 @@ public static class IntroCutsceneBuilder
                 clip = Clip($"{VoiceDir}/voz_{i + 1:D2}.wav") ?? Clip($"{VoiceDir}/voz_{i + 1:D2}.mp3"), // dublagem (ElevenLabs) entra aqui; sem arquivo, só legenda
             };
 
-        AudioClip shutter = Clip("Assets/Sounds/Camera/483381__michx123__sony-a7-ii-autofocus-shutter-mechanism-sound.wav");
-        AudioClip rewind = Clip("Assets/Sounds/UI/mixkit-tape-rewind-cinematic-transition-1088.wav");
-        AudioClip glitch = Clip("Assets/Sounds/UI/mixkit-glitch-static-1457.wav");
-        AudioClip confirm = Clip("Assets/Sounds/UI/mixkit-sci-fi-confirmation-914.wav");
+        AudioClip shutter = Clip("Assets/Audio/Camera/483381__michx123__sony-a7-ii-autofocus-shutter-mechanism-sound.wav");
+        AudioClip rewind = Clip("Assets/Audio/UI/mixkit-tape-rewind-cinematic-transition-1088.wav");
+        AudioClip glitch = Clip("Assets/Audio/UI/mixkit-glitch-static-1457.wav");
+        AudioClip confirm = Clip("Assets/Audio/UI/mixkit-sci-fi-confirmation-914.wav");
         IntroCutsceneDirector.Cue Q(float t, AudioClip c, float v, string note) => new IntroCutsceneDirector.Cue { time = t, clip = c, volume = v, note = note };
         AudioClip click = Sfx("sfx_tool_click"), whoosh = Sfx("sfx_whoosh");
         d.cues = new[]
