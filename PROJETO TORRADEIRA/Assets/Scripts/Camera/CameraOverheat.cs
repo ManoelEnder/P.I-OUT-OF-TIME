@@ -18,6 +18,8 @@ public class CameraOverheat : MonoBehaviour
 
     [Header("Interface")]
     [SerializeField] private Image heatBar;
+    [SerializeField] private GameObject heatWarning;
+    [SerializeField, Range(0f, 1f)] private float warningThreshold = 0.75f;
 
     [Header("Distorcao Temporal")]
     [SerializeField] private Volume glitchVolume;
@@ -29,6 +31,13 @@ public class CameraOverheat : MonoBehaviour
     private bool rupturePending;
 
     private GameObject lostCameraInstance;
+    private bool configurationErrorLogged;
+    private float displayedHeat = -1f;
+
+    [Header("Cores da barra")]
+    [SerializeField] private Color coolColor = new Color(0.45f, 1f, 0.55f, 1f);
+    [SerializeField] private Color warmColor = new Color(1f, 0.6f, 0.15f, 1f);
+    [SerializeField] private Color hotColor = new Color(1f, 0.15f, 0.1f, 1f);
 
     private ChromaticAberration chromatic;
     private LensDistortion distortion;
@@ -116,24 +125,19 @@ public class CameraOverheat : MonoBehaviour
         if (cameraLost || !photoCamera.CanLoseCamera)
             return;
 
-        if (lostCameraPrefab == null)
-        {
-            Debug.LogError(
-                "CameraOverheat: configure o Lost Camera Prefab.",
-                this
-            );
-
-            return;
-        }
-
         Transform destination = GetRandomPoint();
 
-        if (destination == null)
+        if (lostCameraPrefab == null || destination == null)
         {
-            Debug.LogError(
-                "CameraOverheat: configure pelo menos um Teleport Point.",
-                this
-            );
+            if (!configurationErrorLogged)
+            {
+                Debug.LogError(
+                    "CameraOverheat: configure o Lost Camera Prefab e pelo menos um Teleport Point.",
+                    this
+                );
+
+                configurationErrorLogged = true;
+            }
 
             return;
         }
@@ -168,10 +172,6 @@ public class CameraOverheat : MonoBehaviour
         photoCamera.OnCameraLost();
 
         ResetGlitch();
-
-        Debug.Log(
-            "Ruptura temporal! A camera desapareceu."
-        );
     }
 
     private Transform GetRandomPoint()
@@ -224,14 +224,35 @@ public class CameraOverheat : MonoBehaviour
 
         UpdateHeatUI();
         ResetGlitch();
-
-        Debug.Log("Camera recuperada!");
     }
 
     private void UpdateHeatUI()
     {
-        if (heatBar != null)
-            heatBar.fillAmount = HeatPercent;
+        float heat = HeatPercent;
+
+        if (heatWarning != null)
+        {
+            // Pisca o aviso fora do centro da tela, sem cobrir a mira.
+            bool warn = heat >= warningThreshold && !cameraLost;
+            bool visible = warn && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f;
+
+            if (heatWarning.activeSelf != visible)
+                heatWarning.SetActive(visible);
+        }
+
+        if (heatBar == null)
+            return;
+
+        // A barra so precisa ser redesenhada quando o valor muda visivelmente.
+        if (Mathf.Abs(heat - displayedHeat) < 0.002f)
+            return;
+
+        displayedHeat = heat;
+        heatBar.fillAmount = heat;
+
+        heatBar.color = heat < 0.6f
+            ? Color.Lerp(coolColor, warmColor, heat / 0.6f)
+            : Color.Lerp(warmColor, hotColor, (heat - 0.6f) / 0.4f);
     }
 
     private void UpdateGlitch()

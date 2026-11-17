@@ -16,6 +16,11 @@ public class DetectorPecas : MonoBehaviour
     private AudioSource audioSource;
     private float tempoProximoBip;
 
+    // Os marcadores so somem (SetActive false); basta atualizar a lista de vez em quando.
+    private const float IntervaloBuscaMarcadores = 1f;
+    private GameObject[] marcadores = new GameObject[0];
+    private float proximaBuscaMarcadores;
+
     void Start()
     {
         if (Camera.main != null)
@@ -36,8 +41,11 @@ public class DetectorPecas : MonoBehaviour
         if (jogador == null || somDetector == null)
             return;
 
-        GameObject[] marcadores =
-            GameObject.FindGameObjectsWithTag("PecaDetector");
+        if (Time.unscaledTime >= proximaBuscaMarcadores)
+        {
+            marcadores = GameObject.FindGameObjectsWithTag("PecaDetector");
+            proximaBuscaMarcadores = Time.unscaledTime + IntervaloBuscaMarcadores;
+        }
 
         Transform marcadorMaisProximo = null;
         float menorDistancia = distanciaMaxima;
@@ -62,7 +70,10 @@ public class DetectorPecas : MonoBehaviour
         if (marcadorMaisProximo == null)
         {
             tempoProximoBip = 0f;
-            audioSource.Stop();
+
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+
             return;
         }
 

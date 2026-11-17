@@ -41,13 +41,19 @@ public class DefeatController : MonoBehaviour
         }
 
         Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void Retry()
     {
         Time.timeScale = 1f;
 
-        if (currentSpawnPoint != null)
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (currentSpawnPoint != null && player != null)
         {
             CharacterController characterController =
                 player.GetComponent<CharacterController>();

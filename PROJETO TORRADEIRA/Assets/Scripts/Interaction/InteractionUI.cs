@@ -27,8 +27,12 @@ public class InteractionUI : MonoBehaviour
             return;
         }
 
-        interactText.text = message;
-        interactText.gameObject.SetActive(true);
+        // Evita reconstruir a malha do TMP a cada quadro com o mesmo texto.
+        if (interactText.text != message)
+            interactText.text = message;
+
+        if (!interactText.gameObject.activeSelf)
+            interactText.gameObject.SetActive(true);
     }
 
     public void Hide()
@@ -38,6 +42,13 @@ public class InteractionUI : MonoBehaviour
             return;
         }
 
-        interactText.gameObject.SetActive(false);
+        if (interactText.gameObject.activeSelf)
+            interactText.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }

@@ -31,6 +31,8 @@ public class MissionSystem : MonoBehaviour
         pieces = 0;
         photographedLocations.Clear();
 
+        ValidateRequirements();
+
         if (fadeImage != null)
         {
             Color color = fadeImage.color;
@@ -79,8 +81,6 @@ public class MissionSystem : MonoBehaviour
             return;
         }
 
-        Debug.Log("RegisterPhoto chamado. Lugares na cena: " + PhotoLocation.All.Count);
-
         foreach (PhotoLocation location in PhotoLocation.All)
         {
             if (photographedLocations.Contains(location.Id))
@@ -90,12 +90,53 @@ public class MissionSystem : MonoBehaviour
             {
                 photographedLocations.Add(location.Id);
                 location.MarkPhotographed();
-                Debug.Log("Lugar fotografado: " + location.DisplayName);
             }
         }
 
         UpdateMissionText();
         CheckMissions();
+    }
+
+    // A missao nao pode exigir mais pecas ou lugares do que existem na cena.
+    private void ValidateRequirements()
+    {
+        int availablePieces = FindObjectsByType<TemporalObjectPickup>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        ).Length;
+
+        HashSet<string> locationIds = new HashSet<string>();
+
+        foreach (PhotoLocation location in FindObjectsByType<PhotoLocation>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None))
+        {
+            locationIds.Add(location.Id);
+        }
+
+        if (availablePieces < piecesRequired)
+        {
+            Debug.LogWarning(
+                "MissionSystem: a missao pede " + piecesRequired +
+                " pecas, mas a cena tem " + availablePieces +
+                ". Ajustando para " + availablePieces + ".",
+                this
+            );
+
+            piecesRequired = availablePieces;
+        }
+
+        if (locationIds.Count < locationsRequired)
+        {
+            Debug.LogWarning(
+                "MissionSystem: a missao pede " + locationsRequired +
+                " lugares, mas a cena tem " + locationIds.Count +
+                ". Ajustando para " + locationIds.Count + ".",
+                this
+            );
+
+            locationsRequired = locationIds.Count;
+        }
     }
 
     private void UpdateMissionText()
@@ -106,7 +147,7 @@ public class MissionSystem : MonoBehaviour
         string photoMission =
             photos >= photosRequired
                 ? "[X] Tirar fotos [" + photosRequired + "/" + photosRequired + "]"
-                : "Tirar 10 fotos [" + photos + "/" + photosRequired + "]";
+                : "Tirar " + photosRequired + " fotos [" + photos + "/" + photosRequired + "]";
 
         string pieceMission =
             pieces >= piecesRequired
@@ -159,7 +200,7 @@ public class MissionSystem : MonoBehaviour
 
         while (time < fadeTime)
         {
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
 
             float alpha = Mathf.Clamp01(time / fadeTime);
 

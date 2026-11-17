@@ -21,6 +21,7 @@ public class IntroVideoCutscene : MonoBehaviour
     private float skipHintUntil = -1f;
     private CursorLockMode savedLock;
     private bool savedVisible;
+    private RenderTexture renderTarget;
 
     private void Start()
     {
@@ -32,10 +33,17 @@ public class IntroVideoCutscene : MonoBehaviour
         if (MusicManager.instance != null) MusicManager.instance.FadeOut(1.5f);
         if (skipHint != null) skipHint.alpha = 0f;
 
-        var rt = new RenderTexture(640, 360, 0) { filterMode = FilterMode.Point };
+        if (player == null || screen == null)
+        {
+            Debug.LogError("IntroVideoCutscene: configure VideoPlayer e RawImage.", this);
+            SceneManager.LoadScene(nextScene);
+            return;
+        }
+
+        renderTarget = new RenderTexture(640, 360, 0) { filterMode = FilterMode.Point };
         player.renderMode = VideoRenderMode.RenderTexture;
-        player.targetTexture = rt;
-        screen.texture = rt;
+        player.targetTexture = renderTarget;
+        screen.texture = renderTarget;
         player.loopPointReached += _ => Finish();
         player.errorReceived += (_, msg) => { Debug.LogError("Cutscene: " + msg); Finish(); };
         player.Play();
@@ -84,5 +92,13 @@ public class IntroVideoCutscene : MonoBehaviour
         Cursor.lockState = savedLock;
         Cursor.visible = savedVisible;
         SceneManager.LoadScene(nextScene);
+    }
+
+    private void OnDestroy()
+    {
+        if (renderTarget == null) return;
+        if (player != null && player.targetTexture == renderTarget) player.targetTexture = null;
+        renderTarget.Release();
+        Destroy(renderTarget);
     }
 }
