@@ -1,6 +1,8 @@
 # Cutscene de abertura (IntroCutscene)
 
-Fluxo: **Menu → Jogar → `IntroCutscene` → `Principal`** (antes era `Radio`). Duração configurada: **112 s** (1:52), já com o fade de saída de 0,4 s.
+> **Situação (2026-11-17):** a cutscene oficial do jogo é a de vídeo (`IntroCutsceneVideo`, feita no projeto `Cutscene-Remotion/`): o fluxo é **Menu → Jogar → `IntroCutsceneVideo` → `Principal`**. Esta versão desenhada em código (`IntroCutscene`) continua no projeto como alternativa, **fora do build**. Para voltar a usá-la, habilite a cena em Build Settings e troque o destino do botão Jogar no menu.
+
+Fluxo original desta versão: **Menu → Jogar → `IntroCutscene` → `Principal`** (antes era `Radio`). Duração configurada: **112 s** (1:52), já com o fade de saída de 0,4 s.
 Tudo é desenhado em arte própria e renderizado em 640x360 (a mesma resolução pixelada do jogo), ampliado sem filtro; os textos usam a fonte VCR_OSD_MONO do projeto.
 
 ## Onde editar

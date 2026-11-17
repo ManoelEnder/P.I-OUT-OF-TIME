@@ -53,6 +53,10 @@ public static class ReferenceMap
         // Pipeline, input, volumes e tudo mais que as configuracoes do projeto apontam.
         foreach (string settings in Directory.GetFiles(Path.Combine(Application.dataPath, "../ProjectSettings"), "*.asset"))
         {
+            // A lista de cenas (inclusive as desativadas) ja entra acima so pelas habilitadas.
+            if (settings.EndsWith("EditorBuildSettings.asset"))
+                continue;
+
             foreach (Match m in GuidRef.Matches(File.ReadAllText(settings)))
             {
                 string path = AssetDatabase.GUIDToAssetPath(m.Groups[1].Value);

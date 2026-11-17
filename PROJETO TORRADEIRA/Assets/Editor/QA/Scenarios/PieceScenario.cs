@@ -15,6 +15,7 @@ public class PieceScenario : QAScenario
     {
         yield return LoadScene("Principal");
         yield return WaitGameplay();
+        DisableEnemy();
 
         PhotoCamera photo = Require<PhotoCamera>();
         MissionSystem missions = Require<MissionSystem>();
