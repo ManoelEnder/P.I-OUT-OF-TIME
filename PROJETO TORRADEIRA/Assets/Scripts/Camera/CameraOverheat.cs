@@ -167,6 +167,8 @@ public class CameraOverheat : MonoBehaviour
             destination.rotation
         );
 
+        RestOnFloor(instance);
+
         LostCameraPickup pickup =
             instance.GetComponent<LostCameraPickup>();
 
@@ -201,6 +203,38 @@ public class CameraOverheat : MonoBehaviour
         ShowRadioMessage(mensagemPerdida);
 
         ResetGlitch();
+    }
+
+    // O ponto de teleporte marca o chao; sem isso a camera nascia com o centro no piso (meio enterrada).
+    private static void RestOnFloor(GameObject instance)
+    {
+        Collider body = instance.GetComponentInChildren<Collider>();
+
+        if (body == null)
+            return;
+
+        Physics.SyncTransforms();
+
+        Bounds bounds = body.bounds;
+        Vector3 from = new Vector3(bounds.center.x, bounds.max.y + 0.5f, bounds.center.z);
+        RaycastHit[] hits = Physics.RaycastAll(from, Vector3.down, bounds.size.y + 2f, ~0, QueryTriggerInteraction.Ignore);
+
+        float floor = float.NegativeInfinity;
+        float nearest = float.PositiveInfinity;
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.transform.IsChildOf(instance.transform) || hit.distance >= nearest)
+                continue;
+
+            nearest = hit.distance;
+            floor = hit.point.y;
+        }
+
+        if (float.IsNegativeInfinity(floor))
+            return;
+
+        instance.transform.position += Vector3.up * (floor - bounds.min.y);
     }
 
     private Transform GetRandomPoint()

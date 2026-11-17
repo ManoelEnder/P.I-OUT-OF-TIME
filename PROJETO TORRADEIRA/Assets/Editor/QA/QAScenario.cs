@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 // Base dos testes automaticos. Cenarios de play mode dirigem o jogo com QAInput;
@@ -145,6 +147,55 @@ public abstract class QAScenario
         yield return WaitSeconds(0.5f);
     }
 
+    // Espera a animacao de abrir/fechar o visor terminar (o fechamento inclui a piscada).
+    protected IEnumerator WaitTransition(PhotoCamera photo)
+    {
+        float end = Time.realtimeSinceStartup + 6f;
+        yield return null;
+
+        while (photo.IsTransitioning && Time.realtimeSinceStartup < end)
+            yield return null;
+
+        yield return WaitSeconds(0.1f);
+    }
+
+    // Altura do piso logo abaixo de um colisor (ignorando o proprio colisor).
+    protected static float GroundUnder(Collider body)
+    {
+        Vector3 from = new Vector3(body.bounds.center.x, body.bounds.max.y + 0.5f, body.bounds.center.z);
+
+        foreach (RaycastHit hit in Physics.RaycastAll(from, Vector3.down, 5f, ~0, QueryTriggerInteraction.Ignore)
+                     .OrderBy(h => h.distance))
+        {
+            if (!IsPartOf(hit.collider, body))
+                return hit.point.y;
+        }
+
+        return float.NegativeInfinity;
+    }
+
+    // Poe o jogador a ~5 m do inimigo, num ponto do NavMesh com caminho livre ate ele, olhando para ele.
+    protected bool PlaceInFrontOf(Transform player, Transform enemy)
+    {
+        foreach (float angle in new[] { 0f, 30f, -30f, 60f, -60f, 90f, -90f, 135f, -135f, 180f })
+        {
+            Vector3 dir = Quaternion.Euler(0f, angle, 0f) * enemy.forward;
+            if (!NavMesh.SamplePosition(enemy.position + dir * 5f, out NavMeshHit spot, 1.5f, NavMesh.AllAreas))
+                continue;
+
+            if (NavMesh.Raycast(enemy.position, spot.position, out _, NavMesh.AllAreas))
+                continue;
+
+            Vector3 back = enemy.position - spot.position;
+            back.y = 0f;
+            PerfBenchmark.Teleport(player, spot.position, Quaternion.LookRotation(back).eulerAngles.y);
+            return true;
+        }
+
+        Check(false, "achou ponto livre na frente do inimigo");
+        return false;
+    }
+
     // Ajusta a mira com o mouse virtual ate o centro da tela cair sobre o alvo.
     protected IEnumerator Aim(Camera view, Collider target)
     {
@@ -158,7 +209,9 @@ public abstract class QAScenario
             yield return QAInput.Look(new Vector2((vp.x - 0.5f) * 40f, (vp.y - 0.5f) * 40f), 1);
         }
 
-        Check(false, "mira chegou em " + target.name);
+        Ray last = view.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        string seen = Physics.Raycast(last, out RaycastHit h, 5f) ? h.collider.name + " a " + h.distance.ToString("0.00") + "m" : "nada";
+        Check(false, "mira chegou em " + target.name + " (centro da tela acerta: " + seen + ")");
     }
 
     private static bool IsPartOf(Collider hit, Collider target)
