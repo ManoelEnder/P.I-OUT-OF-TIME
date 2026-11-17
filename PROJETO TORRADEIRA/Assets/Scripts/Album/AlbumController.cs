@@ -67,8 +67,6 @@ public class AlbumController : MonoBehaviour
         if (deleteConfirmationPanel != null)
             deleteConfirmationPanel.SetActive(false);
 
-        Time.timeScale = 1f;
-
         SetCrosshairVisible(true);
         SetGameInputLocked(false);
     }
@@ -133,6 +131,17 @@ public class AlbumController : MonoBehaviour
     {
         if (albumPanel == null)
             return;
+
+        if (PauseMenu.IsPaused)
+            return;
+
+        if (
+            photoCamera != null &&
+            (photoCamera.IsCameraMode || photoCamera.IsTransitioning)
+        )
+        {
+            return;
+        }
 
         Time.timeScale = 0f;
 
@@ -359,16 +368,16 @@ public class AlbumController : MonoBehaviour
         deletedMessageCoroutine = null;
     }
 
-    public void AddPhoto(Texture2D texture)
+    public bool IsFull =>
+        photos.Count >= maxPhotos;
+
+    public bool AddPhoto(Texture2D texture)
     {
         if (texture == null)
-            return;
+            return false;
 
         if (photos.Count >= maxPhotos)
-        {
-            Object.Destroy(texture);
-            return;
-        }
+            return false;
 
         AlbumPhoto photo =
             new AlbumPhoto(texture);
@@ -379,6 +388,7 @@ public class AlbumController : MonoBehaviour
             photos.Count - 1;
 
         UpdatePageFromSelection();
+        return true;
     }
 
     public void SelectPhoto(int index)
@@ -605,6 +615,17 @@ public class AlbumController : MonoBehaviour
         return
             index >= 0 &&
             index < photos.Count;
+    }
+
+    void OnDestroy()
+    {
+        if (IsAlbumOpen)
+            Time.timeScale = 1f;
+
+        foreach (AlbumPhoto photo in photos)
+            photo.Destroy();
+
+        photos.Clear();
     }
 
     void SetCrosshairVisible(bool visible)

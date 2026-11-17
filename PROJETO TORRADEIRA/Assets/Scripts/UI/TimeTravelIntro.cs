@@ -535,7 +535,7 @@ public class TimeTravelIntro : MonoBehaviour
         SetPlayerControls(true);
 
         Time.timeScale =
-            previousTimeScale;
+            previousTimeScale > 0f ? previousTimeScale : 1f;
 
         running = false;
 
@@ -574,7 +574,7 @@ public class TimeTravelIntro : MonoBehaviour
             return;
 
         Time.timeScale =
-            previousTimeScale;
+            previousTimeScale > 0f ? previousTimeScale : 1f;
 
         SetPlayerControls(true);
 

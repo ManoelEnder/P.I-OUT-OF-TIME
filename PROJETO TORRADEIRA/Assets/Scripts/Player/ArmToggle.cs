@@ -22,6 +22,9 @@ public class ArmToggle : MonoBehaviour
             return;
         }
 
-        radar.SetActive(!photoCamera.IsCameraMode);
+        bool showRadar = !photoCamera.IsCameraMode;
+
+        if (radar.activeSelf != showRadar)
+            radar.SetActive(showRadar);
     }
 }

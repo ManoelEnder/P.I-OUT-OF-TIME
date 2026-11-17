@@ -28,6 +28,9 @@ public class InteractionDetector : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenu.IsPaused || Time.timeScale <= 0f)
+            return;
+
         DetectInteraction();
 
         if (currentInteractable != null &&

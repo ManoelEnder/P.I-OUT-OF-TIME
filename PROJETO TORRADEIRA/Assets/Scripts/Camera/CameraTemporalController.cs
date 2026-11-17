@@ -111,7 +111,7 @@ public class CameraTemporalController : MonoBehaviour
     )
     {
         TemporalObjectPickup pickup =
-            renderer.GetComponent<TemporalObjectPickup>();
+            renderer.GetComponentInParent<TemporalObjectPickup>();
 
         if (pickup != null)
             pickup.SetRevealed(active);

@@ -59,12 +59,14 @@ public class PhotoCamera : MonoBehaviour
     private bool canShoot = true;
     private bool isTransitioning;
     private bool hasCamera = true;
+    private bool closeRequested;
 
     private Coroutine transitionCoroutine;
     private Coroutine pauseRestoreCoroutine;
 
     public bool IsCameraMode => cameraMode;
     public bool HasCamera => hasCamera;
+    public bool IsTransitioning => isTransitioning;
 
     public bool CanLoseCamera =>
         hasCamera &&
@@ -89,7 +91,10 @@ public class PhotoCamera : MonoBehaviour
 
         battery.Initialize();
 
-        photoCapture = new CameraPhotoCapture();
+        photoCapture = GetComponent<CameraPhotoCapture>();
+
+        if (photoCapture == null)
+            photoCapture = gameObject.AddComponent<CameraPhotoCapture>();
 
         photoCapture.Initialize(
             photoCam,
@@ -137,14 +142,28 @@ public class PhotoCamera : MonoBehaviour
 
     private void Update()
     {
+        if (IsGamePaused())
+            return;
+
         HandleInput();
 
-        if (!cameraMode || isTransitioning)
+        if (!cameraMode)
+        {
+            battery.UpdateLowWarning(false);
+
+            if (hasCamera && !isTransitioning)
+                battery.TickRecharge(Time.deltaTime);
+
+            return;
+        }
+
+        if (isTransitioning)
             return;
 
         HandleCameraInput();
 
         battery.Tick(Time.deltaTime);
+        battery.UpdateLowWarning(true);
 
         if (battery.IsEmpty)
             CloseCamera();
@@ -172,6 +191,11 @@ public class PhotoCamera : MonoBehaviour
         );
 
         photoCam.fieldOfView = playerCam.fieldOfView;
+    }
+
+    private static bool IsGamePaused()
+    {
+        return PauseMenu.IsPaused || Time.timeScale <= 0f;
     }
 
     private void HandleInput()
@@ -281,6 +305,7 @@ public class PhotoCamera : MonoBehaviour
         }
 
         cameraMode = true;
+        closeRequested = false;
 
         DisablePauseMenu();
 
@@ -406,6 +431,7 @@ public class PhotoCamera : MonoBehaviour
         if (!entering)
         {
             cameraMode = false;
+            closeRequested = false;
 
             temporalController.SetCameraMode(false);
 
@@ -443,6 +469,9 @@ public class PhotoCamera : MonoBehaviour
 
         isTransitioning = false;
         transitionCoroutine = null;
+
+        if (entering && (closeRequested || !hasCamera))
+            CloseCamera();
     }
 
     private IEnumerator TakePhoto()
@@ -589,13 +618,28 @@ public class PhotoCamera : MonoBehaviour
 
         hasCamera = false;
 
-        if (cameraMode && !isTransitioning)
+        if (!cameraMode)
+            return;
+
+        if (isTransitioning)
+            closeRequested = true;
+        else
             CloseCamera();
     }
 
     public void OnCameraRecovered()
     {
         hasCamera = true;
+    }
+
+    private void OnDisable()
+    {
+        if (gameObject.activeInHierarchy)
+            return;
+
+        canShoot = true;
+        isTransitioning = false;
+        transitionCoroutine = null;
     }
 
     private void OnDestroy()

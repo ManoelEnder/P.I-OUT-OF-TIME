@@ -33,11 +33,25 @@ public class PauseMenu : MonoBehaviour
     private LensDistortion lensDistortion;
     private float originalDistortion;
     private bool hasLensDistortion;
+    private int enabledFrame = -1;
+
+    private void OnEnable()
+    {
+        enabledFrame = Time.frameCount;
+    }
+
+    private void OnDestroy()
+    {
+        if (IsPaused)
+        {
+            IsPaused = false;
+            Time.timeScale = 1f;
+        }
+    }
 
     private void Start()
     {
         IsPaused = false;
-        Time.timeScale = 1f;
 
         if (pauseMenu != null)
             pauseMenu.SetActive(false);
@@ -59,6 +73,10 @@ public class PauseMenu : MonoBehaviour
         if (Keyboard.current == null)
             return;
 
+        // O Escape que fechou o album ou o visor reativa este script no mesmo quadro.
+        if (Time.frameCount == enabledFrame)
+            return;
+
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
             HandleEscape();
     }
@@ -67,6 +85,10 @@ public class PauseMenu : MonoBehaviour
     {
         if (!IsPaused)
         {
+            // Intro, derrota ou outro painel modal ja congelou o jogo.
+            if (Time.timeScale <= 0f)
+                return;
+
             if (photoCamera != null && photoCamera.TryExitCameraMode())
                 return;
 

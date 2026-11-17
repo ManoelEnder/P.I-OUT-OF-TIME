@@ -43,6 +43,7 @@ public class CameraPhotoData : MonoBehaviour
 
     private int photoCount;
     private Coroutine previewCoroutine;
+    private Texture2D ownedPreviewTexture;
 
     private Vector2 restPosition;
     private Vector3 restScale;
@@ -91,6 +92,9 @@ public class CameraPhotoData : MonoBehaviour
         if (photo == null)
             return;
 
+        StopPreview();
+        ReleaseOwnedPreview();
+
         photoCount++;
 
         UpdatePhotoCounter();
@@ -121,14 +125,38 @@ public class CameraPhotoData : MonoBehaviour
         if (missionSystem != null)
             missionSystem.AddFoto();
 
-        if (albumController != null)
+        bool storedInAlbum =
+            albumController != null &&
             albumController.AddPhoto(photo);
+
+        if (!storedInAlbum)
+            ownedPreviewTexture = photo;
+    }
+
+    private void ReleaseOwnedPreview()
+    {
+        if (ownedPreviewTexture == null)
+            return;
+
+        if (photoPreview != null && photoPreview.texture == ownedPreviewTexture)
+            photoPreview.texture = null;
+
+        Destroy(ownedPreviewTexture);
+        ownedPreviewTexture = null;
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseOwnedPreview();
     }
 
     private void PlayPreview(Texture2D photo)
     {
         if (photoPreview == null)
+        {
+            ReleaseOwnedPreview();
             return;
+        }
 
         StopPreview();
 
@@ -230,6 +258,9 @@ public class CameraPhotoData : MonoBehaviour
 
         ResetPreviewPose();
         photoPreview.gameObject.SetActive(false);
+        photoPreview.texture = null;
+
+        ReleaseOwnedPreview();
 
         previewCoroutine = null;
     }

@@ -20,6 +20,9 @@ public class ControlsPanel : MonoBehaviour
 
     void Update()
     {
+        if (Keyboard.current == null)
+            return;
+
         if (Keyboard.current.tabKey.isPressed && !isVisible)
         {
             Show();
