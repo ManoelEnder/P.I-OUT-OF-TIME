@@ -1,10 +1,9 @@
 # Auditoria das cenas do build
 
-Cenas auditadas: 8 · Total de itens: 449
+Cenas auditadas: 8 · Total de itens: 448
 
-## Scripts faltando (Missing Script) (1)
+## Scripts faltando (Missing Script) (0)
 
-- `Credits/Canvas/Text (TMP)`
 
 ## Prefabs sem asset (0)
 

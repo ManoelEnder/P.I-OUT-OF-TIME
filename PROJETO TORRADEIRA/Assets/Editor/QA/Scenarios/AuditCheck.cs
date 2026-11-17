@@ -19,6 +19,8 @@ public class AuditCheck : QAScenario
         Check(report.ScenesAudited == enabled, "auditou todas as cenas habilitadas (" + report.ScenesAudited + "/" + enabled + ")");
         Check(File.Exists(SceneAudit.ReportPath), "gerou " + SceneAudit.ReportPath);
         Check(report.Total == report.MissingScripts.Count + report.NullReferences.Count + report.MissingPrefabs.Count, "total soma as tres listas");
+        Check(report.MissingScripts.Count == 0, "nenhum Missing Script (" + string.Join(", ", report.MissingScripts) + ")");
+        Check(report.MissingPrefabs.Count == 0, "nenhum prefab sem asset (" + string.Join(", ", report.MissingPrefabs) + ")");
         yield break;
     }
 }

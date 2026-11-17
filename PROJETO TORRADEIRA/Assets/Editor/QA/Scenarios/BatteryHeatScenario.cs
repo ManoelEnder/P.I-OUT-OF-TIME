@@ -66,13 +66,18 @@ public class BatteryHeatScenario : QAScenario
             yield return WaitSeconds(0.1f);
         }
 
-        yield return WaitSeconds(photo.enterTransitionTime + 0.5f);
+        yield return WaitTransition(photo);
         Check(heat.IsCameraLost, "camera some ao superaquecer");
         Check(!photo.cameraHUD.activeSelf, "visor fecha quando a camera some");
         Check(photo.crosshair == null || photo.crosshair.activeSelf, "mira volta quando a camera some");
 
         LostCameraPickup[] lost = Object.FindObjectsByType<LostCameraPickup>(FindObjectsSortMode.None);
         Check(lost.Length == 1, "uma unica camera perdida no mapa (" + lost.Length + ")");
+        if (lost.Length == 1)
+        {
+            Collider body = lost[0].GetComponentInChildren<Collider>();
+            Check(body.bounds.min.y >= GroundUnder(body) - 0.02f, "camera perdida apoiada no piso, nao enterrada (base " + body.bounds.min.y.ToString("0.00") + ", piso " + GroundUnder(body).ToString("0.00") + ")");
+        }
 
         for (int i = 0; i < 5; i++)
         {
@@ -87,6 +92,7 @@ public class BatteryHeatScenario : QAScenario
         if (lost.Length > 0)
         {
             Collider col = lost[0].GetComponentInChildren<Collider>();
+            Debug.Log("QA TRACE lost cam at " + lost[0].transform.position + " col=" + (col != null ? col.GetType().Name + " trig=" + col.isTrigger + " b=" + col.bounds : "none") + " layer=" + LayerMask.LayerToName(lost[0].gameObject.layer));
             Check(col != null, "camera perdida tem colisor para interagir");
             if (col != null)
             {
@@ -100,8 +106,64 @@ public class BatteryHeatScenario : QAScenario
         Check(!heat.IsCameraLost, "E recupera a camera");
         photo.AddBattery(100);
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.5f);
+        yield return WaitSeconds(0.2f);
+        yield return WaitTransition(photo);
         Check(photo.cameraHUD.activeSelf, "visor abre de novo depois de recuperar");
+
+        yield return QAInput.Tap(Key.C);
+        yield return WaitSeconds(0.2f);
+        yield return WaitTransition(photo);
+        yield return CheckEveryRespawn(photo, heat);
+    }
+
+    // Forca cada ponto de reaparecimento, superaquece de verdade e confere onde a camera caiu.
+    private IEnumerator CheckEveryRespawn(PhotoCamera photo, CameraOverheat heat)
+    {
+        var so = new SerializedObject(heat);
+        SerializedProperty points = so.FindProperty("teleportPoints");
+        var all = new Transform[points.arraySize];
+        for (int i = 0; i < all.Length; i++)
+            all[i] = points.GetArrayElementAtIndex(i).objectReferenceValue as Transform;
+
+        foreach (Transform point in all)
+        {
+            if (point == null)
+                continue;
+
+            points.arraySize = 1;
+            points.GetArrayElementAtIndex(0).objectReferenceValue = point;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            photo.AddBattery(100);
+            yield return QAInput.Tap(Key.C);
+            yield return WaitSeconds(0.2f);
+            yield return WaitTransition(photo);
+
+            for (int i = 0; i < 30 && !heat.IsCameraLost; i++)
+            {
+                heat.RegisterPhotoHeat();
+                yield return WaitSeconds(0.1f);
+            }
+            yield return WaitTransition(photo);
+
+            LostCameraPickup lost = Object.FindFirstObjectByType<LostCameraPickup>();
+            Check(lost != null, "camera some com o ponto " + point.name);
+            if (lost != null)
+            {
+                Collider body = lost.GetComponentInChildren<Collider>();
+                float ground = GroundUnder(body);
+                Check(body.bounds.min.y >= ground - 0.02f,
+                    "camera perdida em " + point.name + " apoiada no piso (base " + body.bounds.min.y.ToString("0.00") + ", piso " + ground.ToString("0.00") + ")");
+            }
+
+            heat.RecoverCamera();
+            yield return WaitSeconds(0.3f);
+        }
+
+        points.arraySize = all.Length;
+        for (int i = 0; i < all.Length; i++)
+            points.GetArrayElementAtIndex(i).objectReferenceValue = all[i];
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     // Todo ponto de reaparecimento precisa estar num piso, com espaco para o jogador chegar perto.
