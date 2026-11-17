@@ -88,3 +88,17 @@ A fazer:
 
 - Commits na branch `main`, título curto e direto em português, sem descrição e sem coautoria do Claude.
 - Hierarquia com nomes em inglês e organizada.
+
+## Revisão completa (2026-11-17)
+
+Design: `docs/superpowers/specs/2026-11-17-revisao-completa-design.md` · Plano da Parte 1: `docs/superpowers/plans/2026-11-17-revisao-parte1-base-bugs-organizacao.md` · Entregas: `docs/revisao/`.
+
+**Parte 1 — linha de base, bugs e organização: FEITA**
+- Testes automáticos: **Ferramentas › QA** (`Assets/Editor/QA/`). 13 cenários/checagens (fluxo completo duas vezes, pausa, visor, álbum, peças, bateria/superaquecimento, inimigo, auditoria, mapa de referências, contorno, caminhos das ferramentas). Rodar todos: `Unity.exe -projectPath "<projeto>" -executeMethod QARunner.RunFromCommandLine -qaScenario All` (com a janela do editor; o Unity precisa estar fechado antes).
+- Medição: build de desenvolvimento (`Ferramentas › QA › Build de desenvolvimento`) + `OutOfTime.exe -benchmark -perf` → `%USERPROFILE%/AppData/LocalLow/<empresa>/OUT OF TIME/perf/`.
+- 5 bugs corrigidos (`docs/revisao/bugs.md`), 353 MB removidos e pastas reorganizadas (`docs/revisao/limpeza.md`), linha de base em `docs/revisao/linha-de-base.md`.
+
+**Parte 2 — desempenho, visual e validação final: A FAZER** (plano próprio, a partir das medições da Parte 1).
+- Visor aberto tem 1% low abaixo de 60 FPS; menu no limite.
+- Visual: padronizar HUD (missão, visor, bateria x calor), pixelização do cenário, iluminação/contraste, tela final (`Victory TEMP`).
+- Fitas de isolamento continuam com o autor (pacote `ThirdParty/CautionTape` preservado para isso).
