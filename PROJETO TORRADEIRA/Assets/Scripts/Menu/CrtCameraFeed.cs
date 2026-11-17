@@ -48,6 +48,16 @@ public class CrtCameraFeed : MonoBehaviour
         feedCamera.Render();
     }
 
+    // Tira uma "foto": renderiza agora e congela a imagem por holdSeconds.
+    public void Snapshot(float holdSeconds)
+    {
+        if (!enabled || feedCamera == null)
+            return;
+
+        feedCamera.Render();
+        nextFrame = Time.unscaledTime + Mathf.Max(0f, holdSeconds);
+    }
+
     private void OnDestroy()
     {
         if (feedCamera != null)
