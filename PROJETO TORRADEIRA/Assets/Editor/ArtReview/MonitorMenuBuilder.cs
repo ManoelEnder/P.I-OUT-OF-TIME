@@ -38,24 +38,42 @@ public static class MonitorMenuBuilder
     private static Camera menuCamera;
     private static Transform prototypeLens;
     private static Transform setRoot;
+    private static PhotoFlash playerFacingCamera;
+
+    // O que a TV principal mostra; o resto da sala e igual nas tres cenas.
+    public enum Mode { Menu, Start }
+
+    private static Mode mode;
 
     [MenuItem("Ferramentas/Pixel Art/Montar menu em monitores CRT")]
     public static void Build()
     {
+        Build(Mode.Menu);
+    }
+
+    [MenuItem("Ferramentas/Pixel Art/Montar tela inicial em monitores CRT")]
+    public static void BuildStart()
+    {
+        Build(Mode.Start);
+    }
+
+    public static void Build(Mode buildMode)
+    {
+        mode = buildMode;
         menuCamera = FindMenuCamera();
 
         if (menuCamera == null)
         {
-            Debug.LogError("MonitorMenuBuilder: abra a cena Menu (nenhuma camera encontrada).");
+            Debug.LogError("MonitorMenuBuilder: abra a cena " + (mode == Mode.Start ? "TelaInicio" : "Menu") + " (nenhuma camera encontrada).");
             return;
         }
 
         ConfigureTextures();
         font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(PixelFontPath);
 
-        Button play = FindButton("PlayButton", "Play");
-        Button credits = FindButton("CreditsButton", "Credits");
-        Button quit = FindButton("QuitButton", "Leave");
+        Button play = mode == Mode.Menu ? FindButton("PlayButton", "Play") : null;
+        Button credits = mode == Mode.Menu ? FindButton("CreditsButton", "Credits") : null;
+        Button quit = mode == Mode.Menu ? FindButton("QuitButton", "Leave") : null;
 
         // Tira os botoes do cenario antigo antes de recria-lo.
         Canvas overlay = FindOverlayCanvas();
@@ -65,7 +83,7 @@ public static class MonitorMenuBuilder
                 Undo.SetTransformParent(b.transform, overlay.transform, "Menu");
         }
 
-        foreach (string old in new[] { SetName, "MonitorWall" })
+        foreach (string old in new[] { SetName, "MonitorWall", "StartScreen" })
         {
             GameObject found = GameObject.Find(old);
             if (found != null)
@@ -99,12 +117,100 @@ public static class MonitorMenuBuilder
                 Undo.DestroyObjectImmediate(oldPanel.gameObject);
         }
 
+        if (mode == Mode.Start)
+            SetupStartScene();
+
         ConfigureCamera();
         ConfigureAtmosphere();
         ConfigureVolume();
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-        Debug.Log("MonitorMenuBuilder: sala do menu montada.");
+        Debug.Log("MonitorMenuBuilder: sala montada (" + mode + ").");
+    }
+
+    // ---------- Tela inicial ----------
+
+    private static TextMeshProUGUI startPrompt;
+
+    private static void BuildStartScreen(Transform tv)
+    {
+        RectTransform screen = CreateScreenCanvas(tv, "StartScreen_TV", out CanvasGroup group);
+
+        TextMeshProUGUI title = Text(screen, "Title", "OUT OF TIME", 70f, Phosphor);
+        title.alignment = TextAlignmentOptions.Center;
+        Stretch(title.rectTransform, new Vector2(0f, 60f), new Vector2(0f, 0f));
+
+        TextMeshProUGUI sub = Text(screen, "Subtitle", "LAB 1975 // FITA 01", 24f, TextIdle);
+        sub.alignment = TextAlignmentOptions.Top;
+        Stretch(sub.rectTransform, Vector2.zero, new Vector2(0f, -30f));
+
+        startPrompt = Text(screen, "Prompt", "PRESSIONE QUALQUER TECLA", 32f, Phosphor);
+        startPrompt.alignment = TextAlignmentOptions.Center;
+        Stretch(startPrompt.rectTransform, new Vector2(0f, 0f), new Vector2(0f, -250f));
+        Blinker(startPrompt.gameObject, MenuBlinker.Mode.Blink, 1.2f, 0.65f, null, Color.white, Color.white, null, 0f, startPrompt);
+
+        TextMeshProUGUI footer = Text(screen, "Footer", "PROTOTIPO CCD 100x100 // 1975", 24f, new Color(0.5f, 0.5f, 0.48f));
+        footer.alignment = TextAlignmentOptions.Bottom;
+        Stretch(footer.rectTransform, new Vector2(0f, 26f), Vector2.zero);
+
+        TextMeshProUGUI rec = Text(screen, "Rec", "[REC]", 24f, LedRed);
+        rec.alignment = TextAlignmentOptions.TopRight;
+        Stretch(rec.rectTransform, Vector2.zero, new Vector2(-30f, -30f));
+        Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
+
+        AddCanvasOverlay(screen);
+        AddScreenGlow(tv, screen, group);
+    }
+
+    // Desliga a UI 2D antiga, monta o fade e o script que leva ao menu.
+    private static void SetupStartScene()
+    {
+        // UI 2D e cenario antigo da tela inicial (escritorio noir e cameras Canon).
+        foreach (string old in new[] { "Canvas", "Lights", "Point Light", "Point Light ",
+                     "detectives_office_in_noir_style", "camera_canon_eos_400d", "camera_canon_eos_400d (1)" })
+            Deactivate(old);
+
+        // Mesmo enquadramento da camera do menu: sem rolagem, leve inclinacao para baixo.
+        Undo.RecordObject(menuCamera.transform, "Tela inicial");
+        menuCamera.transform.rotation = setRoot.rotation * Quaternion.Euler(3.6f, 0f, 0f);
+        Undo.RecordObject(menuCamera, "Tela inicial");
+        menuCamera.fieldOfView = 60f;
+
+        foreach (StartScreenManager manager in Object.FindObjectsByType<StartScreenManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            Undo.RecordObject(manager, "Tela inicial");
+            manager.enabled = false;
+        }
+
+        foreach (StartScreenHandler handler in Object.FindObjectsByType<StartScreenHandler>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            Undo.RecordObject(handler, "Tela inicial");
+            handler.enabled = false;
+        }
+
+        GameObject go = new GameObject("StartScreen", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(CanvasGroup));
+        Undo.RegisterCreatedObjectUndo(go, "Tela inicial");
+        Canvas canvas = go.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 100;
+
+        Image black = new GameObject("Fade", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
+        black.transform.SetParent(go.transform, false);
+        black.color = Color.black;
+        black.raycastTarget = false;
+        Stretch(black.rectTransform, Vector2.zero, Vector2.zero);
+
+        CanvasGroup fade = go.GetComponent<CanvasGroup>();
+        fade.alpha = 0f;
+        fade.blocksRaycasts = false;
+        fade.interactable = false;
+
+        StartScreenCrt start = go.AddComponent<StartScreenCrt>();
+        SerializedObject so = new SerializedObject(start);
+        so.FindProperty("fade").objectReferenceValue = fade;
+        so.FindProperty("prompt").objectReferenceValue = startPrompt;
+        so.FindProperty("shutter").objectReferenceValue = playerFacingCamera;
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     // ---------- Sala ----------
@@ -142,7 +248,10 @@ public static class MonitorMenuBuilder
         Transform rack = Rack(root, "Rack_Menu", new Vector3(-0.8f, Floor, 1.6f), 1.45f, 0.95f, 0.84f, new[] { 0.10f, 0.46f, 0.84f }, 6f);
 
         Transform tv = Tv(rack, "Monitor_Menu", new Vector3(0f, 0.87f, 0f), 1.75f);
-        BuildMenuScreen(tv, play, credits, quit);
+        if (mode == Mode.Start)
+            BuildStartScreen(tv);
+        else
+            BuildMenuScreen(tv, play, credits, quit);
 
         // Prateleira do meio: osciloscopio com estatica e caixa de contador.
         Transform scope = Device(rack, "Oscilloscope", new Vector3(-0.32f, 0.49f, -0.08f), new Vector3(0.5f, 0.3f, 0.5f));
@@ -351,7 +460,8 @@ public static class MonitorMenuBuilder
         // Duas apontadas para o jogador (a da esquerda fica atras da TV e so ilumina a sala)
         // e uma para o prototipo no console.
         PhotoCamera(cameras, "PhotoCamera_Left", new Vector3(-2.15f, Floor, 3.1f), 1.38f, Vector3.zero);
-        PhotoCamera(cameras, "PhotoCamera_Right", new Vector3(2.75f, Floor, 3.2f), 1.3f, Vector3.zero);
+        Transform right = PhotoCamera(cameras, "PhotoCamera_Right", new Vector3(2.75f, Floor, 3.2f), 1.3f, Vector3.zero);
+        playerFacingCamera = right.GetComponentInChildren<PhotoFlash>();
         PhotoCamera(cameras, "PhotoCamera_Back", new Vector3(-0.05f, Floor, 4.5f), 1.2f, new Vector3(1.0f, Floor + 1.15f, 1.5f));
     }
 
@@ -559,8 +669,12 @@ public static class MonitorMenuBuilder
         Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
 
         AddCanvasOverlay(screen);
+        AddScreenGlow(tv, screen, group);
+    }
 
-        // Luz da tela iluminando a estante e a cintilacao do tubo.
+    // Luz da tela iluminando a estante e a cintilacao do tubo.
+    private static void AddScreenGlow(Transform tv, RectTransform screen, CanvasGroup group)
+    {
         GameObject lightGo = new GameObject("ScreenGlow", typeof(Light));
         lightGo.transform.SetParent(tv, false);
         lightGo.transform.localPosition = TvScreenCenter + new Vector3(0f, 0f, 0.4f);

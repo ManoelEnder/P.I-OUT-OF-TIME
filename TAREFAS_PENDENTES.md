@@ -50,7 +50,9 @@ Sem verde, sem laranja/amarelo. Cores: branco, cinzas, vermelho. Tema: protótip
 - Adicionar no `MonitorMenuBuilder` (menu) e reaproveitar na tela inicial e nos créditos.
 - Scripts de apoio que já existem em `Assets/Scripts/Menu/`: `MenuBlinker`, `MenuSpin`, `TapeRecordingText`, `CrtCameraFeed`, `CrtNoiseScreen`, `CrtFlicker`.
 
-## 3. Tela inicial (`Assets/Scenes/TelaInicio.unity`)
+## 3. Tela inicial (`Assets/Scenes/TelaInicio.unity`) — FEITO
+
+> Feito: `MonitorMenuBuilder.Build(Mode)` com modo `Start` (**Ferramentas › Pixel Art › Montar tela inicial em monitores CRT**): mesma sala e câmeras, TV principal com "OUT OF TIME" e "PRESSIONE QUALQUER TECLA" piscando. `StartScreenCrt` espera o aviso de fotossensibilidade, e ao apertar uma tecla dispara o flash, escurece e carrega o `Menu`. UI 2D antiga, `StartScreenManager`/`StartScreenHandler` e o cenário noir com as câmeras Canon ficaram desativados (não apagados).
 
 - Cena atual: `Canvas` com `StartPanel`, `Title`, `FadeScreen`, `GameManager`, `ChanceScene`; scripts `Assets/Scripts/UI/StartScreenManager.cs` (usa DOTween) e `StartScreenHandler.cs`.
 - Refazer com a mesma sala do menu: TV principal com "OUT OF TIME" e "PRESSIONE QUALQUER TECLA" piscando; câmeras com flash; antes disso, o aviso de fotossensibilidade.
