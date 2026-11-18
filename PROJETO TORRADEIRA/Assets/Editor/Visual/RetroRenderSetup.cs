@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -111,6 +112,93 @@ public static class RetroRenderSetup
     {
         ApplyPalette();
         EditorApplication.Exit(0);
+    }
+
+    public const string GameplayProfilePath = "Assets/Settings/Volumes/GameplayVolume.asset";
+    public const string GameplayScene = "Assets/Scenes/Principal.unity";
+    public const string GameplayVolumeName = "GlobalVolume";
+
+    // Pos-processamento da fase para pixel art: sem motion blur, Panini e desfoque de profundidade
+    // (borram o pixel). Saturacao 0: a paleta (passe RetroPalette) faz os cinzas e preserva o vermelho.
+    // Aberracao cromatica e distorcao ficam (o superaquecimento e a pausa animam as duas).
+    [MenuItem("Ferramentas/Visual/Aplicar volume da fase")]
+    public static void ApplyGameplayVolume()
+    {
+        if (!AssetDatabase.IsValidFolder("Assets/Settings/Volumes"))
+            AssetDatabase.CreateFolder("Assets/Settings", "Volumes");
+
+        VolumeProfile profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(GameplayProfilePath);
+        if (profile == null)
+        {
+            profile = ScriptableObject.CreateInstance<VolumeProfile>();
+            AssetDatabase.CreateAsset(profile, GameplayProfilePath);
+        }
+
+        Get<Tonemapping>(profile).mode.Override(TonemappingMode.Neutral);
+
+        ColorAdjustments color = Get<ColorAdjustments>(profile);
+        color.postExposure.Override(0.2f);
+        color.contrast.Override(18f);
+        color.saturation.Override(0f);
+        color.colorFilter.Override(Color.white);
+
+        Bloom bloom = Get<Bloom>(profile);
+        bloom.threshold.Override(0.9f);
+        bloom.intensity.Override(0.8f);
+        bloom.scatter.Override(0.6f);
+        bloom.tint.Override(Color.white);
+
+        Vignette vignette = Get<Vignette>(profile);
+        vignette.color.Override(Color.black);
+        vignette.intensity.Override(0.35f);
+        vignette.smoothness.Override(0.5f);
+
+        FilmGrain grain = Get<FilmGrain>(profile);
+        grain.type.Override(FilmGrainLookup.Medium1);
+        grain.intensity.Override(0.25f);
+        grain.response.Override(0.8f);
+
+        Get<ChromaticAberration>(profile).intensity.Override(0.08f);
+        Get<LensDistortion>(profile).intensity.Override(-0.05f);
+
+        EditorUtility.SetDirty(profile);
+        AssetDatabase.SaveAssets();
+
+        var scene = EditorSceneManager.OpenScene(GameplayScene);
+        bool assigned = false;
+        foreach (Volume volume in Object.FindObjectsByType<Volume>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (!volume.isGlobal || volume.name != GameplayVolumeName)
+                continue;
+
+            Undo.RecordObject(volume, "Volume da fase");
+            volume.sharedProfile = profile;
+            assigned = true;
+        }
+
+        if (assigned)
+            EditorSceneManager.SaveScene(scene);
+        Debug.Log("RETRO volume: " + (assigned ? "aplicado em " : "NAO achou o volume em ") + GameplayScene);
+    }
+
+    public static void ApplyGameplayVolumeFromCommandLine()
+    {
+        ApplyGameplayVolume();
+        EditorApplication.Exit(0);
+    }
+
+    private static T Get<T>(VolumeProfile profile) where T : VolumeComponent
+    {
+        if (!profile.TryGet(out T component))
+        {
+            component = profile.Add<T>(true);
+            component.name = typeof(T).Name;
+            component.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            AssetDatabase.AddObjectToAsset(component, profile);
+        }
+
+        component.active = true;
+        return component;
     }
 
     public static ScriptableRendererData ActiveRendererData()
