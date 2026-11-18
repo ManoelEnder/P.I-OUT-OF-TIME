@@ -30,6 +30,7 @@ public class FlowScenario : QAScenario
 
         yield return WaitForScene("Victory TEMP", 20f);
         yield return WaitSeconds(1f);
+        Check(GameObject.Find("FinalScreen_TV") != null, "tela final no estilo do menu (TV CRT)");
         Button toMenu = FindButtonWithLabel("Menu");
         Check(toMenu != null, "final tem botao para o menu");
         Check(Cursor.visible, "cursor visivel no final");

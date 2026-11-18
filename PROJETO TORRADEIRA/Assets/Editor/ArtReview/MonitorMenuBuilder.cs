@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -41,7 +42,7 @@ public static class MonitorMenuBuilder
     private static PhotoFlash playerFacingCamera;
 
     // O que a TV principal mostra; o resto da sala e igual nas tres cenas.
-    public enum Mode { Menu, Start, Credits }
+    public enum Mode { Menu, Start, Credits, Final }
 
     private static Mode mode;
 
@@ -57,6 +58,20 @@ public static class MonitorMenuBuilder
         Build(Mode.Start);
     }
 
+    [MenuItem("Ferramentas/Pixel Art/Montar tela final em monitores CRT")]
+    public static void BuildFinal()
+    {
+        Build(Mode.Final);
+    }
+
+    public static void BuildFinalFromCommandLine()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/Victory TEMP.unity");
+        Build(Mode.Final);
+        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+        EditorApplication.Exit(0);
+    }
+
     [MenuItem("Ferramentas/Pixel Art/Montar creditos em monitores CRT")]
     public static void BuildCredits()
     {
@@ -70,7 +85,7 @@ public static class MonitorMenuBuilder
 
         if (menuCamera == null)
         {
-            Debug.LogError("MonitorMenuBuilder: abra a cena " + (mode == Mode.Start ? "TelaInicio" : mode == Mode.Credits ? "Credits" : "Menu") + " (nenhuma camera encontrada).");
+            Debug.LogError("MonitorMenuBuilder: abra a cena " + (mode == Mode.Start ? "TelaInicio" : mode == Mode.Credits ? "Credits" : mode == Mode.Final ? "Victory TEMP" : "Menu") + " (nenhuma camera encontrada).");
             return;
         }
 
@@ -80,6 +95,13 @@ public static class MonitorMenuBuilder
         Button play = mode == Mode.Menu ? FindButton("PlayButton", "Play") : null;
         Button credits = mode == Mode.Menu ? FindButton("CreditsButton", "Credits") : null;
         Button quit = mode == Mode.Menu ? FindButton("QuitButton", "Leave") : null;
+
+        // Tela final: o botao MENU que ja existe vai para a TV, e ganha um irmao CREDITOS.
+        if (mode == Mode.Final)
+        {
+            play = FindButton("BackBttn");
+            credits = FindButton("CreditsBttn") ?? CreateCreditsButton(play);
+        }
 
         // Tira os botoes do cenario antigo antes de recria-lo.
         Canvas overlay = FindOverlayCanvas();
@@ -127,6 +149,8 @@ public static class MonitorMenuBuilder
             SetupStartScene();
         else if (mode == Mode.Credits)
             SetupCreditsScene();
+        else if (mode == Mode.Final)
+            Deactivate("Canvas");
 
         if (mode != Mode.Menu)
             FrameLikeMenu();
@@ -226,6 +250,79 @@ public static class MonitorMenuBuilder
         menuCamera.transform.rotation = setRoot.rotation * Quaternion.Euler(3.6f, 0f, 0f);
         Undo.RecordObject(menuCamera, "Camera");
         menuCamera.fieldOfView = 60f;
+    }
+
+    // ---------- Tela final ----------
+
+    private static void BuildFinalScreen(Transform tv, Button menu, Button credits)
+    {
+        RectTransform screen = CreateScreenCanvas(tv, "FinalScreen_TV", out CanvasGroup group);
+
+        TextMeshProUGUI title = Text(screen, "Title", "FITA RECUPERADA", 54f, Phosphor);
+        title.alignment = TextAlignmentOptions.Top;
+        Stretch(title.rectTransform, new Vector2(90f, 0f), new Vector2(0f, -46f));
+
+        TextMeshProUGUI sub = Text(screen, "Subtitle", "O PROTÓTIPO FOI RECONSTRUÍDO", 24f, TextIdle);
+        sub.alignment = TextAlignmentOptions.Top;
+        Stretch(sub.rectTransform, new Vector2(90f, 0f), new Vector2(0f, -120f));
+
+        TextMeshProUGUI thanks = Text(screen, "Thanks", "OBRIGADO POR JOGAR", 30f, Phosphor);
+        thanks.alignment = TextAlignmentOptions.Top;
+        Stretch(thanks.rectTransform, new Vector2(90f, 0f), new Vector2(0f, -180f));
+
+        float y = -250f;
+        foreach (Button button in new[] { menu, credits })
+        {
+            if (button == null)
+                continue;
+
+            RectTransform rect = (RectTransform)button.transform;
+            Undo.SetTransformParent(rect, screen, "Final");
+            rect.localScale = Vector3.one;
+            rect.localRotation = Quaternion.identity;
+            rect.localPosition = Vector3.zero;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.sizeDelta = new Vector2(520f, 76f);
+            rect.anchoredPosition = new Vector2(45f, y);
+            y -= 88f;
+
+            StyleScreenButton(button);
+        }
+
+        SetLabel(menu, "MENU");
+        SetLabel(credits, "CRÉDITOS");
+
+        TextMeshProUGUI footer = Text(screen, "Footer", "LAB 1975 // FIM DA FITA", 22f, new Color(0.5f, 0.5f, 0.48f));
+        footer.alignment = TextAlignmentOptions.Bottom;
+        Stretch(footer.rectTransform, new Vector2(90f, 22f), Vector2.zero);
+
+        TextMeshProUGUI rec = Text(screen, "Rec", "[REC]", 24f, LedRed);
+        rec.alignment = TextAlignmentOptions.TopRight;
+        Stretch(rec.rectTransform, Vector2.zero, new Vector2(-30f, -30f));
+        Blinker(rec.gameObject, MenuBlinker.Mode.Blink, 1f, 0.6f, null, Color.white, Color.white, null, 0f, rec);
+
+        AddCanvasOverlay(screen);
+        AddScreenGlow(tv, screen, group);
+    }
+
+    // Copia do botao MENU que leva aos creditos (mesma cena de ChangeScene).
+    private static Button CreateCreditsButton(Button menu)
+    {
+        ChangeScene changer = Object.FindFirstObjectByType<ChangeScene>(FindObjectsInactive.Include);
+        if (menu == null || changer == null)
+            return null;
+
+        GameObject copy = Object.Instantiate(menu.gameObject, menu.transform.parent);
+        Undo.RegisterCreatedObjectUndo(copy, "Final");
+        copy.name = "CreditsBttn";
+
+        Button button = copy.GetComponent<Button>();
+        var so = new SerializedObject(button);
+        so.FindProperty("m_OnClick.m_PersistentCalls.m_Calls").ClearArray();
+        so.ApplyModifiedPropertiesWithoutUndo();
+        UnityEventTools.AddStringPersistentListener(button.onClick, changer.LoadScene, "Credits");
+        return button;
     }
 
     // ---------- Creditos ----------
@@ -419,6 +516,8 @@ public static class MonitorMenuBuilder
             BuildStartScreen(tv);
         else if (mode == Mode.Credits)
             BuildCreditsScreen(tv);
+        else if (mode == Mode.Final)
+            BuildFinalScreen(tv, play, credits);
         else
             BuildMenuScreen(tv, play, credits, quit);
 
