@@ -17,3 +17,10 @@ Medições: build de desenvolvimento, 1920x1080 tela cheia, mesma máquina e rot
 | superaquecimento | 124 / 90 | **341 / 240** |
 
 O jogo estava limitado pela GPU (resolução cheia + pós-processamento pesado + cena desenhada duas vezes no visor); a resolução de render reduzida dá folga para a melhoria gráfica.
+
+## 2. Paleta e pontilhado (`Assets/Art/Shaders/RetroPalette.shader`, `Ferramentas › Visual › Aplicar paleta retro`)
+
+- Passe de tela cheia do URP (`FullScreenPassRendererFeature` "RetroPalette" no `PC_Renderer`, depois do pós-processamento): cinzas levemente frios, **vermelho preservado** (LEDs, calor, perigo), 8 tons por canal com pontilhado Bayer 4x4 no pixel da imagem de render.
+- Quantização em espaço perceptual (gama): na primeira versão (linear, 6 tons) o laboratório escuro virava preto — capturas `capturas-t3/` mostram a versão corrigida.
+- Custo medido: ~0,06 ms por quadro (principal_normal 313 → 307 FPS; menu 251 → 244).
+- Parâmetros no material `Assets/Art/Materials/RetroPalette.mat`: tons, limiar do vermelho, tom dos cinzas, força do pontilhado e intensidade (0 desliga).
