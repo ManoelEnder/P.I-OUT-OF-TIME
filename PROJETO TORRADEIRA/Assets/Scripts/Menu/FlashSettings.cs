@@ -28,4 +28,20 @@ public static class FlashSettings
     }
 
     public static string Label => Enabled ? "LIGADO" : "DESLIGADO";
+
+    // Shaders que pulsam (ex.: Retro/TemporalRim) leem este global: 1 = flashes ligados.
+    private static readonly int ShaderFlag = Shader.PropertyToID("_RetroFlashes");
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void SyncShaders()
+    {
+        Shader.SetGlobalFloat(ShaderFlag, Enabled ? 1f : 0f);
+        Changed -= OnChanged;
+        Changed += OnChanged;
+    }
+
+    private static void OnChanged(bool enabled)
+    {
+        Shader.SetGlobalFloat(ShaderFlag, enabled ? 1f : 0f);
+    }
 }
