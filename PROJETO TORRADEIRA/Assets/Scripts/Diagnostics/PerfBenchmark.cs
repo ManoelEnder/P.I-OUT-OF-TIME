@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -89,7 +90,8 @@ public class PerfBenchmark : MonoBehaviour
         if (enemy != null)
         {
             enemy.SetActive(true);
-            Teleport(player, enemy.transform.position + enemy.transform.forward * 6f, enemy.transform.eulerAngles.y + 180f);
+            yield return null;
+            PlaceInFrontOf(player, enemy.transform);
             yield return Measure("inimigo_perseguindo", 10f, null, () => DefeatController.IsDefeated);
         }
 
@@ -202,6 +204,31 @@ public class PerfBenchmark : MonoBehaviour
     {
         TemporalEraserController enemy = FindAnyObjectByType<TemporalEraserController>();
         return enemy != null ? enemy.gameObject : null;
+    }
+
+    // Jogador a 8-12 m do inimigo, num ponto do NavMesh com caminho livre ate ele, olhando para ele:
+    // a perseguicao dura alguns segundos antes da derrota (antes caia atras de parede ou em cima dele).
+    public static bool PlaceInFrontOf(Transform player, Transform enemy)
+    {
+        foreach (float distance in new[] { 12f, 10f, 8f, 6f })
+        {
+            foreach (float angle in new[] { 0f, 30f, -30f, 60f, -60f, 90f, -90f, 135f, -135f, 180f })
+            {
+                Vector3 dir = Quaternion.Euler(0f, angle, 0f) * enemy.forward;
+                if (!NavMesh.SamplePosition(enemy.position + dir * distance, out NavMeshHit spot, 1.5f, NavMesh.AllAreas))
+                    continue;
+
+                if (NavMesh.Raycast(enemy.position, spot.position, out _, NavMesh.AllAreas))
+                    continue;
+
+                Vector3 back = enemy.position - spot.position;
+                back.y = 0f;
+                Teleport(player, spot.position, Quaternion.LookRotation(back).eulerAngles.y);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void Teleport(Transform player, Vector3 position, float yaw)
