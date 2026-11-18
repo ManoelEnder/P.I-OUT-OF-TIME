@@ -33,6 +33,9 @@ public class TemporalEraserPresence : MonoBehaviour
     private float glitchEnd;
     private float stepDistance;
 
+    private static readonly int SpeedId = Animator.StringToHash("Speed");
+    private bool hasSpeedParameter;
+
     private static AudioClip droneClip;
     private static AudioClip stepClip;
 
@@ -45,7 +48,15 @@ public class TemporalEraserPresence : MonoBehaviour
             modelRest = model.localPosition;
 
         if (animator != null)
+        {
             animator.applyRootMotion = false;
+
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash == SpeedId && parameter.type == AnimatorControllerParameterType.Float)
+                    hasSpeedParameter = true;
+            }
+        }
 
         if (droneSource != null)
         {
@@ -70,7 +81,18 @@ public class TemporalEraserPresence : MonoBehaviour
         float speed = agent.velocity.magnitude;
 
         if (animator != null)
-            animator.speed = Mathf.Clamp(speed / Mathf.Max(0.1f, clipWalkSpeed), 0f, maxAnimationSpeed);
+        {
+            if (hasSpeedParameter)
+            {
+                // Idle/Walk/Run misturados pela velocidade real: o passo acompanha o chao.
+                animator.speed = 1f;
+                animator.SetFloat(SpeedId, speed, 0.12f, Time.deltaTime);
+            }
+            else
+            {
+                animator.speed = Mathf.Clamp(speed / Mathf.Max(0.1f, clipWalkSpeed), 0f, maxAnimationSpeed);
+            }
+        }
 
         if (droneSource != null)
         {

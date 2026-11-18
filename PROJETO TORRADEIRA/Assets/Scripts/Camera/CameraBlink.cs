@@ -1,11 +1,13 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+// Abre e fecha o visor como o diafragma de uma lente: laminas em espiral giram e se
+// afastam do centro (abrir) ou se fecham ate o preto (fechar). O HUD entra e sai em
+// fade suave, com um leve ajuste de escala, sem piscar.
 public class CameraBlink : MonoBehaviour
 {
-    [Header("Bordas")]
+    [Header("Bordas (legado, ficam escondidas)")]
     [SerializeField] private Image top;
     [SerializeField] private Image bottom;
 
@@ -20,20 +22,20 @@ public class CameraBlink : MonoBehaviour
     [SerializeField] private float closeDuration = 0.35f;
     [SerializeField] private float fadeInDuration = 0.45f;
 
-    [Header("Bordas")]
-    [SerializeField] private float closedSize = 600f;
+    [Header("Diafragma")]
+    [SerializeField] private float irisOpenSeconds = 0.42f;
+    [SerializeField] private float irisCloseSeconds = 0.3f;
+    [SerializeField, Range(3, 12)] private int blades = 6;
+    [Tooltip("Quanto as laminas giram (radianos) durante o movimento.")]
+    [SerializeField] private float bladeTurn = 0.7f;
 
-    [Header("Fade do HUD")]
-    [SerializeField, Range(0.1f, 1f)]
-    private float hudFadeOutPortion = 0.4f;
+    private static readonly int RadiusId = Shader.PropertyToID("_Radius");
+    private static readonly int RotationId = Shader.PropertyToID("_Rotation");
+    private static readonly int AspectId = Shader.PropertyToID("_Aspect");
+    private static readonly int BladesId = Shader.PropertyToID("_Blades");
 
-    [Header("Efeito CRT")]
-    [SerializeField] private float slitHalfHeight = 3f;
-    [SerializeField] private float pixelStep = 4f;
-    [SerializeField] private Color scanLineColor = new Color(0.95f, 0.95f, 0.95f, 1f);
-
-    private Image scanLine;
-
+    private Image iris;
+    private Material irisMaterial;
     private Coroutine animationCoroutine;
 
     private void Awake()
@@ -45,159 +47,224 @@ public class CameraBlink : MonoBehaviour
     public Coroutine Play()
     {
         StopAnimation();
-
-        animationCoroutine = StartCoroutine(
-            AnimateOpen()
-        );
-
+        animationCoroutine = StartCoroutine(AnimateOpen());
         return animationCoroutine;
     }
 
     public Coroutine PlayClose()
     {
         StopAnimation();
-
-        animationCoroutine = StartCoroutine(
-            AnimateClose()
-        );
-
+        animationCoroutine = StartCoroutine(AnimateClose());
         return animationCoroutine;
     }
 
     public Coroutine PlayReveal()
     {
         StopAnimation();
-
-        animationCoroutine = StartCoroutine(
-            AnimateReveal()
-        );
-
+        animationCoroutine = StartCoroutine(AnimateReveal());
         return animationCoroutine;
     }
 
     private IEnumerator AnimateOpen()
     {
-        // Liga como um CRT: a linha de fosforo acende no centro e a imagem se abre a partir dela.
         SetScreenFade(0f);
-        SetBordersActive(true);
+        SetIrisActive(true);
 
-        float fullSize = GetClosedSize();
-        float slitSize = Mathf.Max(0f, fullSize - slitHalfHeight);
-        float duration = Mathf.Max(0.001f, openDuration);
-        float lineEnd = duration * 0.28f;
-        float width = GetScreenWidth();
+        float duration = Mathf.Max(0.05f, irisOpenSeconds > 0f ? irisOpenSeconds : openDuration);
+        float full = FullyOpenRadius();
 
-        SetBorderSize(fullSize);
+        SetIris(0f, bladeTurn);
         SetHUDAlpha(0f);
-        SetHUDScale(1f);
-        SetScanLine(0f, 1f, true);
+        SetHUDScale(1.04f);
 
         float time = 0f;
 
         while (time < duration)
         {
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(time / duration);
+            float k = EaseOutQuart(t);
 
-            if (time < lineEnd)
-            {
-                float k = EaseOutCubic(time / lineEnd);
-                SetBorderSize(Snap(Mathf.Lerp(fullSize, slitSize, k)));
-                SetScanLine(width * k, 1f, true);
-            }
-            else
-            {
-                float k = EaseOutCubic(Mathf.Clamp01((time - lineEnd) / (duration - lineEnd)));
-                SetBorderSize(Snap(Mathf.Lerp(slitSize, 0f, k)));
-                SetScanLine(width, 1f - k, true);
+            SetIris(full * k, bladeTurn * (1f - k));
 
-                // HUD entra piscando em degraus e com um leve "pop".
-                SetHUDAlpha(Stepped(k, 4) * (Flicker(time) ? 1f : 0.55f));
-                SetHUDScale(Mathf.Lerp(1.05f, 1f, k));
-            }
+            // HUD aparece na segunda metade, assentando no lugar.
+            float hud = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.35f, 1f, t));
+            SetHUDAlpha(hud);
+            SetHUDScale(Mathf.Lerp(1.04f, 1f, hud));
 
             yield return null;
         }
 
-        SetBorderSize(0f);
-        SetBordersActive(false);
-        SetScanLine(0f, 0f, false);
+        SetIrisActive(false);
         SetHUDAlpha(1f);
         SetHUDScale(1f);
-
         animationCoroutine = null;
     }
 
     private IEnumerator AnimateClose()
     {
-        // Desliga como um CRT: a imagem se espreme numa linha, que encolhe ate um ponto.
         SetScreenFade(0f);
-        SetBordersActive(true);
+        SetIrisActive(true);
 
-        float fullSize = GetClosedSize();
-        float slitSize = Mathf.Max(0f, fullSize - slitHalfHeight);
-        float duration = Mathf.Max(0.001f, closeDuration);
-        float squeezeEnd = duration * 0.6f;
-        float width = GetScreenWidth();
+        float duration = Mathf.Max(0.05f, irisCloseSeconds > 0f ? irisCloseSeconds : closeDuration);
+        float full = FullyOpenRadius();
 
-        SetBorderSize(0f);
+        SetIris(full, 0f);
         SetHUDAlpha(1f);
 
         float time = 0f;
 
         while (time < duration)
         {
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(time / duration);
+            float k = EaseInCubic(t);
 
-            float hudK = Mathf.Clamp01(time / (duration * Mathf.Max(0.05f, hudFadeOutPortion)));
-            SetHUDAlpha(1f - Stepped(hudK, 3));
-            SetHUDScale(Mathf.Lerp(1f, 0.97f, hudK));
+            SetIris(full * (1f - k), -bladeTurn * k);
 
-            if (time < squeezeEnd)
-            {
-                float k = EaseInCubic(time / squeezeEnd);
-                SetBorderSize(Snap(Mathf.Lerp(0f, slitSize, k)));
-                SetScanLine(width, k, true);
-            }
-            else
-            {
-                float k = EaseInCubic(Mathf.Clamp01((time - squeezeEnd) / (duration - squeezeEnd)));
-                SetBorderSize(Snap(Mathf.Lerp(slitSize, fullSize, k)));
-                SetScanLine(Mathf.Lerp(width, slitHalfHeight * 2f, k), 1f, true);
-            }
+            float hud = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.5f, t));
+            SetHUDAlpha(hud);
+            SetHUDScale(Mathf.Lerp(0.98f, 1f, hud));
 
             yield return null;
         }
 
-        SetBorderSize(fullSize);
+        SetIris(0f, -bladeTurn);
         SetHUDAlpha(0f);
         SetHUDScale(1f);
-        SetScanLine(0f, 0f, false);
 
+        // Fica preto: quem chamou troca a camera e depois usa PlayReveal.
         SetScreenFade(1f);
-        SetBordersActive(false);
-
+        SetIrisActive(false);
         animationCoroutine = null;
     }
 
-    private float Snap(float size)
+    private IEnumerator AnimateReveal()
     {
-        return pixelStep > 0f ? Mathf.Round(size / pixelStep) * pixelStep : size;
+        SetIrisActive(false);
+        SetHUDAlpha(0f);
+        SetScreenFade(1f);
+
+        float duration = Mathf.Max(0.001f, fadeInDuration);
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.unscaledDeltaTime;
+            SetScreenFade(1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(time / duration)));
+            yield return null;
+        }
+
+        SetScreenFade(0f);
+        animationCoroutine = null;
     }
 
-    private static float Stepped(float value, int steps)
+    public void ResetBlink()
     {
-        return Mathf.Floor(Mathf.Clamp01(value) * steps + 0.0001f) / steps;
+        StopAnimation();
+        SetIrisActive(false);
+        SetHUDAlpha(0f);
+        SetHUDScale(1f);
+        SetScreenFade(0f);
     }
 
-    private static bool Flicker(float time)
+    // ---------- Diafragma ----------
+
+    private void CreateIris()
     {
-        return Mathf.Repeat(time * 30f, 1f) > 0.25f;
+        RectTransform parent = HostRect();
+
+        if (parent == null)
+            return;
+
+        Shader shader = Resources.Load<Shader>("ApertureIris");
+
+        if (shader == null)
+        {
+            Debug.LogWarning("CameraBlink: shader ApertureIris nao encontrado em Resources.");
+            return;
+        }
+
+        GameObject go = new GameObject("ApertureIris", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        go.layer = parent.gameObject.layer;
+        go.transform.SetParent(parent, false);
+
+        RectTransform rect = (RectTransform)go.transform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        irisMaterial = new Material(shader) { name = "ApertureIris (instancia)" };
+        irisMaterial.SetFloat(BladesId, blades);
+
+        iris = go.GetComponent<Image>();
+        iris.material = irisMaterial;
+        iris.color = Color.white;
+        iris.raycastTarget = false;
+
+        go.SetActive(false);
     }
 
-    private static float EaseOutCubic(float t)
+    private RectTransform HostRect()
+    {
+        if (top != null)
+            return top.rectTransform.parent as RectTransform;
+
+        if (screenFade != null)
+            return screenFade.rectTransform.parent as RectTransform;
+
+        return hudGroup != null ? hudGroup.transform.parent as RectTransform : null;
+    }
+
+    private float Aspect()
+    {
+        RectTransform host = HostRect();
+
+        if (host != null && host.rect.height > 1f)
+            return host.rect.width / host.rect.height;
+
+        return Screen.height > 0 ? (float)Screen.width / Screen.height : 16f / 9f;
+    }
+
+    // Raio em que o hexagono cobre os cantos da tela (com folga).
+    private float FullyOpenRadius()
+    {
+        float aspect = Aspect();
+        return Mathf.Sqrt(aspect * aspect + 1f) * 1.08f;
+    }
+
+    private void SetIris(float radius, float rotation)
+    {
+        if (irisMaterial == null)
+            return;
+
+        irisMaterial.SetFloat(RadiusId, radius);
+        irisMaterial.SetFloat(RotationId, rotation);
+        irisMaterial.SetFloat(AspectId, Aspect());
+    }
+
+    private void SetIrisActive(bool active)
+    {
+        if (iris == null && active)
+            CreateIris();
+
+        if (iris == null)
+            return;
+
+        if (iris.gameObject.activeSelf != active)
+            iris.gameObject.SetActive(active);
+
+        if (active)
+            iris.rectTransform.SetAsLastSibling();
+    }
+
+    // ---------- Utilitarios ----------
+
+    private static float EaseOutQuart(float t)
     {
         t = 1f - Mathf.Clamp01(t);
-        return 1f - t * t * t;
+        return 1f - t * t * t * t;
     }
 
     private static float EaseInCubic(float t)
@@ -206,10 +273,30 @@ public class CameraBlink : MonoBehaviour
         return t * t * t;
     }
 
-    private float GetScreenWidth()
+    private void Setup()
     {
-        RectTransform parent = top != null ? top.rectTransform.parent as RectTransform : null;
-        return parent != null ? parent.rect.width : 1920f;
+        // As bordas pretas antigas nao sao mais usadas.
+        if (top != null)
+        {
+            top.raycastTarget = false;
+            top.gameObject.SetActive(false);
+        }
+
+        if (bottom != null)
+        {
+            bottom.raycastTarget = false;
+            bottom.gameObject.SetActive(false);
+        }
+
+        if (screenFade != null)
+        {
+            RectTransform rect = screenFade.rectTransform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            screenFade.raycastTarget = false;
+        }
     }
 
     private void SetHUDScale(float scale)
@@ -218,190 +305,10 @@ public class CameraBlink : MonoBehaviour
             hudGroup.transform.localScale = new Vector3(scale, scale, 1f);
     }
 
-    private void SetScanLine(float width, float alpha, bool active)
-    {
-        if (scanLine == null)
-            CreateScanLine();
-
-        if (scanLine == null)
-            return;
-
-        if (scanLine.gameObject.activeSelf != active)
-            scanLine.gameObject.SetActive(active);
-
-        if (!active)
-            return;
-
-        scanLine.rectTransform.sizeDelta = new Vector2(Snap(width), slitHalfHeight * 2f);
-        Color color = scanLineColor;
-        color.a *= Mathf.Clamp01(alpha);
-        scanLine.color = color;
-        scanLine.rectTransform.SetAsLastSibling();
-    }
-
-    private void CreateScanLine()
-    {
-        RectTransform parent = top != null ? top.rectTransform.parent as RectTransform : null;
-
-        if (parent == null)
-            return;
-
-        GameObject line = new GameObject("ScanLine", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        line.layer = parent.gameObject.layer;
-        line.transform.SetParent(parent, false);
-
-        scanLine = line.GetComponent<Image>();
-        scanLine.raycastTarget = false;
-
-        RectTransform rect = scanLine.rectTransform;
-        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.anchoredPosition = Vector2.zero;
-
-        line.SetActive(false);
-    }
-
-    private IEnumerator AnimateReveal()
-    {
-        SetBordersActive(false);
-        SetHUDAlpha(0f);
-        SetScreenFade(1f);
-
-        float duration = Mathf.Max(
-            0.001f,
-            fadeInDuration
-        );
-
-        float time = 0f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-
-            float progress = Mathf.Clamp01(
-                time / duration
-            );
-
-            float smooth = Mathf.SmoothStep(
-                0f,
-                1f,
-                progress
-            );
-
-            SetScreenFade(1f - smooth);
-
-            yield return null;
-        }
-
-        SetScreenFade(0f);
-
-        animationCoroutine = null;
-    }
-
-    public void ResetBlink()
-    {
-        StopAnimation();
-
-        SetBorderSize(0f);
-        SetBordersActive(false);
-        SetHUDAlpha(0f);
-        SetHUDScale(1f);
-        SetScreenFade(0f);
-
-        if (scanLine != null)
-            scanLine.gameObject.SetActive(false);
-    }
-
-    private void Setup()
-    {
-        if (top != null)
-        {
-            RectTransform rect = top.rectTransform;
-
-            rect.anchorMin = new Vector2(0f, 1f);
-            rect.anchorMax = new Vector2(1f, 1f);
-            rect.pivot = new Vector2(0.5f, 1f);
-            rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = Vector2.zero;
-
-            top.color = Color.black;
-            top.raycastTarget = false;
-        }
-
-        if (bottom != null)
-        {
-            RectTransform rect = bottom.rectTransform;
-
-            rect.anchorMin = new Vector2(0f, 0f);
-            rect.anchorMax = new Vector2(1f, 0f);
-            rect.pivot = new Vector2(0.5f, 0f);
-            rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = Vector2.zero;
-
-            bottom.color = Color.black;
-            bottom.raycastTarget = false;
-        }
-
-        if (screenFade != null)
-        {
-            RectTransform rect =
-                screenFade.rectTransform;
-
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-
-            screenFade.raycastTarget = false;
-        }
-    }
-
-    private float GetClosedSize()
-    {
-        float size = closedSize;
-
-        if (top != null)
-        {
-            RectTransform parent =
-                top.rectTransform.parent as RectTransform;
-
-            if (parent != null)
-            {
-                size = Mathf.Max(
-                    size,
-                    parent.rect.height * 0.5f + 5f
-                );
-            }
-        }
-
-        return size;
-    }
-
-    private void SetBorderSize(float size)
-    {
-        if (top != null)
-        {
-            top.rectTransform.SetSizeWithCurrentAnchors(
-                RectTransform.Axis.Vertical,
-                size
-            );
-        }
-
-        if (bottom != null)
-        {
-            bottom.rectTransform.SetSizeWithCurrentAnchors(
-                RectTransform.Axis.Vertical,
-                size
-            );
-        }
-    }
-
     private void SetHUDAlpha(float alpha)
     {
-        if (hudGroup == null)
-            return;
-
-        hudGroup.alpha = Mathf.Clamp01(alpha);
+        if (hudGroup != null)
+            hudGroup.alpha = Mathf.Clamp01(alpha);
     }
 
     private void SetScreenFade(float alpha)
@@ -414,24 +321,10 @@ public class CameraBlink : MonoBehaviour
         if (alpha > 0f)
             screenFade.gameObject.SetActive(true);
 
-        screenFade.color = new Color(
-            0f,
-            0f,
-            0f,
-            alpha
-        );
+        screenFade.color = new Color(0f, 0f, 0f, alpha);
 
         if (alpha <= 0f)
             screenFade.gameObject.SetActive(false);
-    }
-
-    private void SetBordersActive(bool active)
-    {
-        if (top != null)
-            top.gameObject.SetActive(active);
-
-        if (bottom != null)
-            bottom.gameObject.SetActive(active);
     }
 
     private void StopAnimation()
@@ -446,5 +339,11 @@ public class CameraBlink : MonoBehaviour
     private void OnDisable()
     {
         ResetBlink();
+    }
+
+    private void OnDestroy()
+    {
+        if (irisMaterial != null)
+            Destroy(irisMaterial);
     }
 }

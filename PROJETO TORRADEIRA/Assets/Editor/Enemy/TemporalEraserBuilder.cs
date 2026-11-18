@@ -15,8 +15,13 @@ using UnityEngine.UI;
 // Pode ser executado de novo: reaproveita o que ja existe.
 public static class TemporalEraserBuilder
 {
-    private const string ModelPath = "Assets/Prefabs/Enemy/Vampire A Lusth.fbx";
-    private const string WalkPath = "Assets/Prefabs/Enemy/Walking (2).fbx";
+    // Modelo feito no Blender pelo script Tools/Blender/temporal_eraser.py (rig Generic com Idle, Walk e Run).
+    private const string ModelPath = "Assets/Prefabs/Enemy/TemporalEraser.fbx";
+    private const string MaterialFolder = "Assets/Art/Materials/Enemy";
+
+    // Velocidades (m/s) em que cada ciclo foi animado: pes sem deslizar nessas velocidades.
+    private const float WalkClipSpeed = 2.1f;
+    private const float RunClipSpeed = 4.1f;
     private const string ControllerFolder = "Assets/Animation/Enemy";
     private const string ControllerPath = ControllerFolder + "/TemporalEraser.controller";
     private const string PixelFontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
@@ -47,83 +52,181 @@ public static class TemporalEraserBuilder
         }
 
         ConfigureImports();
-        AnimationClip walk = LoadWalkClip();
-        AnimatorController controller = BuildController(walk);
+        AnimationClip idle = LoadClip("Idle");
+        AnimationClip walk = LoadClip("Walk");
+        AnimationClip run = LoadClip("Run");
+
+        if (walk == null || run == null || idle == null)
+        {
+            Debug.LogError("TemporalEraserBuilder: clipes Idle/Walk/Run nao encontrados em " + ModelPath);
+            return;
+        }
+
+        AnimatorController controller = BuildController(idle, walk, run);
 
         Transform parent = enemy.transform.parent;
         Transform spawn = BuildSpawnPoint(parent, player);
         DefeatController defeat = BuildDefeat(parent, player.gameObject, spawn);
 
-        BuildEnemy(enemy, controller, walk, defeat);
+        BuildEnemy(enemy, controller, defeat);
 
         EditorSceneManager.MarkSceneDirty(enemy.gameObject.scene);
         Debug.Log("TemporalEraserBuilder: inimigo montado e ativado.");
     }
 
+    [MenuItem("Ferramentas/Inimigo/Focar TemporalEraser na cena")]
+    public static void Focus()
+    {
+        TemporalEraserController enemy = Object.FindFirstObjectByType<TemporalEraserController>(FindObjectsInactive.Include);
+        if (enemy == null)
+            return;
+
+        Selection.activeGameObject = enemy.gameObject;
+        SceneView view = SceneView.lastActiveSceneView;
+        if (view == null)
+            return;
+
+        // Vista de frente, um pouco de lado, na altura do peito.
+        Transform t = enemy.transform;
+        view.LookAt(t.position + Vector3.up * 1.1f, Quaternion.LookRotation(-(t.forward + t.right * 0.35f).normalized), 2.6f);
+    }
+
     // ---------- Importacao ----------
+
+    private static readonly (string name, Color color, bool doubleSided, bool glow)[] Materials =
+    {
+        ("Eraser_Coat", new Color(0.24f, 0.23f, 0.19f), true, false),
+        ("Eraser_CoatDark", new Color(0.13f, 0.125f, 0.1f), true, false),
+        ("Eraser_Pants", new Color(0.1f, 0.085f, 0.07f), false, false),
+        ("Eraser_Boots", new Color(0.2f, 0.125f, 0.07f), false, false),
+        ("Eraser_Sole", new Color(0.06f, 0.05f, 0.045f), false, false),
+        ("Eraser_Skin", new Color(0.6f, 0.56f, 0.5f), false, false),
+        ("Eraser_Hair", new Color(0.06f, 0.05f, 0.045f), false, false),
+        ("Eraser_Belt", new Color(0.15f, 0.11f, 0.08f), false, false),
+        ("Eraser_Badge", new Color(0.66f, 0.58f, 0.44f), false, false),
+        ("Eraser_FaceVoid", new Color(0f, 0f, 0f), false, false),
+        ("Eraser_Eyes", new Color(0.9f, 0.95f, 1f) * 5f, false, true),
+    };
 
     private static void ConfigureImports()
     {
         var model = (ModelImporter)AssetImporter.GetAtPath(ModelPath);
-        if (model.animationType != ModelImporterAnimationType.Human)
-        {
-            model.animationType = ModelImporterAnimationType.Human;
-            model.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            model.SaveAndReimport();
-        }
-
-        var walk = (ModelImporter)AssetImporter.GetAtPath(WalkPath);
         bool dirty = false;
 
-        if (walk.animationType != ModelImporterAnimationType.Human)
+        if (model.animationType != ModelImporterAnimationType.Generic)
         {
-            walk.animationType = ModelImporterAnimationType.Human;
-            walk.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            model.animationType = ModelImporterAnimationType.Generic;
+            model.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
             dirty = true;
         }
 
-        ModelImporterClipAnimation[] clips = walk.clipAnimations.Length > 0 ? walk.clipAnimations : walk.defaultClipAnimations;
-        if (clips.Length > 0 && (clips[0].name != "Walk" || !clips[0].loopTime))
+        if (model.importCameras || model.importLights)
         {
-            ModelImporterClipAnimation clip = clips[0];
-            clip.name = "Walk";
-            clip.loopTime = true;
-            clip.loopPose = true;
-            clip.lockRootRotation = true;
-            clip.lockRootHeightY = true;
-            clip.keepOriginalOrientation = true;
-            clip.keepOriginalPositionY = true;
-            walk.clipAnimations = new[] { clip };
+            model.importCameras = false;
+            model.importLights = false;
             dirty = true;
+        }
+
+        // Todos os ciclos em loop.
+        ModelImporterClipAnimation[] clips = model.clipAnimations.Length > 0 ? model.clipAnimations : model.defaultClipAnimations;
+        foreach (ModelImporterClipAnimation clip in clips)
+        {
+            string clean = CleanClipName(clip.name);
+            if (clip.name != clean || !clip.loopTime)
+            {
+                clip.name = clean;
+                clip.loopTime = true;
+                clip.loopPose = true;
+                dirty = true;
+            }
+        }
+        model.clipAnimations = clips;
+
+        // Materiais do jogo no lugar dos que vieram do Blender.
+        foreach (var entry in Materials)
+        {
+            Material material = EnemyMaterial(entry.name, entry.color, entry.doubleSided, entry.glow);
+            var id = new AssetImporter.SourceAssetIdentifier(typeof(Material), entry.name);
+            if (!model.GetExternalObjectMap().TryGetValue(id, out Object current) || current != material)
+            {
+                model.AddRemap(id, material);
+                dirty = true;
+            }
         }
 
         if (dirty)
-            walk.SaveAndReimport();
+            model.SaveAndReimport();
     }
 
-    private static AnimationClip LoadWalkClip()
+    // O Blender exporta "TemporalEraser|Walk"; fica so "Walk".
+    private static string CleanClipName(string name)
     {
-        return AssetDatabase.LoadAllAssetsAtPath(WalkPath)
-            .OfType<AnimationClip>()
-            .FirstOrDefault(c => !c.name.StartsWith("__preview"));
+        int bar = name.LastIndexOf('|');
+        return bar >= 0 ? name.Substring(bar + 1) : name;
     }
 
-    private static AnimatorController BuildController(AnimationClip walk)
+    private static Material EnemyMaterial(string name, Color color, bool doubleSided, bool glow)
+    {
+        if (!AssetDatabase.IsValidFolder(MaterialFolder))
+            AssetDatabase.CreateFolder("Assets/Art/Materials", "Enemy");
+
+        string path = MaterialFolder + "/" + name + ".mat";
+        string shaderName = glow ? "Universal Render Pipeline/Unlit" : "Universal Render Pipeline/Lit";
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+
+        if (material == null)
+        {
+            material = new Material(Shader.Find(shaderName));
+            AssetDatabase.CreateAsset(material, path);
+        }
+        else if (material.shader.name != shaderName)
+        {
+            material.shader = Shader.Find(shaderName);
+        }
+
+        material.SetColor("_BaseColor", color);
+
+        if (!glow)
+        {
+            material.SetFloat("_Smoothness", 0.12f);
+            material.SetFloat("_Metallic", 0f);
+        }
+
+        // Barra do jaleco nao tem espessura: desenha os dois lados.
+        material.SetFloat("_Cull", doubleSided ? 0f : 2f);
+        material.doubleSidedGI = doubleSided;
+
+        EditorUtility.SetDirty(material);
+        return material;
+    }
+
+    private static AnimationClip LoadClip(string name)
+    {
+        return AssetDatabase.LoadAllAssetsAtPath(ModelPath)
+            .OfType<AnimationClip>()
+            .FirstOrDefault(c => c.name == name);
+    }
+
+    // Idle -> Walk -> Run misturados pela velocidade do NavMeshAgent (parametro Speed).
+    private static AnimatorController BuildController(AnimationClip idle, AnimationClip walk, AnimationClip run)
     {
         if (!AssetDatabase.IsValidFolder(ControllerFolder))
             AssetDatabase.CreateFolder("Assets/Animation", "Enemy");
 
-        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
-        if (controller == null)
-            controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+        AssetDatabase.DeleteAsset(ControllerPath);
+        AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+        controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
 
         AnimatorStateMachine machine = controller.layers[0].stateMachine;
-        AnimatorState state = machine.states.Select(s => s.state).FirstOrDefault(s => s.name == "Walk");
-        if (state == null)
-            state = machine.AddState("Walk");
-
-        state.motion = walk;
+        AnimatorState state = controller.CreateBlendTreeInController("Locomotion", out BlendTree tree, 0);
+        tree.blendType = BlendTreeType.Simple1D;
+        tree.blendParameter = "Speed";
+        tree.useAutomaticThresholds = false;
+        tree.AddChild(idle, 0f);
+        tree.AddChild(walk, WalkClipSpeed);
+        tree.AddChild(run, RunClipSpeed);
         machine.defaultState = state;
+
         EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
         return controller;
@@ -131,7 +234,7 @@ public static class TemporalEraserBuilder
 
     // ---------- Inimigo ----------
 
-    private static void BuildEnemy(TemporalEraserController enemy, AnimatorController controller, AnimationClip walk, DefeatController defeat)
+    private static void BuildEnemy(TemporalEraserController enemy, AnimatorController controller, DefeatController defeat)
     {
         GameObject root = enemy.gameObject;
         Undo.RecordObject(root.transform, "Inimigo");
@@ -194,16 +297,19 @@ public static class TemporalEraserBuilder
         foreach (Transform t in model.GetComponentsInChildren<Transform>(true))
             t.gameObject.layer = root.layer;
 
-        // O FBX veio sem texturas: figura cinza-palida e fosca, "apagada", em vez do branco padrao.
-        Material erased = ErasedMaterial();
         foreach (Renderer r in renderers)
-            r.sharedMaterials = Enumerable.Repeat(erased, r.sharedMaterials.Length).ToArray();
+        {
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            if (r is SkinnedMeshRenderer skinned)
+                skinned.updateWhenOffscreen = false;
+        }
 
         Animator animator = model.GetComponent<Animator>();
         if (animator == null)
             animator = Undo.AddComponent<Animator>(model);
         animator.runtimeAnimatorController = controller;
         animator.avatar = AssetDatabase.LoadAllAssetsAtPath(ModelPath).OfType<Avatar>().FirstOrDefault();
+        animator.speed = 1f;
         animator.applyRootMotion = false;
         animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 
@@ -218,7 +324,7 @@ public static class TemporalEraserBuilder
         }
 
         BuildAttack(root.transform, defeat);
-        BuildPresence(root, animator, model.transform, renderers, walk);
+        BuildPresence(root, animator, model.transform, renderers);
 
         // Tentar de novo: inimigo volta ao inicio.
         SerializedObject defeatSo = new SerializedObject(defeat);
@@ -229,28 +335,6 @@ public static class TemporalEraserBuilder
 
         Undo.RecordObject(root, "Inimigo");
         root.SetActive(true);
-    }
-
-    private static Material ErasedMaterial()
-    {
-        const string folder = "Assets/Art/Materials/Enemy";
-        const string path = folder + "/TemporalEraser.mat";
-
-        if (!AssetDatabase.IsValidFolder(folder))
-            AssetDatabase.CreateFolder("Assets/Art/Materials", "Enemy");
-
-        Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
-        if (material == null)
-        {
-            material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            AssetDatabase.CreateAsset(material, path);
-        }
-
-        material.SetColor("_BaseColor", new Color(0.62f, 0.62f, 0.6f));
-        material.SetFloat("_Smoothness", 0.15f);
-        material.SetFloat("_Metallic", 0f);
-        EditorUtility.SetDirty(material);
-        return material;
     }
 
     private static UnityEvent GetRetryEvent(DefeatController defeat)
@@ -306,7 +390,7 @@ public static class TemporalEraserBuilder
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static void BuildPresence(GameObject root, Animator animator, Transform model, Renderer[] renderers, AnimationClip walk)
+    private static void BuildPresence(GameObject root, Animator animator, Transform model, Renderer[] renderers)
     {
         AudioSource drone = root.GetComponent<AudioSource>();
         if (drone == null)
@@ -330,13 +414,9 @@ public static class TemporalEraserBuilder
         if (presence == null)
             presence = Undo.AddComponent<TemporalEraserPresence>(root);
 
-        float walkSpeed = walk != null ? walk.averageSpeed.magnitude : 0f;
-        if (walkSpeed < 0.3f)
-            walkSpeed = 1.3f;
-
         SerializedObject so = new SerializedObject(presence);
         so.FindProperty("animator").objectReferenceValue = animator;
-        so.FindProperty("clipWalkSpeed").floatValue = walkSpeed;
+        so.FindProperty("clipWalkSpeed").floatValue = WalkClipSpeed;
         so.FindProperty("droneSource").objectReferenceValue = drone;
         so.FindProperty("stepSource").objectReferenceValue = steps;
         so.FindProperty("model").objectReferenceValue = model;

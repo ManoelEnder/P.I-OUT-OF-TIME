@@ -624,9 +624,6 @@ public static class PixelArtSceneSetup
         foreach (CameraBattery battery in FindAll<CameraBattery>())
             count += SetColor(battery, "corNormal", new Color(0.92f, 0.92f, 0.92f, 1f));
 
-        foreach (CameraBlink blink in FindAll<CameraBlink>())
-            count += SetColor(blink, "scanLineColor", new Color(0.95f, 0.95f, 0.95f, 1f));
-
         foreach (ButtonHoverEffect hover in FindAll<ButtonHoverEffect>())
         {
             count += SetColor(hover, "hoverTextColor", Color.white);

@@ -23,8 +23,6 @@ public class CameraOverheat : MonoBehaviour
 
     [Header("Distorcao Temporal")]
     [SerializeField] private Volume glitchVolume;
-    [SerializeField, Range(0f, 1f)] private float maxChromatic = 0.8f;
-    [SerializeField, Range(0f, 1f)] private float maxDistortion = 0.25f;
 
     private float currentHeat;
     private bool cameraLost;
@@ -41,10 +39,23 @@ public class CameraOverheat : MonoBehaviour
     [SerializeField, Min(1)] private int segmentosBarra = 10;
 
     [Header("Som de aquecimento")]
-    [SerializeField, Range(0f, 1f)] private float volumeAquecimento = 0.22f;
-    [SerializeField] private float pitchFrio = 0.6f;
-    [SerializeField] private float pitchQuente = 1.9f;
+    [SerializeField, Range(0f, 1f)] private float volumeZumbido = 0.12f;
+    [SerializeField] private float pitchZumbidoFrio = 0.85f;
+    [SerializeField] private float pitchZumbidoQuente = 1.2f;
     [SerializeField, Range(0f, 1f)] private float volumeRuptura = 0.35f;
+
+    [Header("Efeito de calor (suave)")]
+    [Tooltip("Aberracao cromatica maxima no calor maximo.")]
+    [SerializeField, Range(0f, 1f)] private float calorCromatico = 0.3f;
+    [Tooltip("Ondulacao de calor: amplitude da distorcao de lente.")]
+    [SerializeField, Range(0f, 0.3f)] private float calorOndulacao = 0.05f;
+    [Tooltip("Respiracoes por segundo das bordas vermelhas.")]
+    [SerializeField] private float calorRespiracao = 0.45f;
+    [SerializeField] private Color calorBorda = new Color(0.3f, 0.02f, 0.02f, 1f);
+    [SerializeField, Range(0f, 1f)] private float calorBordaMaxima = 0.5f;
+
+    private RawImage heatGlowRaw;
+    private static Texture2D heatGlowTexture;
 
     private AudioSource heatAudio;
     private AudioClip heatLoop;
@@ -321,14 +332,14 @@ public class CameraOverheat : MonoBehaviour
             photoCamera.IsCameraMode;
 
         float target = audible
-            ? volumeAquecimento * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.1f, 1f, heat))
+            ? volumeZumbido * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.2f, 1f, heat))
             : 0f;
 
-        heatAudio.volume = Mathf.MoveTowards(heatAudio.volume, target, Time.unscaledDeltaTime * 0.8f);
-        heatAudio.pitch = Mathf.Lerp(pitchFrio, pitchQuente, heat);
+        heatAudio.volume = Mathf.MoveTowards(heatAudio.volume, target, Time.unscaledDeltaTime * 0.5f);
+        heatAudio.pitch = Mathf.Lerp(pitchZumbidoFrio, pitchZumbidoQuente, Mathf.SmoothStep(0f, 1f, heat));
     }
 
-    // Zumbido de capacitor carregando: loop de 1 s com frequencias inteiras (sem estalo na emenda).
+    // Zumbido grave e morno de transformador: loop de 1 s com frequencias inteiras (sem estalo na emenda).
     private static AudioClip CreateChargeLoop()
     {
         int rate = UnityEngine.AudioSettings.outputSampleRate > 0 ? UnityEngine.AudioSettings.outputSampleRate : 44100;
@@ -338,11 +349,11 @@ public class CameraOverheat : MonoBehaviour
         {
             float t = (float)i / rate;
             float tone =
-                Mathf.Sin(2f * Mathf.PI * 330f * t) * 0.55f +
-                Mathf.Sin(2f * Mathf.PI * 660f * t) * 0.25f +
-                Mathf.Sin(2f * Mathf.PI * 990f * t) * 0.1f;
-            float flutter = 0.75f + 0.25f * Mathf.Sin(2f * Mathf.PI * 12f * t);
-            data[i] = tone * flutter * 0.5f;
+                Mathf.Sin(2f * Mathf.PI * 110f * t) * 0.6f +
+                Mathf.Sin(2f * Mathf.PI * 220f * t) * 0.22f +
+                Mathf.Sin(2f * Mathf.PI * 330f * t) * 0.06f;
+            float swell = 0.85f + 0.15f * Mathf.Sin(2f * Mathf.PI * 2f * t);
+            data[i] = tone * swell * 0.5f;
         }
 
         AudioClip clip = AudioClip.Create("HeatChargeLoop", rate, 1, rate, false);
@@ -393,9 +404,9 @@ public class CameraOverheat : MonoBehaviour
 
         if (heatWarning != null)
         {
-            // Pisca o aviso fora do centro da tela, sem cobrir a mira.
+            // Aviso fora do centro da tela, piscando devagar (sem estrobo).
             bool warn = heat >= warningThreshold && !cameraLost;
-            bool visible = warn && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f;
+            bool visible = warn && Mathf.Repeat(Time.unscaledTime * 0.8f, 1f) < 0.75f;
 
             if (heatWarning.activeSelf != visible)
                 heatWarning.SetActive(visible);
@@ -421,55 +432,108 @@ public class CameraOverheat : MonoBehaviour
         );
     }
 
+    // Efeito calmo: as bordas esquentam em vermelho e "respiram" devagar, a imagem ondula
+    // de leve como ar quente e as cores se separam pouco. Nada pisca nem treme rapido.
     private void UpdateGlitch()
     {
-        float strength = Mathf.InverseLerp(
-            0.25f,
-            1f,
-            HeatPercent
-        );
+        float heat = HeatPercent;
+        float strength = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.35f, 1f, heat));
+        bool visible = photoCamera != null && photoCamera.IsCameraMode && !cameraLost;
 
-        float pulse = 0f;
-
-        if (HeatPercent >= 0.65f && FlashSettings.Enabled)
-        {
-            pulse = Mathf.Pow(
-                Mathf.Max(
-                    0f,
-                    Mathf.Sin(Time.time * 22f)
-                ),
-                12f
-            ) * strength;
-        }
+        // Respiracao lenta, mais marcada perto do limite.
+        float breathe = 0.5f + 0.5f * Mathf.Sin(Time.time * calorRespiracao * Mathf.PI * 2f);
+        float hot = Mathf.InverseLerp(0.6f, 1f, heat);
 
         if (chromatic != null)
-        {
-            float value = Mathf.Clamp01(
-                originalChromatic +
-                strength * maxChromatic +
-                pulse * 0.15f
-            );
-
-            chromatic.intensity.Override(value);
-        }
+            chromatic.intensity.Override(Mathf.Clamp01(originalChromatic + strength * calorCromatico));
 
         if (distortion != null)
         {
-            float value =
-                originalDistortion +
-                Mathf.Sin(Time.time * 13f) *
-                maxDistortion *
-                strength +
-                pulse * 0.1f;
-
-            distortion.intensity.Override(
-                Mathf.Clamp(value, -1f, 1f)
-            );
+            float wave = Mathf.Sin(Time.time * 1.3f) * 0.6f + Mathf.Sin(Time.time * 0.7f) * 0.4f;
+            distortion.intensity.Override(Mathf.Clamp(originalDistortion + wave * calorOndulacao * strength, -1f, 1f));
         }
+
+        UpdateHeatGlow(visible ? strength * Mathf.Lerp(1f, 0.7f, breathe * hot) : 0f);
+    }
+
+    private void UpdateHeatGlow(float amount)
+    {
+        if (heatGlowRaw == null)
+            CreateHeatGlow();
+
+        if (heatGlowRaw == null)
+            return;
+
+        bool show = amount > 0.01f;
+        if (heatGlowRaw.gameObject.activeSelf != show)
+            heatGlowRaw.gameObject.SetActive(show);
+
+        if (!show)
+            return;
+
+        Color color = calorBorda;
+        color.a = amount * calorBordaMaxima;
+        heatGlowRaw.color = color;
+    }
+
+    // Brilho vermelho nas bordas da tela, desenhado embaixo do HUD.
+    private void CreateHeatGlow()
+    {
+        if (heatBar == null || heatBar.canvas == null)
+            return;
+
+        Transform canvas = heatBar.canvas.rootCanvas.transform;
+
+        GameObject go = new GameObject("HeatGlow", typeof(RectTransform), typeof(CanvasRenderer), typeof(RawImage));
+        go.layer = canvas.gameObject.layer;
+        go.transform.SetParent(canvas, false);
+        go.transform.SetAsFirstSibling();
+
+        RectTransform rect = (RectTransform)go.transform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        if (heatGlowTexture == null)
+            heatGlowTexture = BuildEdgeTexture();
+
+        heatGlowRaw = go.GetComponent<RawImage>();
+        heatGlowRaw.texture = heatGlowTexture;
+        heatGlowRaw.raycastTarget = false;
+        go.SetActive(false);
+    }
+
+    private static Texture2D BuildEdgeTexture()
+    {
+        const int size = 128;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Bilinear,
+            name = "HeatGlow",
+        };
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float u = Mathf.Abs(x / (size - 1f) - 0.5f) * 2f;
+                float v = Mathf.Abs(y / (size - 1f) - 0.5f) * 2f;
+                float d = Mathf.Max(Mathf.Pow(u, 10f), Mathf.Pow(v, 7f));
+                texture.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.SmoothStep(0.05f, 1f, d)));
+            }
+        }
+
+        texture.Apply(false, true);
+        return texture;
     }
 
     private void ResetGlitch()
     {
+        if (heatGlowRaw != null)
+            heatGlowRaw.gameObject.SetActive(false);
+
         if (chromatic != null)
             chromatic.intensity.Override(originalChromatic);
 
