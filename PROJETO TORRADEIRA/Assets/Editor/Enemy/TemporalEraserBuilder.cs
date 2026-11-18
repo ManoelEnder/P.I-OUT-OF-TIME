@@ -144,7 +144,9 @@ public static class TemporalEraserBuilder
             root.transform.position = NavMesh.SamplePosition(feet, out NavMeshHit hit, 3f, NavMesh.AllAreas) ? hit.position : feet;
         }
 
-        root.layer = LayerMask.NameToLayer("Enemy");
+        // Camada Default: a camera do jogador (CameraPlayer) so desenha as camadas 0-5; na camada
+        // "Enemy" o inimigo so apareceria pelo visor.
+        root.layer = 0;
 
         MeshRenderer capsuleRenderer = root.GetComponent<MeshRenderer>();
         if (capsuleRenderer != null)
