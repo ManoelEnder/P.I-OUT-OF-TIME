@@ -133,8 +133,7 @@ public class PhotoCamera : MonoBehaviour
         if (crosshair != null)
             crosshair.SetActive(true);
 
-        if (photoCam != null && photoCam != playerCam)
-            photoCam.enabled = false;
+        SetVisorCameras(false);
 
         ResetEffects();
         temporalController.SetCameraMode(false);
@@ -361,8 +360,7 @@ public class PhotoCamera : MonoBehaviour
         {
             SyncPhotoCamera();
 
-            if (photoCam != null && photoCam != playerCam)
-                photoCam.enabled = true;
+            SetVisorCameras(true);
 
             if (cameraHUD != null)
                 cameraHUD.SetActive(true);
@@ -435,8 +433,7 @@ public class PhotoCamera : MonoBehaviour
 
             temporalController.SetCameraMode(false);
 
-            if (photoCam != null && photoCam != playerCam)
-                photoCam.enabled = false;
+            SetVisorCameras(false);
 
             if (cameraHUD != null)
                 cameraHUD.SetActive(false);
@@ -634,12 +631,27 @@ public class PhotoCamera : MonoBehaviour
 
     private void OnDisable()
     {
+        // Nunca deixa a tela sem camera se o componente for desligado com o visor aberto.
+        if (playerCam != null)
+            playerCam.enabled = true;
+
         if (gameObject.activeInHierarchy)
             return;
 
         canShoot = true;
         isTransitioning = false;
         transitionCoroutine = null;
+    }
+
+    // Com o visor aberto quem aparece na tela e a photoCam (por cima, sem os bracos e com o volume
+    // do visor). A camera do jogador desliga para a cena nao ser desenhada duas vezes por quadro.
+    private void SetVisorCameras(bool visor)
+    {
+        if (photoCam == null || playerCam == null || photoCam == playerCam)
+            return;
+
+        photoCam.enabled = visor;
+        playerCam.enabled = !visor;
     }
 
     private void OnDestroy()

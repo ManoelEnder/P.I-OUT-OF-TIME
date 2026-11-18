@@ -29,6 +29,7 @@ public class CameraScenario : QAScenario
         yield return WaitSeconds(photo.enterTransitionTime + 0.4f);
         Check(photo.cameraHUD != null && photo.cameraHUD.activeSelf, "HUD do visor aparece");
         Check(photo.crosshair == null || !photo.crosshair.activeSelf, "mira some com o visor aberto");
+        Check(!(photo.playerCam.enabled && photo.photoCam.enabled && photo.photoCam != photo.playerCam), "visor nao renderiza a cena duas vezes (as duas cameras ligadas)");
 
         yield return CheckLook(player, view, "visor aberto");
 
@@ -54,6 +55,7 @@ public class CameraScenario : QAScenario
         yield return WaitSeconds(photo.enterTransitionTime + 0.6f);
         Check(photo.cameraHUD == null || !photo.cameraHUD.activeSelf, "HUD do visor some ao fechar");
         Check(photo.crosshair == null || photo.crosshair.activeSelf, "mira volta ao fechar");
+        Check(photo.playerCam.enabled, "camera do jogador volta a renderizar ao fechar o visor");
         Check(Mathf.Abs(view.fieldOfView - photo.normalFOV) < 0.5f, "FOV volta ao normal (" + view.fieldOfView.ToString("0.0") + ")");
 
         // Controles restaurados.
