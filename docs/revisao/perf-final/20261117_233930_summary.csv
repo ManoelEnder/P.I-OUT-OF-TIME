@@ -1,0 +1,16 @@
+segmento,quadros,fps_medio,fps_1pct_low,pior_ms,quadros_acima_16_67ms
+load:TelaInicio,1,1.7,1.7,577.08,1
+load:Menu,1,130.5,130.5,7.66,0
+menu,4940,247.0,225.0,5.25,0
+load:IntroCutsceneVideo,1,85.8,85.8,11.65,0
+cutscene,13754,916.9,745.7,1.61,0
+load:Principal,1,11.4,11.4,87.58,1
+principal_normal,6302,315.1,226.8,52.49,1
+principal_pesado_p1,3592,359.3,125.4,99.16,2
+principal_pesado_p2,7300,730.0,594.6,8.70,0
+principal_pesado_p3,3851,385.1,358.1,2.89,0
+visor_aberto,7451,372.6,340.7,5.77,0
+fotos_sequencia,4688,375.1,351.4,3.01,0
+album,3996,399.6,375.0,2.92,0
+superaquecimento,22510,375.2,344.6,4.06,0
+inimigo_perseguindo,2520,404.9,357.9,4.79,0

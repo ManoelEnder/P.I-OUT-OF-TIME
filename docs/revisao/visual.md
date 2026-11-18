@@ -24,3 +24,32 @@ O jogo estava limitado pela GPU (resolução cheia + pós-processamento pesado +
 - Quantização em espaço perceptual (gama): na primeira versão (linear, 6 tons) o laboratório escuro virava preto — capturas `capturas-t3/` mostram a versão corrigida.
 - Custo medido: ~0,06 ms por quadro (principal_normal 313 → 307 FPS; menu 251 → 244).
 - Parâmetros no material `Assets/Art/Materials/RetroPalette.mat`: tons, limiar do vermelho, tom dos cinzas, força do pontilhado e intensidade (0 desliga).
+
+## 3. Pós-processamento da fase (`Ferramentas › Visual › Aplicar volume da fase`, perfil `Assets/Settings/Volumes/GameplayVolume.asset`)
+
+- **Fora:** motion blur (qualidade alta), projeção Panini e desfoque de profundidade — borravam a pixel art e custavam GPU.
+- **Dentro:** tonemapping Neutral, exposição +0,2, contraste +18, bloom para as luzes emissivas, vinheta 0,35, grão leve.
+- **Saturação 0 (antes −100):** o volume tirava o vermelho antes da paleta; agora a paleta faz os cinzas e o vermelho de perigo aparece.
+- Aberração cromática (0,08) e distorção (−0,05) continuam porque o superaquecimento e a pausa animam as duas.
+- Custo: dentro da variação da medição (os ganhos grandes vieram da pixelização e do visor).
+
+## 4. Luzes guia e brilho das peças (`Ferramentas › Visual › Iluminar laboratorio`)
+
+- Sobre cada porta: placa emissiva branca fria (brilha com o bloom) + luz pontual sem sombra, alcance 4 m (`Lighting/Guides`).
+- Peças temporais: segunda camada de material `Retro/TemporalRim` (`Assets/Art/Shaders/TemporalRim.shader`) — borda branca brilhante, linhas de glitch subindo e pulso lento. **Sem pulso quando os flashes estão desligados** (`FlashSettings` publica o global `_RetroFlashes`).
+- Custo: sem diferença mensurável (luzes sem sombra, 4 portas, 4 peças).
+
+## 5. Visor sem renderizar a cena duas vezes
+
+- Com o visor aberto a imagem na tela é a da `photoCam` (confirmado por comparação de capturas: diferença 0,0012 x 0,0048); a câmera do jogador agora desliga enquanto o visor está aberto.
+- visor_aberto: **217 → 373 FPS** médios, 1% low **183 → 306**; álbum 192 → 371.
+
+## 6. HUD padronizado (`Ferramentas › Visual › Padronizar HUD da fase`)
+
+- Escala única no `HUDCanvas`: 30 (rótulo do visor, contador de fotos), 26 (rádio, mensagens do álbum), 24 (missão, dicas, interação, aviso de calor), 20 (salvamento); fonte VCR em todos.
+- Missão com moldura escura em pixel art (leitura em áreas claras).
+- **Bateria branca/cinza** (pilha segmentada) x **calor vermelho** (barra contínua; branco-quente no crítico): diferentes na forma e na cor.
+
+## 7. Tela final no estilo do menu (`Ferramentas › Pixel Art › Montar tela final em monitores CRT`)
+
+- A cena `Victory TEMP` agora é a mesma sala do laboratório, com a TV principal: "FITA RECUPERADA", "O PROTÓTIPO FOI RECONSTRUÍDO", "OBRIGADO POR JOGAR" e os botões MENU / CRÉDITOS.

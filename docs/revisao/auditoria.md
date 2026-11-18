@@ -1,6 +1,6 @@
 # Auditoria das cenas do build
 
-Cenas auditadas: 6 · Total de itens: 429
+Cenas auditadas: 6 · Total de itens: 558
 
 ## Scripts faltando (Missing Script) (0)
 
@@ -8,7 +8,7 @@ Cenas auditadas: 6 · Total de itens: 429
 ## Prefabs sem asset (0)
 
 
-## Referências vazias ou quebradas em componentes do jogo (429)
+## Referências vazias ou quebradas em componentes do jogo (558)
 
 - `TelaInicio/Main Camera : CameraLensEffect.postProcessVolume`
 - `TelaInicio/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
@@ -305,7 +305,136 @@ Cenas auditadas: 6 · Total de itens: 429
 - `Principal/DefeatCanvas/DefeatPanel/RetryButton : ButtonHoverEffect.audioSource`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.hoverSound`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.audioSource`
-- `Victory TEMP/Canvas/BackBttn : ButtonHoverEffect.label`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Prototype_1975/TallyLed : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Console/Prototype_1975/TallyLed : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Console/Prototype_1975/TallyGlow : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Console/Prototype_1975/TallyGlow : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Monitor_Menu/FinalScreen_TV/Rec : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Rack_Menu/Monitor_Menu/FinalScreen_TV/Rec : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Oscilloscope/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Counter/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Menu/Module/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Feed/Monitor_Feed/Overlay/Rec : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Rack_Feed/Monitor_Feed/Overlay/Rec : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Rack_Feed/TapeDeck/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/Rack_Back/Led : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/RedBulb : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/RedBulb : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Back_Set/RecordingSign : MenuBlinker.targetLight`
+- `Victory TEMP/MenuSet/Back_Set/RecordingSign : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Lights/RedBacklight : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Lights/RedBacklight : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Lights/RecordingSignLight : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Lights/RecordingSignLight : MenuBlinker.targetText`
+- `Victory TEMP/MenuSet/Lights/WindowLight : MenuBlinker.targetRenderer`
+- `Victory TEMP/MenuSet/Lights/WindowLight : MenuBlinker.targetText`
 - `Credits/Canvas/BackBttn : ButtonHoverEffect.label`
 - `Credits/CreditsManager : CreditsController.onCreditsFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument`
 - `Credits/CreditsManager : CreditsController.onEscapePressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument`
