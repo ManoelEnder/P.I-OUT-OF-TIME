@@ -17,6 +17,10 @@ public class EnemyScenario : QAScenario
         if (enemy == null || defeat == null)
             yield break;
 
+        Camera eye = Require<PhotoCamera>().playerCam;
+        foreach (Renderer r in enemy.GetComponentsInChildren<Renderer>(true))
+            Check((eye.cullingMask & (1 << r.gameObject.layer)) != 0, "inimigo visivel a olho nu (" + r.name + " na camada " + LayerMask.LayerToName(r.gameObject.layer) + ")");
+
         Transform player = GameObject.FindGameObjectWithTag("Player").transform;
         Transform spawn = GameObject.Find("PlayerSpawn").transform;
 
