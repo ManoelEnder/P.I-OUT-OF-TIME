@@ -469,6 +469,109 @@ public static class MonitorMenuBuilder
             cams.GetArrayElementAtIndex(i).objectReferenceValue = photoCameras[i];
 
         snap.ApplyModifiedProperties();
+
+        BuildCreditsExit(controller);
+    }
+
+    // Botao fixo no canto da tela, bem visivel: moldura, seta e a tecla ESC desenhada.
+    private static void BuildCreditsExit(CreditsController controller)
+    {
+        GameObject old = GameObject.Find("CreditsExitCanvas");
+        if (old != null)
+            Undo.DestroyObjectImmediate(old);
+
+        GameObject canvasGo = new GameObject("CreditsExitCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        Undo.RegisterCreatedObjectUndo(canvasGo, "Creditos");
+        canvasGo.layer = LayerMask.NameToLayer("UI");
+
+        Canvas canvas = canvasGo.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 40;
+
+        CanvasScaler scaler = canvasGo.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1280f, 720f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        canvasGo.AddComponent<UnlockMouse>();
+
+        GameObject buttonGo = new GameObject("BackToMenuButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+        buttonGo.layer = canvasGo.layer;
+        buttonGo.transform.SetParent(canvasGo.transform, false);
+
+        RectTransform rect = (RectTransform)buttonGo.transform;
+        rect.anchorMin = rect.anchorMax = new Vector2(0f, 0f);
+        rect.pivot = new Vector2(0f, 0f);
+        rect.sizeDelta = new Vector2(330f, 58f);
+        rect.anchoredPosition = new Vector2(36f, 32f);
+
+        // Fundo escuro translucido + moldura de 2 px.
+        Image background = buttonGo.GetComponent<Image>();
+        background.color = new Color(0.02f, 0.02f, 0.025f, 0.78f);
+
+        Color frame = new Color(0.85f, 0.85f, 0.82f, 0.9f);
+        FrameEdge(rect, "FrameTop", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 2f), frame);
+        FrameEdge(rect, "FrameBottom", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 2f), frame);
+        FrameEdge(rect, "FrameLeft", new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(2f, 0f), frame);
+        FrameEdge(rect, "FrameRight", new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(2f, 0f), frame);
+
+        // Tecla ESC desenhada a direita.
+        GameObject keyGo = new GameObject("EscKey", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        keyGo.layer = canvasGo.layer;
+        keyGo.transform.SetParent(rect, false);
+        RectTransform key = (RectTransform)keyGo.transform;
+        key.anchorMin = key.anchorMax = new Vector2(1f, 0.5f);
+        key.pivot = new Vector2(1f, 0.5f);
+        key.sizeDelta = new Vector2(62f, 34f);
+        key.anchoredPosition = new Vector2(-12f, 0f);
+        Image keyImage = keyGo.GetComponent<Image>();
+        keyImage.color = new Color(0.85f, 0.85f, 0.82f, 1f);
+        keyImage.raycastTarget = false;
+
+        TextMeshProUGUI keyText = Text(key, "Label", "ESC", 20f, new Color(0.03f, 0.03f, 0.03f));
+        keyText.alignment = TextAlignmentOptions.Center;
+        Stretch(keyText.rectTransform, Vector2.zero, Vector2.zero);
+
+        TextMeshProUGUI label = Text(rect, "Label", "< VOLTAR AO MENU", 24f, Phosphor);
+        label.alignment = TextAlignmentOptions.MidlineLeft;
+        Stretch(label.rectTransform, new Vector2(18f, 0f), new Vector2(-84f, 0f));
+
+        Button button = buttonGo.GetComponent<Button>();
+        button.targetGraphic = background;
+        ColorBlock colors = button.colors;
+        // O fundo e branco e o ColorBlock da a cor: escuro parado, vermelho no hover.
+        background.color = Color.white;
+        colors.normalColor = new Color(0.02f, 0.02f, 0.025f, 0.8f);
+        colors.highlightedColor = new Color(0.42f, 0.04f, 0.04f, 0.92f);
+        colors.pressedColor = new Color(0.65f, 0.06f, 0.06f, 1f);
+        colors.selectedColor = colors.normalColor;
+        colors.colorMultiplier = 1f;
+        colors.fadeDuration = 0.08f;
+        button.colors = colors;
+
+        UnityEditor.Events.UnityEventTools.AddVoidPersistentListener(button.onClick, controller.FinishCreditsManually);
+
+        if (Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>(FindObjectsInactive.Include) == null)
+        {
+            GameObject events = new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
+            Undo.RegisterCreatedObjectUndo(events, "Creditos");
+        }
+    }
+
+    private static void FrameEdge(RectTransform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 size, Color color)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        go.layer = parent.gameObject.layer;
+        go.transform.SetParent(parent, false);
+        RectTransform rect = (RectTransform)go.transform;
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = size;
+        rect.anchoredPosition = Vector2.zero;
+        Image image = go.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
     }
 
     private static int Rank(PhotoFlash camera)
