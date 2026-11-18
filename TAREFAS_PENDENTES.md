@@ -98,7 +98,9 @@ Design: `docs/superpowers/specs/2026-11-17-revisao-completa-design.md` · Plano 
 - Medição: build de desenvolvimento (`Ferramentas › QA › Build de desenvolvimento`) + `OutOfTime.exe -benchmark -perf` → `%USERPROFILE%/AppData/LocalLow/<empresa>/OUT OF TIME/perf/`.
 - 5 bugs corrigidos (`docs/revisao/bugs.md`), 353 MB removidos e pastas reorganizadas (`docs/revisao/limpeza.md`), linha de base em `docs/revisao/linha-de-base.md`.
 
-**Parte 2 — desempenho, visual e validação final: A FAZER** (plano próprio, a partir das medições da Parte 1).
-- Visor aberto tem 1% low abaixo de 60 FPS; menu no limite.
-- Visual: padronizar HUD (missão, visor, bateria x calor), pixelização do cenário, iluminação/contraste, tela final (`Victory TEMP`).
+**Parte 2 — desempenho, gráficos e validação: FEITA** (plano `docs/superpowers/plans/2026-11-17-revisao-parte2-desempenho-visual.md`).
+- Visual: imagem pixelada pelo URP, shader de paleta (cinzas + vermelho) com pontilhado, volume da fase sem efeitos que borram, luzes guia nas portas, brilho `Retro/TemporalRim` nas peças, HUD padronizado, tela final na sala do laboratório (`docs/revisao/visual.md`; ferramentas em **Ferramentas › Visual**).
+- Desempenho (build de release, 1080p): todos os trechos acima de 60 FPS na média e no 1% low; o menor 1% low é 125 (`docs/revisao/medicoes.md`).
+- 2 bugs a mais corrigidos (inimigo invisível sem o visor; visor desenhando a cena duas vezes).
+- Teste manual sugerido: `docs/revisao/teste-manual.md`.
 - Fitas de isolamento continuam com o autor (pacote `ThirdParty/CautionTape` preservado para isso).
