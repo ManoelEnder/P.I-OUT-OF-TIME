@@ -1,2 +1,2 @@
-QA PASS Piece
-
+QA FAIL Piece: tempo esgotado (120 s)
+- tempo esgotado (120 s)

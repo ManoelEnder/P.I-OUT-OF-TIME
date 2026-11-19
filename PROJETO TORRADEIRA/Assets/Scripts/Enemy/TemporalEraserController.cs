@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+// IA do TemporalEraser: patrulha -> persegue quando ve o jogador -> procura onde o viu por ultimo.
+// O NavMeshAgent so calcula o caminho; a rotacao e suavizada aqui para ele nao "girar no eixo".
 [RequireComponent(typeof(NavMeshAgent))]
 public class TemporalEraserController : MonoBehaviour
 {
@@ -20,6 +22,21 @@ public class TemporalEraserController : MonoBehaviour
     [SerializeField] private float chaseSpeed = 4f;
     [SerializeField] private float roamingRadius = 15f;
     [SerializeField] private float destinationTolerance = 1f;
+    [SerializeField] private float turnSpeed = 300f;
+    [SerializeField] private float acceleration = 8f;
+
+    [Header("Patrulha")]
+    [Tooltip("Distancia minima ate o proximo ponto de patrulha (evita andar em circulos).")]
+    [SerializeField] private float minRoamDistance = 4f;
+    [Tooltip("Pausa ao chegar num ponto de patrulha, parado 'escutando'.")]
+    [SerializeField] private Vector2 roamPause = new Vector2(1.2f, 3.2f);
+
+    [Header("Percepcao")]
+    [Tooltip("Tempo vendo o jogador antes de comecar a perseguir.")]
+    [SerializeField] private float reactionTime = 0.35f;
+    [Tooltip("Depois de perder o jogador de vista, ainda corre ate onde o viu por ultimo.")]
+    [SerializeField] private float loseSightGrace = 1.2f;
+    [SerializeField] private float repathInterval = 0.15f;
 
     [Header("Search")]
     [SerializeField] private float searchDuration = 5f;
@@ -33,6 +50,12 @@ public class TemporalEraserController : MonoBehaviour
 
     private float searchTimer;
     private int currentSearchAttempt;
+
+    private float sightTimer;
+    private float lastSeenTime;
+    private float nextRepath;
+    private float pauseUntil;
+    private float stuckTimer;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -54,105 +77,118 @@ public class TemporalEraserController : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogError(
-                $"{name}: Player reference is missing.",
-                this
-            );
-
+            Debug.LogError($"{name}: Player reference is missing.", this);
             enabled = false;
             return;
         }
 
         if (vision == null)
         {
-            Debug.LogError(
-                $"{name}: TemporalEraserVision reference is missing.",
-                this
-            );
-
+            Debug.LogError($"{name}: TemporalEraserVision reference is missing.", this);
             enabled = false;
             return;
         }
 
-        if (!agent.isOnNavMesh)
+        agent.updateRotation = false;
+        agent.acceleration = acceleration;
+        agent.autoBraking = true;
+
+        if (!EnsureOnNavMesh())
         {
-            Debug.LogError(
-                $"{name}: NavMeshAgent is not placed on a NavMesh.",
-                this
-            );
-
+            Debug.LogError($"{name}: NavMeshAgent is not placed on a NavMesh.", this);
             enabled = false;
             return;
         }
 
-        currentState = State.Roaming;
-
-        agent.speed = roamingSpeed;
-        agent.isStopped = false;
-
-        SetRoamingDestination();
+        ReturnToRoaming();
     }
 
     private void Update()
     {
-        if (!agent.isActiveAndEnabled ||
-            !agent.isOnNavMesh)
-        {
+        if (!agent.isActiveAndEnabled)
             return;
+
+        if (!agent.isOnNavMesh && !EnsureOnNavMesh())
+            return;
+
+        bool sees = vision.CanSeePlayer();
+
+        if (sees)
+        {
+            lastKnownPlayerPosition = player.position;
+            lastSeenTime = Time.time;
         }
 
         switch (currentState)
         {
             case State.Roaming:
-                UpdateRoaming();
+                UpdateRoaming(sees);
                 break;
 
             case State.Chasing:
-                UpdateChasing();
+                UpdateChasing(sees);
                 break;
 
             case State.Searching:
-                UpdateSearching();
+                UpdateSearching(sees);
                 break;
         }
+
+        UpdateRotation();
+        UpdateStuck();
     }
 
-    private void UpdateRoaming()
+    // ---------- Estados ----------
+
+    private void UpdateRoaming(bool sees)
     {
-        if (vision.CanSeePlayer())
+        if (Notice(sees, reactionTime))
         {
             StartChasing();
             return;
         }
 
-        if (HasReachedDestination())
-        {
-            SetRoamingDestination();
-        }
-    }
+        if (Time.time < pauseUntil)
+            return;
 
-    private void UpdateChasing()
-    {
-        if (vision.CanSeePlayer())
+        if (agent.isStopped)
         {
-            lastKnownPlayerPosition = player.position;
-
-            agent.speed = chaseSpeed;
             agent.isStopped = false;
-
-            agent.SetDestination(player.position);
-
+            SetRoamingDestination();
             return;
         }
 
-        StartSearching();
+        if (HasReachedDestination())
+        {
+            // Para e "escuta" antes de seguir.
+            agent.isStopped = true;
+            pauseUntil = Time.time + Random.Range(roamPause.x, roamPause.y);
+        }
     }
 
-    private void UpdateSearching()
+    private void UpdateChasing(bool sees)
+    {
+        if (!sees && Time.time - lastSeenTime > loseSightGrace)
+        {
+            StartSearching();
+            return;
+        }
+
+        agent.speed = chaseSpeed;
+        agent.isStopped = false;
+
+        if (Time.time >= nextRepath)
+        {
+            nextRepath = Time.time + repathInterval;
+            agent.SetDestination(ReachablePoint(lastKnownPlayerPosition));
+        }
+    }
+
+    private void UpdateSearching(bool sees)
     {
         searchTimer -= Time.deltaTime;
 
-        if (vision.CanSeePlayer())
+        if (Notice(sees, reactionTime * 0.4f))
         {
             StartChasing();
             return;
@@ -163,7 +199,6 @@ public class TemporalEraserController : MonoBehaviour
             if (currentSearchAttempt < searchAttempts)
             {
                 currentSearchAttempt++;
-
                 SetSearchDestination();
             }
             else
@@ -173,21 +208,26 @@ public class TemporalEraserController : MonoBehaviour
         }
 
         if (searchTimer <= 0f)
-        {
             ReturnToRoaming();
-        }
+    }
+
+    // Precisa ver o jogador por um instante antes de reagir (sem "estalar" ao primeiro pixel).
+    private bool Notice(bool sees, float time)
+    {
+        sightTimer = sees ? sightTimer + Time.deltaTime : Mathf.Max(0f, sightTimer - Time.deltaTime * 2f);
+        return sightTimer >= time;
     }
 
     private void StartChasing()
     {
         currentState = State.Chasing;
-
-        lastKnownPlayerPosition = player.position;
+        sightTimer = 0f;
+        pauseUntil = 0f;
+        nextRepath = 0f;
 
         agent.speed = chaseSpeed;
         agent.isStopped = false;
-
-        agent.SetDestination(player.position);
+        agent.SetDestination(ReachablePoint(lastKnownPlayerPosition));
     }
 
     private void StartSearching()
@@ -199,15 +239,14 @@ public class TemporalEraserController : MonoBehaviour
 
         agent.speed = roamingSpeed;
         agent.isStopped = false;
-
-        agent.SetDestination(
-            lastKnownPlayerPosition
-        );
+        agent.SetDestination(ReachablePoint(lastKnownPlayerPosition));
     }
 
     private void ReturnToRoaming()
     {
         currentState = State.Roaming;
+        sightTimer = 0f;
+        pauseUntil = 0f;
 
         agent.speed = roamingSpeed;
         agent.isStopped = false;
@@ -223,63 +262,109 @@ public class TemporalEraserController : MonoBehaviour
 
         agent.Warp(startPosition);
         transform.rotation = startRotation;
+        lastSeenTime = -999f;
 
         if (agent.isOnNavMesh)
             ReturnToRoaming();
     }
 
+    // ---------- Movimento ----------
+
+    private void UpdateRotation()
+    {
+        Vector3 look = agent.desiredVelocity;
+
+        // Perto do jogador, encara ele em vez da direcao do caminho.
+        if (currentState == State.Chasing && Vector3.Distance(transform.position, player.position) < 2.5f)
+            look = player.position - transform.position;
+
+        look.y = 0f;
+        if (look.sqrMagnitude < 0.01f)
+            return;
+
+        Quaternion target = Quaternion.LookRotation(look.normalized, Vector3.up);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, target, turnSpeed * Time.deltaTime);
+    }
+
+    // Se ficar parado sem chegar (preso num canto), escolhe outro destino.
+    private void UpdateStuck()
+    {
+        bool shouldMove = !agent.isStopped && agent.hasPath && agent.remainingDistance > destinationTolerance;
+
+        if (shouldMove && agent.velocity.sqrMagnitude < 0.04f)
+            stuckTimer += Time.deltaTime;
+        else
+            stuckTimer = 0f;
+
+        if (stuckTimer < 1.5f)
+            return;
+
+        stuckTimer = 0f;
+
+        if (currentState == State.Chasing)
+            agent.SetDestination(ReachablePoint(lastKnownPlayerPosition));
+        else if (currentState == State.Searching)
+            SetSearchDestination();
+        else
+            SetRoamingDestination();
+    }
+
+    private bool EnsureOnNavMesh()
+    {
+        if (agent.isOnNavMesh)
+            return true;
+
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 4f, NavMesh.AllAreas))
+        {
+            agent.Warp(hit.position);
+            return agent.isOnNavMesh;
+        }
+
+        return false;
+    }
+
+    // Ponto do NavMesh mais perto do alvo (o jogador pode estar fora dele, ex.: em cima de algo).
+    private Vector3 ReachablePoint(Vector3 target)
+    {
+        return NavMesh.SamplePosition(target, out NavMeshHit hit, 2.5f, NavMesh.AllAreas) ? hit.position : target;
+    }
+
     private void SetRoamingDestination()
     {
-        if (TryGetRandomNavMeshPosition(
-            transform.position,
-            roamingRadius,
-            out Vector3 destination))
+        for (int i = 0; i < 6; i++)
         {
-            agent.SetDestination(destination);
+            if (TryGetRandomNavMeshPosition(transform.position, roamingRadius, out Vector3 destination) &&
+                Vector3.Distance(destination, transform.position) >= minRoamDistance)
+            {
+                agent.SetDestination(destination);
+                return;
+            }
         }
+
+        // Volta para perto do inicio se nao achou nada longe o suficiente.
+        agent.SetDestination(ReachablePoint(startPosition));
     }
 
     private void SetSearchDestination()
     {
-        if (TryGetRandomNavMeshPosition(
-            lastKnownPlayerPosition,
-            searchRadius,
-            out Vector3 destination))
-        {
+        if (TryGetRandomNavMeshPosition(lastKnownPlayerPosition, searchRadius, out Vector3 destination))
             agent.SetDestination(destination);
-        }
         else
-        {
             ReturnToRoaming();
-        }
     }
 
-    private bool TryGetRandomNavMeshPosition(
-        Vector3 center,
-        float radius,
-        out Vector3 result)
+    private bool TryGetRandomNavMeshPosition(Vector3 center, float radius, out Vector3 result)
     {
         for (int i = 0; i < 10; i++)
         {
-            Vector3 randomPosition =
-                center +
-                Random.insideUnitSphere *
-                radius;
+            Vector2 circle = Random.insideUnitCircle * radius;
+            Vector3 randomPosition = center + new Vector3(circle.x, 0f, circle.y);
 
-            if (NavMesh.SamplePosition(
-                randomPosition,
-                out NavMeshHit hit,
-                2f,
-                NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPosition, out NavMeshHit hit, 2f, NavMesh.AllAreas))
             {
-                NavMeshPath path =
-                    new NavMeshPath();
+                NavMeshPath path = new NavMeshPath();
 
-                if (agent.CalculatePath(
-                    hit.position,
-                    path) &&
-                    path.status ==
-                    NavMeshPathStatus.PathComplete)
+                if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
                 {
                     result = hit.position;
                     return true;
@@ -293,38 +378,21 @@ public class TemporalEraserController : MonoBehaviour
 
     private bool HasReachedDestination()
     {
-        if (agent == null ||
-            !agent.isActiveAndEnabled ||
-            !agent.isOnNavMesh ||
-            agent.pathPending)
-        {
+        if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh || agent.pathPending)
             return false;
-        }
 
-        if (agent.remainingDistance ==
-            Mathf.Infinity)
-        {
+        if (agent.remainingDistance == Mathf.Infinity)
             return false;
-        }
 
-        return agent.remainingDistance <=
-               destinationTolerance;
+        return agent.remainingDistance <= destinationTolerance;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-
-        Gizmos.DrawWireSphere(
-            transform.position,
-            roamingRadius
-        );
+        Gizmos.DrawWireSphere(transform.position, roamingRadius);
 
         Gizmos.color = Color.red;
-
-        Gizmos.DrawWireSphere(
-            lastKnownPlayerPosition,
-            searchRadius
-        );
+        Gizmos.DrawWireSphere(lastKnownPlayerPosition, searchRadius);
     }
 }
