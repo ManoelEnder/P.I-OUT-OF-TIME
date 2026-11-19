@@ -14,7 +14,7 @@ public class ReferenceMapCheck : QAScenario
         HashSet<string> used = ReferenceMap.UsedAssets();
         Check(used.Contains("Assets/Scenes/Principal.unity"), "Principal e usada");
         Check(used.Contains("Assets/Fonts/VCR_OSD_MONO SDF.asset"), "fonte VCR e usada");
-        Check(used.Contains("Assets/Prefabs/Enemy/Vampire A Lusth.fbx"), "modelo do inimigo e usado");
+        Check(used.Contains("Assets/Prefabs/Enemy/TemporalEraser.fbx"), "modelo do inimigo e usado");
         Check(!used.Contains("Assets/_Recovery/0.unity"), "_Recovery nao e usada");
         yield break;
     }

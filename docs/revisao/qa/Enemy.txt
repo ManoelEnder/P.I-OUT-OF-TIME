@@ -1,2 +1,5 @@
-QA PASS Enemy
-
+QA FAIL Enemy: inimigo alcanca e derrota o jogador | derrota congela o jogo | tela de derrota aparece | cursor livre na derrota
+- inimigo alcanca e derrota o jogador
+- derrota congela o jogo
+- tela de derrota aparece
+- cursor livre na derrota

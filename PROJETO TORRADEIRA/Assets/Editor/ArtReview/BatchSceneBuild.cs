@@ -16,6 +16,18 @@ public static class BatchSceneBuild
         Run("Assets/Scenes/Principal.unity", TemporalEraserBuilder.Build);
     }
 
+    // So desenha o mapa do NavMesh atual (antes de refazer).
+    public static void EnemyNavMapBefore()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/Principal.unity", OpenSceneMode.Single);
+        EnemyNavigationBuilder.DrawMap("navmesh_antes.png");
+    }
+
+    public static void EnemyNav()
+    {
+        Run("Assets/Scenes/Principal.unity", EnemyNavigationBuilder.Build);
+    }
+
     private static void Run(string scenePath, System.Action build)
     {
         EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
