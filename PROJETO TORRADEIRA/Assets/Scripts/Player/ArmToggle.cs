@@ -30,7 +30,7 @@ public class ArmToggle : MonoBehaviour
             return;
         }
 
-        bool showRadar = !photoCamera.IsCameraMode;
+        bool showRadar = !photoCamera.IsCameraMode && !photoCamera.IsTransitioning;
 
         if (radar.activeSelf != showRadar)
             radar.SetActive(showRadar);

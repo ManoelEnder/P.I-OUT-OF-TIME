@@ -86,9 +86,14 @@ public class UiLooksScenario : QAScenario
         {
             photo.AddBattery(100);
             yield return QAInput.Tap(Key.C);
-            yield return WaitSecondsRealtime(0.3f);
+            yield return WaitSecondsRealtime(0.18f);
+            yield return Shot("camera_subindo_1");
+            yield return WaitSecondsRealtime(0.2f);
+            yield return Shot("camera_subindo_2");
+            yield return WaitSecondsRealtime(0.45f);
             yield return Shot("lente_abrindo");
-            yield return WaitSeconds(1.2f);
+            yield return WaitTransition(photo);
+            yield return WaitSeconds(0.3f);
             yield return Shot("lente_aberta");
             for (int i = 0; i < 6; i++) yield return QAInput.Scroll(120f);
             yield return WaitSeconds(0.8f);
@@ -108,8 +113,12 @@ public class UiLooksScenario : QAScenario
             yield return WaitSeconds(2.5f);
 
             yield return QAInput.Tap(Key.C);
-            yield return WaitSecondsRealtime(0.35f);
+            yield return WaitSecondsRealtime(0.5f);
             yield return Shot("lente_fechando");
+            yield return WaitSecondsRealtime(0.55f);
+            yield return Shot("lente_fechada");
+            yield return WaitSecondsRealtime(0.35f);
+            yield return Shot("camera_descendo");
             yield return WaitSeconds(1.5f);
         }
     }
