@@ -23,35 +23,30 @@ public class EnemyWallsScenario : QAScenario
         Transform player = GameObject.FindGameObjectWithTag("Player").transform;
         int solid = ~LayerMask.GetMask("Ignore Raycast", "UI", "Arms", "PhotoCameraEffect", "GlobalVolume", "Enemy", "Temporal", "TransparentFX");
 
-        // 1) Procura um ponto perto do inimigo com parede no meio (anda pelo NavMesh ate achar).
+        // 1) Ponto do NavMesh a 3-12 m do inimigo, no mesmo andar, com algo solido entre os dois.
         Vector3 eye = enemy.transform.position + Vector3.up * 1.6f;
         bool placed = false;
-        for (int i = 0; i < 360 && !placed; i++)
+        NavMeshTriangulation tri = NavMesh.CalculateTriangulation();
+        for (int t = 0; t < tri.indices.Length && !placed; t += 3)
         {
-            float angle = i * 360f / 72f;
-            float range = 6f + (i / 72) * 4f;
-            Vector3 dir = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-            if (!Physics.Raycast(eye, dir, out RaycastHit wall, range, solid, QueryTriggerInteraction.Ignore))
+            Vector3 center = (tri.vertices[tri.indices[t]] + tri.vertices[tri.indices[t + 1]] + tri.vertices[tri.indices[t + 2]]) / 3f;
+            Vector3 flat = center - enemy.transform.position;
+            if (Mathf.Abs(flat.y) > 1f)
+                continue;
+            flat.y = 0f;
+            if (flat.magnitude < 3f || flat.magnitude > 12f)
+                continue;
+            if (!NavMesh.SamplePosition(center, out NavMeshHit spot, 0.5f, NavMesh.AllAreas))
                 continue;
 
-            NavMeshHit spot = default;
-            bool found = false;
-            foreach (float back in new[] { 0.8f, 1.2f, 1.8f, 2.5f })
-            {
-                if (NavMesh.SamplePosition(wall.point + dir * back, out spot, 0.5f, NavMesh.AllAreas))
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                continue;
-            if (!Physics.Linecast(eye, spot.position + Vector3.up * 1.2f, solid, QueryTriggerInteraction.Ignore))
+            // Cabeca e peito escondidos.
+            if (!Physics.Linecast(eye, spot.position + Vector3.up * 1.55f, solid, QueryTriggerInteraction.Ignore) ||
+                !Physics.Linecast(eye, spot.position + Vector3.up * 0.9f, solid, QueryTriggerInteraction.Ignore))
                 continue;
 
-            // Vira o inimigo para a parede, com o jogador logo atras dela.
-            enemy.transform.rotation = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.z));
-            PerfBenchmark.Teleport(player, spot.position, angle + 180f);
+            // Inimigo olhando direto para o ponto (so a parede no meio).
+            enemy.transform.rotation = Quaternion.LookRotation(flat.normalized);
+            PerfBenchmark.Teleport(player, spot.position, Quaternion.LookRotation(-flat).eulerAngles.y);
             placed = true;
         }
 
@@ -64,6 +59,7 @@ public class EnemyWallsScenario : QAScenario
         }
 
         // 2) Deixa a IA rodar (patrulha/perseguicao) e vigia cada passo.
+        enemy.ActivateNow();
         NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
         Vector3 last = enemy.transform.position;
         int crossings = 0, offMesh = 0, frames = 0;

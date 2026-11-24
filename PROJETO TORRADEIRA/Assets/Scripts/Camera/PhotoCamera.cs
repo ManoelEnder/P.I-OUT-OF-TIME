@@ -276,7 +276,10 @@ public class PhotoCamera : MonoBehaviour
         if (cameraHUDZoom != null)
             cameraHUDZoom.ApplyZoom(zoomAmount);
 
-        if (blackBorders != null)
+        // A lente (diafragma) faz o papel das faixas pretas no zoom.
+        if (cameraBlink != null)
+            cameraBlink.SetZoom(zoomAmount);
+        else if (blackBorders != null)
             blackBorders.SetZoom(zoomAmount);
     }
 
@@ -367,8 +370,8 @@ public class PhotoCamera : MonoBehaviour
 
             if (blackBorders != null)
             {
-                blackBorders.SetActive(true);
                 blackBorders.ResetBorders();
+                blackBorders.SetActive(cameraBlink == null);
             }
 
             if (cameraHUDZoom != null)

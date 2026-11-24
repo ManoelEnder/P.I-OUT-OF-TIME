@@ -52,6 +52,7 @@ public static class EnemyNavigationBuilder
         SaveNavMesh(surface);
 
         ConfigureEnemy(enemy, solid);
+        PlaceEnemyFar(enemy, solid);
 
         EditorSceneManager.MarkSceneDirty(enemy.gameObject.scene);
         DrawMap("navmesh_depois.png");
@@ -236,6 +237,69 @@ public static class EnemyNavigationBuilder
             eye.localPosition = new Vector3(0f, 1.7f, 0.12f);
             eye.localRotation = Quaternion.identity;
         }
+    }
+
+    // Comeco do inimigo longe do jogador: ~30 m pelo caminho e sem linha de visao.
+    private static void PlaceEnemyFar(TemporalEraserController enemy, int solid)
+    {
+        Transform start = GameObject.Find("PlayerSpawn")?.transform;
+        if (start == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            start = player != null ? player.transform : null;
+        }
+
+        if (start == null || !NavMesh.SamplePosition(start.position, out NavMeshHit origin, 3f, NavMesh.AllAreas))
+        {
+            Debug.LogWarning("EnemyNavigationBuilder: nao achou o inicio do jogador no NavMesh; inimigo nao foi movido.");
+            return;
+        }
+
+        NavMeshTriangulation tri = NavMesh.CalculateTriangulation();
+        var path = new NavMeshPath();
+        Vector3 best = enemy.transform.position;
+        float bestScore = float.MaxValue;
+        const float target = 30f;
+
+        for (int t = 0; t < tri.indices.Length; t += 3)
+        {
+            Vector3 center = (tri.vertices[tri.indices[t]] + tri.vertices[tri.indices[t + 1]] + tri.vertices[tri.indices[t + 2]]) / 3f;
+            if (!NavMesh.SamplePosition(center, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
+                continue;
+
+            // Mesmo andar do jogador (o NavMesh tambem cobre andares de cima e telhados).
+            if (Mathf.Abs(hit.position.y - origin.position.y) > 1.2f)
+                continue;
+
+            // Precisa de espaco em volta (nao nascer encostado numa parede).
+            if (NavMesh.FindClosestEdge(hit.position, out NavMeshHit edge, NavMesh.AllAreas) && edge.distance < 0.8f)
+                continue;
+
+            if (!NavMesh.CalculatePath(origin.position, hit.position, NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete)
+                continue;
+
+            float length = 0f;
+            for (int i = 1; i < path.corners.Length; i++)
+                length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+
+            bool seesStart = !Physics.Linecast(hit.position + Vector3.up * 1.6f, start.position + Vector3.up * 1.6f, solid, QueryTriggerInteraction.Ignore);
+            float score = Mathf.Abs(length - target) + (seesStart ? 100f : 0f);
+
+            if (score < bestScore)
+            {
+                bestScore = score;
+                best = hit.position;
+            }
+        }
+
+        Undo.RecordObject(enemy.transform, "Inimigo");
+        enemy.transform.position = best;
+        Vector3 look = origin.position - best;
+        look.y = 0f;
+        if (look.sqrMagnitude > 0.01f)
+            enemy.transform.rotation = Quaternion.LookRotation(look.normalized);
+
+        Debug.Log("EnemyNavigationBuilder: inimigo comeca em " + best + " (nota " + bestScore.ToString("0.0") + ").");
     }
 
     // ---------- Mapa para conferencia ----------

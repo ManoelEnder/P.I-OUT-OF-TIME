@@ -1,0 +1,43 @@
+Tempo proprio medio por quadro (ms), threads principal e de render.
+
+marcador                                                                 parado  girando  andando correndo    delta
+(quadros analisados)                                                     30,000  297,000  297,000  297,000 +267,000
+[render] DrawBuffersBatchMode                                             0,106    0,172    0,148    0,098   +0,042
+[render] RenderLoop.DrawSRPBatcher                                        0,021    0,063    0,054    0,026   +0,032
+SRPBRender.ApplyShader                                                    0,033    0,079    0,064    0,025   +0,031
+RenderLoop.ScheduleDraw                                                   0,013    0,024    0,025    0,023   +0,011
+Inl_Forward+ Setup                                                        0,045    0,051    0,056    0,052   +0,011
+AudioManager.Update                                                       0,011    0,020    0,021    0,021   +0,011
+Inl_Setup Light Constants                                                 0,028    0,038    0,039    0,036   +0,011
+InputUpdate                                                               0,008    0,020    0,019    0,018   +0,010
+Inl_ScriptableRenderer.Setup                                              0,078    0,079    0,088    0,079   +0,009
+FindActiveLights                                                          0,005    0,014    0,014    0,013   +0,009
+UpdateRendererBoundingVolumes                                             0,002    0,008    0,011    0,009   +0,009
+CullAllVisibleLights                                                      0,006    0,014    0,014    0,012   +0,009
+Shadows.ExtractShaderPassContext                                          0,005    0,013    0,013    0,012   +0,008
+CullScriptable                                                            0,021    0,030    0,029    0,025   +0,008
+UnityEngine.CoreModule.dll!UnityEngine.Rendering::RenderPipelineManage    0,023    0,033    0,031    0,028   +0,008
+LightMinMaxZJob (Burst)                                                   0,000    0,007    0,007    0,007   +0,007
+Inl_RenderCameraStack                                                     0,034    0,040    0,041    0,035   +0,007
+Inl_UniversalRenderPipeline.RenderSingleCameraInternal: CameraPlayer      0,030    0,036    0,037    0,032   +0,007
+ScriptableRenderer.Execute: PC_Renderer                                   0,100    0,106    0,107    0,100   +0,007
+AudioSource.Update                                                        0,013    0,015    0,019    0,022   +0,007
+VolumeManager.Update                                                      0,021    0,028    0,027    0,024   +0,006
+Audio.FMODSystemUpdate                                                    0,014    0,017    0,019    0,018   +0,006
+RenderPlayModeViewCameras                                                 0,022    0,029    0,028    0,024   +0,005
+UGUI.Rendering.UpdateBatches                                              0,009    0,013    0,014    0,014   +0,005
+UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Inv    0,025    0,031    0,030    0,032   +0,005
+Assembly-CSharp.dll!::QACoroutineHost.Look() [Coroutine: MoveNext] [In    0,000    0,005    0,005    0,004   +0,005
+FlushDirty                                                                0,018    0,020    0,022    0,020   +0,005
+TransformChangeSystem                                                     0,029    0,029    0,034    0,031   +0,005
+Inl_UniversalRenderTotal                                                  0,013    0,018    0,018    0,015   +0,004
+ExecuteRenderQueueJob                                                     0,008    0,019    0,012    0,009   +0,004
+afterCullingOutputReady.Invoke                                            0,006    0,010    0,010    0,009   +0,004
+SceneCulling                                                              0,008    0,012    0,012    0,010   +0,004
+PrepareSceneNodes                                                         0,004    0,008    0,008    0,006   +0,004
+Inl_ColorGradingLUT                                                       0,025    0,026    0,028    0,025   +0,004
+Inl_Bloom                                                                 0,038    0,041    0,042    0,040   +0,003
+Assembly-CSharp.dll!::PlayerMovement.Update() [Invoke]                    0,047    0,044    0,050    0,055   +0,003
+Inl_UniversalRenderPipeline.CreateShadowData                              0,007    0,009    0,010    0,009   +0,003
+Inl_UniversalRenderPipeline.CreateCameraData                              0,010    0,013    0,014    0,012   +0,003
+Inl_ScriptableRenderContext.Submit                                        0,058    0,066    0,061    0,056   +0,003

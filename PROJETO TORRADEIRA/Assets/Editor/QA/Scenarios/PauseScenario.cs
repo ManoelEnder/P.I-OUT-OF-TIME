@@ -54,6 +54,7 @@ public class PauseScenario : QAScenario
             yield break;
 
         Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+        enemy.ActivateNow();
         PlaceInFrontOf(player, enemy.transform);
 
         float end = Time.realtimeSinceStartup + 15f;

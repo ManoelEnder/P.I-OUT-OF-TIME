@@ -64,6 +64,10 @@ public class PauseMenu : MonoBehaviour
 
         SetupLensDistortion();
 
+        // Visual e animacoes do menu (layout em coluna, fundo, cascata, hover).
+        if (GetComponent<PauseMenuView>() == null)
+            gameObject.AddComponent<PauseMenuView>().Init(pauseMenu, settingsMenu, controlsMenu);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

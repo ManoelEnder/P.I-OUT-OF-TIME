@@ -1,2 +1,2 @@
-QA FAIL BatteryHeat: tempo esgotado (120 s)
-- tempo esgotado (120 s)
+QA PASS BatteryHeat
+

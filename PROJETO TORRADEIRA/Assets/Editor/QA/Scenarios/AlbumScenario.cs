@@ -21,7 +21,7 @@ public class AlbumScenario : QAScenario
 
         photo.AddBattery(100);
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.4f);
+        yield return WaitTransition(photo);
 
         // Algumas fotos de verdade.
         for (int i = 0; i < 3; i++)
@@ -40,7 +40,7 @@ public class AlbumScenario : QAScenario
         Check(growth <= 1, "album lotado: fotos extras nao acumulam textura (+" + growth + ")");
 
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.6f);
+        yield return WaitTransition(photo);
 
         // Abre, apaga pelo teclado (Delete + Y) e pela API.
         yield return QAInput.Tap(Key.F);

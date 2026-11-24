@@ -24,6 +24,7 @@ public class EnemyScenario : QAScenario
         Transform player = GameObject.FindGameObjectWithTag("Player").transform;
         Transform spawn = GameObject.Find("PlayerSpawn").transform;
 
+        enemy.ActivateNow();
         PlaceInFrontOf(player, enemy.transform);
 
         float end = Time.realtimeSinceStartup + 5f;

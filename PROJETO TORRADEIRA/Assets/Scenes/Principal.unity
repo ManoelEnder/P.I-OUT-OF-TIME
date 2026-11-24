@@ -526,10 +526,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MissionUIController
   missionPanel: {fileID: 836264110}
   tabHint: {fileID: 1310288277}
-  hideDistance: 800
-  animationDuration: 0.5
-  startVisibleTime: 5
-  autoHideTime: 30
+  toastSeconds: 3.5
+  hintAlpha: 0.55
   photoCamera: {fileID: 0}
 --- !u!114 &11782730
 MonoBehaviour:
@@ -2415,8 +2413,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168714043}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -21.394001, y: 3.749, z: 24.050995}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -21.394003, y: 3.749, z: 24.050995}
   m_LocalScale: {x: 1.3901048, y: 1.7515515, z: 0.034677092}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8557,6 +8555,7 @@ MonoBehaviour:
   reactionTime: 0.35
   loseSightGrace: 1.2
   repathInterval: 0.15
+  activationDelay: 12
   searchDuration: 5
   searchRadius: 8
   searchAttempts: 3
@@ -8568,8 +8567,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 513641464}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.51, y: 0.08333349, z: -161.14998}
+  m_LocalRotation: {x: -0, y: 0.3450929, z: -0, w: 0.93856853}
+  m_LocalPosition: {x: -20.70672, y: 12, z: -174.1833}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8965,7 +8964,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548829931}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: -16.208, y: 1.598, z: 1.7539978}
   m_LocalScale: {x: 1.4355035, y: 2.4239974, z: 0.034677092}
   m_ConstrainProportionsScale: 0
@@ -10080,8 +10079,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658865311}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -21.394001, y: 3.749, z: 25.447002}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -21.394003, y: 3.749, z: 25.447002}
   m_LocalScale: {x: 1.3901048, y: 1.7515515, z: 0.034677092}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16046,7 +16045,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 796072427}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: -14.745001, y: 1.598, z: 1.7539978}
   m_LocalScale: {x: 1.4355035, y: 2.4239974, z: 0.034677092}
   m_ConstrainProportionsScale: 0
@@ -16513,10 +16512,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MissionUIController
   missionPanel: {fileID: 836264110}
   tabHint: {fileID: 1310288277}
-  hideDistance: 800
-  animationDuration: 0.5
-  startVisibleTime: 5
-  autoHideTime: 30
+  toastSeconds: 3.5
+  hintAlpha: 0.55
   photoCamera: {fileID: 0}
 --- !u!1 &843233700
 GameObject:
@@ -21140,8 +21137,10 @@ MonoBehaviour:
   openDuration: 0.45
   closeDuration: 0.5
   fadeInDuration: 0.45
-  irisOpenSeconds: 0.42
-  irisCloseSeconds: 0.3
+  lensOpenSeconds: 0.85
+  lensCloseSeconds: 0.6
+  restAperture: 0.84
+  zoomAperture: 0.62
   blades: 6
   bladeTurn: 0.7
 --- !u!1 &1155695191
@@ -27841,7 +27840,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1311956969}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -4.601, y: 1.939, z: -3.3069968}
   m_LocalScale: {x: 2.3929045, y: 2.4239974, z: 0.034677092}
   m_ConstrainProportionsScale: 0
@@ -29327,7 +29326,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419871478}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -4.601, y: 1.939, z: -0.877004}
   m_LocalScale: {x: 2.3929045, y: 2.4239974, z: 0.034677092}
   m_ConstrainProportionsScale: 0
@@ -52727,7 +52726,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133385668}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 2.111, y: 9.346151, z: 15.697001}
   m_LocalScale: {x: 2.3929045, y: 2.4239974, z: 0.034677092}
   m_ConstrainProportionsScale: 0
@@ -52875,22 +52874,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 3
   sprintSpeed: 6
-  mouseSensitivity: 0.1
+  acceleration: 18
+  deceleration: 22
+  airControl: 0.35
   gravity: -9.81
   jumpForce: 1
+  coyoteTime: 0.12
+  mouseSensitivity: 0.1
   cameraTransform: {fileID: 1433970451}
   controller: {fileID: 2137393035}
   textoInteracao: {fileID: 1523086864}
-  headBobSpeed: 7
-  headBobAmount: 0.15
-  sprintHeadBobSpeed: 11
-  sprintHeadBobAmount: 0.19
-  headBobSmooth: 10
+  walkStride: 0.75
+  sprintStride: 1.05
+  bobWalk: 0.035
+  bobSprint: 0.06
+  swayAmount: 0.35
+  stepRoll: 0.6
+  strafeRoll: 1.6
+  breathing: 0.006
+  landingDip: 0.08
   audioPassos: {fileID: 2137393041}
   sonsPassos:
   - {fileID: 8300000, guid: 60bffe6666e640c4eaa688ff1bc81b3b, type: 3}
-  intervaloPasso: 0.7
-  intervaloPassoCorrendo: 0.6
+  volumePassoAndando: 0.7
+  volumePassoCorrendo: 1
 --- !u!143 &2137393035
 CharacterController:
   m_ObjectHideFlags: 0

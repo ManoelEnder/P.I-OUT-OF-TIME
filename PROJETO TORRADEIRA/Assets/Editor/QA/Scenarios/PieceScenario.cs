@@ -36,7 +36,7 @@ public class PieceScenario : QAScenario
         Check(piece.GetComponent<Renderer>().enabled, "peca revelada fica visivel");
 
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.6f);
+        yield return WaitTransition(photo);
         yield return Aim(view, piece.GetComponent<Collider>());
 
         int before = missions.GetPieceCount();
@@ -66,7 +66,7 @@ public class PieceScenario : QAScenario
     {
         photo.AddBattery(100);
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.5f);
+        yield return WaitTransition(photo);
         yield return Aim(view, piece.GetComponent<Collider>());
         yield return QAInput.Click();
         yield return WaitSeconds(0.8f);

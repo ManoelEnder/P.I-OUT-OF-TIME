@@ -1,0 +1,15 @@
+Glass pos (-24.02, 14.81, -160.27) tam (0.05, 3.95, 4.39) bordas encostadas 4/4
+Glass (1) pos (-24.02, 14.81, -155.86) tam (0.05, 3.95, 4.39) bordas encostadas 4/4
+Glass (10) pos (-31.31, 2.40, -170.77) tam (2.15, 3.64, 0.05) bordas encostadas 4/4
+Glass (11) pos (-39.09, 5.62, -137.32) tam (0.05, 2.63, 2.09) bordas encostadas 2/4
+Glass (12) pos (-39.09, 5.62, -135.23) tam (0.05, 2.63, 2.09) bordas encostadas 2/4
+Glass (13) pos (-19.80, 15.03, -115.13) tam (0.05, 3.71, 2.09) bordas encostadas 4/4
+Glass (14) pos (-19.80, 15.03, -112.71) tam (0.05, 3.71, 2.09) bordas encostadas 4/4
+Glass (2) pos (-24.02, 14.81, -151.42) tam (0.05, 3.95, 4.39) bordas encostadas 4/4
+Glass (3) pos (-13.90, 2.91, -174.72) tam (0.05, 3.64, 3.59) bordas encostadas 2/4
+Glass (4) pos (-13.90, 2.91, -178.36) tam (0.05, 3.64, 3.59) bordas encostadas 2/4
+Glass (5) pos (-3.83, 14.02, -149.86) tam (0.05, 3.64, 3.59) bordas encostadas 3/4
+Glass (6) pos (-3.83, 14.02, -146.27) tam (0.05, 3.64, 3.59) bordas encostadas 4/4
+Glass (7) pos (-3.83, 14.02, -163.13) tam (0.05, 3.64, 2.15) bordas encostadas 4/4
+Glass (8) pos (-3.83, 14.02, -165.47) tam (0.05, 3.64, 2.15) bordas encostadas 4/4
+Glass (9) pos (-29.12, 2.40, -170.77) tam (2.15, 3.64, 0.05) bordas encostadas 4/4

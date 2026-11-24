@@ -41,6 +41,10 @@ public class AlbumController : MonoBehaviour
         new List<AlbumPhotoSlot>();
 
     private int selectedIndex = -1;
+
+    // Abas ALBUM | MISSOES (TAB troca de pagina).
+    private FieldJournal journal;
+    public FieldJournal Journal => journal;
     private int currentPage;
 
     private bool confirmingDelete;
@@ -61,6 +65,13 @@ public class AlbumController : MonoBehaviour
 
     void Start()
     {
+        journal = GetComponent<FieldJournal>();
+        if (journal == null)
+            journal = gameObject.AddComponent<FieldJournal>();
+
+        TMP_FontAsset font = deleteConfirmationText != null ? deleteConfirmationText.font : null;
+        journal.Init(albumPanel, photoContainer, font);
+
         if (albumPanel != null)
             albumPanel.SetActive(false);
 
@@ -105,6 +116,16 @@ public class AlbumController : MonoBehaviour
         if (!IsAlbumOpen)
             return;
 
+        if (Keyboard.current.tabKey.wasPressedThisFrame && journal != null)
+        {
+            journal.TogglePage();
+            return;
+        }
+
+        // Na pagina de missoes as setas e o Delete nao mexem nas fotos.
+        if (journal != null && journal.OnMissionsPage)
+            return;
+
         HandleAlbumNavigation();
 
         if (
@@ -128,6 +149,17 @@ public class AlbumController : MonoBehaviour
     }
 
     public void OpenAlbum()
+    {
+        OpenAlbum(0);
+    }
+
+    // Abre direto na pagina de missoes (TAB fora do album).
+    public void OpenMissions()
+    {
+        OpenAlbum(1);
+    }
+
+    public void OpenAlbum(int page)
     {
         if (albumPanel == null)
             return;
@@ -167,6 +199,9 @@ public class AlbumController : MonoBehaviour
         }
 
         UpdatePageFromSelection();
+
+        if (journal != null)
+            journal.OnOpened(page);
     }
 
     public void CloseAlbum()

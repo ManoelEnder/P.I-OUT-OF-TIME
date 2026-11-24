@@ -39,7 +39,7 @@ public class BatteryHeatScenario : QAScenario
         battery.Use(battery.Current);
         Check(battery.IsEmpty, "bateria zera");
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.5f);
+        yield return WaitTransition(photo);
         Check(!photo.cameraHUD.activeSelf, "visor nao abre sem bateria");
 
         BatteryPickup pickup = Object.FindObjectsByType<BatteryPickup>(FindObjectsSortMode.None)
@@ -59,7 +59,7 @@ public class BatteryHeatScenario : QAScenario
         // Superaquecimento.
         photo.AddBattery(100);
         yield return QAInput.Tap(Key.C);
-        yield return WaitSeconds(photo.enterTransitionTime + 0.5f);
+        yield return WaitTransition(photo);
 
         for (int i = 0; i < 30 && !heat.IsCameraLost; i++)
         {

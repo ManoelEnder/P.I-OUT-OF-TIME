@@ -1,2 +1,2 @@
-QA FAIL Smoke: tempo esgotado (120 s)
-- tempo esgotado (120 s)
+QA PASS Smoke
+

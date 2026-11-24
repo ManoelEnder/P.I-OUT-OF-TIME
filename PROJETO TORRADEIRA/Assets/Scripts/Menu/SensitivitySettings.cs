@@ -22,6 +22,11 @@ public class SensitivitySettings : MonoBehaviour
         );
 
         PlayerPrefs.Save();
+
+        // Aplica na hora no jogador (antes o valor era salvo e nunca lido).
+        PlayerMovement player = FindFirstObjectByType<PlayerMovement>();
+        if (player != null)
+            player.RefreshSensitivity();
     }
 
     public void Load()

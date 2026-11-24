@@ -64,10 +64,9 @@ public class CameraPhotoData : MonoBehaviour
         if (photoPreview == null)
             return;
 
-        CaptureRestPose();
-        ResetPreviewPose();
-
-        photoPreview.gameObject.SetActive(false);
+        EnsureCard();
+        if (card != null)
+            card.gameObject.SetActive(false);
     }
 
     public void RegisterPhotographedLocations(Camera camera)
@@ -83,8 +82,10 @@ public class CameraPhotoData : MonoBehaviour
         if (photoPreview == null)
             return;
 
-        ResetPreviewPose();
-        photoPreview.gameObject.SetActive(false);
+        if (card != null)
+            card.gameObject.SetActive(false);
+        if (albumHint != null)
+            albumHint.gameObject.SetActive(false);
     }
 
     public void ProcessPhoto(Texture2D photo)
@@ -174,95 +175,204 @@ public class CameraPhotoData : MonoBehaviour
         previewCoroutine = null;
     }
 
-    private IEnumerator PreviewRoutine(Texture2D photo)
+    // ---------- Foto instantanea ----------
+    // A foto sai de baixo num cartao branco (na proporcao certa), "revela" do branco ate a imagem
+    // e depois voa encolhendo para o canto do album.
+
+    private RectTransform card;
+    private Image developLayer;
+    private TextMeshProUGUI cardLabel;
+    private TextMeshProUGUI albumHint;
+
+    private const float CardWidth = 300f;
+    private const float Border = 14f;
+    private const float BottomBorder = 46f;
+
+    private void EnsureCard()
     {
-        CaptureRestPose();
-        ResetPreviewPose();
+        if (card != null || photoPreview == null)
+            return;
 
-        photoPreview.texture = photo;
+        RectTransform parent = photoPreview.rectTransform.parent as RectTransform;
 
-        SetPreviewAlpha(0f);
+        GameObject go = new GameObject("PhotoCard", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(CanvasGroup));
+        go.layer = photoPreview.gameObject.layer;
+        card = (RectTransform)go.transform;
+        card.SetParent(parent, false);
+        card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+        card.pivot = new Vector2(0.5f, 0.5f);
+
+        Image frame = go.GetComponent<Image>();
+        frame.color = new Color(0.92f, 0.91f, 0.87f, 1f);
+        frame.raycastTarget = false;
+
+        // Sombra simples atras do cartao (filho desenhado antes).
+        Image shadow = new GameObject("Shadow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
+        shadow.gameObject.layer = go.layer;
+        shadow.transform.SetParent(parent, false);
+        shadow.color = new Color(0f, 0f, 0f, 0f);
+        shadow.raycastTarget = false;
+        shadow.gameObject.SetActive(false);
+
+        // A foto vai para dentro do cartao.
+        RectTransform photo = photoPreview.rectTransform;
+        photo.SetParent(card, false);
+        photo.anchorMin = Vector2.zero;
+        photo.anchorMax = Vector2.one;
+        photo.pivot = new Vector2(0.5f, 0.5f);
+        photo.offsetMin = new Vector2(Border, BottomBorder);
+        photo.offsetMax = new Vector2(-Border, -Border);
+        photo.anchoredPosition = Vector2.zero;
+        photo.localScale = Vector3.one;
+        photo.localRotation = Quaternion.identity;
         photoPreview.gameObject.SetActive(true);
 
-        RectTransform rect = photoPreview.rectTransform;
+        developLayer = new GameObject("Develop", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
+        developLayer.gameObject.layer = go.layer;
+        developLayer.transform.SetParent(card, false);
+        developLayer.raycastTarget = false;
+        RectTransform dev = developLayer.rectTransform;
+        dev.anchorMin = Vector2.zero;
+        dev.anchorMax = Vector2.one;
+        dev.offsetMin = new Vector2(Border, BottomBorder);
+        dev.offsetMax = new Vector2(-Border, -Border);
 
-        yield return Tween(popDuration, t =>
+        TMP_FontAsset font = photoCounter != null ? photoCounter.font : null;
+        cardLabel = CardText(card, "Label", font, 22f, new Color(0.18f, 0.17f, 0.16f), TextAlignmentOptions.Bottom);
+        StretchRect(cardLabel.rectTransform, new Vector2(Border, 10f), new Vector2(-Border, 0f));
+
+        albumHint = CardText(parent, "AlbumHint", font, 22f, Color.white, TextAlignmentOptions.BottomRight);
+        RectTransform hint = albumHint.rectTransform;
+        hint.anchorMin = hint.anchorMax = new Vector2(0.5f, 0.5f);
+        hint.pivot = new Vector2(1f, 0f);
+        hint.sizeDelta = new Vector2(400f, 40f);
+        albumHint.gameObject.SetActive(false);
+
+        go.SetActive(false);
+    }
+
+    private static TextMeshProUGUI CardText(Transform parent, string name, TMP_FontAsset font, float size, Color color, TextAlignmentOptions align)
+    {
+        TextMeshProUGUI text = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI)).GetComponent<TextMeshProUGUI>();
+        text.gameObject.layer = parent.gameObject.layer;
+        text.transform.SetParent(parent, false);
+        if (font != null)
+            text.font = font;
+        text.fontSize = size;
+        text.color = color;
+        text.alignment = align;
+        text.raycastTarget = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        return text;
+    }
+
+    private static void StretchRect(RectTransform rect, Vector2 min, Vector2 max)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = min;
+        rect.offsetMax = max;
+    }
+
+    private IEnumerator PreviewRoutine(Texture2D photo)
+    {
+        EnsureCard();
+
+        if (card == null)
+            yield break;
+
+        RectTransform parent = card.parent as RectTransform;
+        Vector2 half = parent != null && parent.rect.width > 200f ? parent.rect.size * 0.5f : new Vector2(960f, 540f);
+
+        float aspect = photo.height > 0 ? (float)photo.width / photo.height : 16f / 9f;
+        float photoWidth = CardWidth - Border * 2f;
+        card.sizeDelta = new Vector2(CardWidth, photoWidth / aspect + Border + BottomBorder);
+
+        photoPreview.texture = photo;
+        photoPreview.color = Color.white;
+        cardLabel.text = "FOTO " + photoCount.ToString("00");
+        card.localScale = Vector3.one;
+        card.gameObject.SetActive(true);
+        card.SetAsLastSibling();
+
+        CanvasGroup group = card.GetComponent<CanvasGroup>();
+        group.alpha = 1f;
+
+        Vector2 below = new Vector2(half.x * 0.42f, -half.y - card.sizeDelta.y);
+        Vector2 rest = new Vector2(half.x * 0.42f, -half.y + card.sizeDelta.y * 0.5f + 70f);
+
+        // 1) Sai de baixo, girando ate assentar.
+        SetDevelop(1f);
+        yield return Tween(0.38f, t =>
         {
-            float eased = EaseOutCubic(t);
-
-            rect.localScale = Vector3.Lerp(
-                restScale * popStartScale,
-                restScale,
-                eased
-            );
-
-            SetPreviewAlpha(eased);
+            float e = EaseOutBack(t);
+            card.anchoredPosition = Vector2.LerpUnclamped(below, rest, e);
+            card.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-14f, -4f, EaseOutCubic(t)));
         });
 
-        rect.localScale = restScale;
-        SetPreviewAlpha(1f);
+        // 2) Revela: branco -> imagem.
+        yield return Tween(1.1f, t => SetDevelop(1f - Mathf.SmoothStep(0f, 1f, t)));
+        SetDevelop(0f);
 
-        yield return new WaitForSeconds(previewDuration);
+        yield return new WaitForSeconds(Mathf.Max(0f, previewDuration - 1.1f));
 
-        Vector3 targetScale = restScale * endScale;
+        // 3) Voa para o canto do album, encolhendo.
+        Vector2 corner = new Vector2(half.x - cornerMargin.x - 50f, -half.y + cornerMargin.y + 40f);
+        ShowAlbumHint(corner + new Vector2(30f, 70f));
 
-        Vector2 targetPosition = GetCornerPosition(
-            rect,
-            targetScale
-        );
-
-        yield return Tween(moveDuration, t =>
+        yield return Tween(0.55f, t =>
         {
-            float eased = Mathf.SmoothStep(0f, 1f, t);
-
-            rect.anchoredPosition = Vector2.Lerp(
-                restPosition,
-                targetPosition,
-                eased
-            );
-
-            rect.localScale = Vector3.Lerp(
-                restScale,
-                targetScale,
-                eased
-            );
-
-            rect.localRotation = Quaternion.Euler(
-                0f,
-                0f,
-                Mathf.Lerp(
-                    restRotationZ,
-                    endRotationZ,
-                    eased
-                )
-            );
+            float e = EaseInOutCubic(t);
+            card.anchoredPosition = Vector2.Lerp(rest, corner, e);
+            card.localScale = Vector3.one * Mathf.Lerp(1f, 0.22f, e);
+            card.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-4f, 10f, e));
+            group.alpha = 1f - Mathf.InverseLerp(0.7f, 1f, t);
         });
 
-        rect.anchoredPosition = targetPosition;
-        rect.localScale = targetScale;
-
-        rect.localRotation = Quaternion.Euler(
-            0f,
-            0f,
-            endRotationZ
-        );
-
-        yield return new WaitForSeconds(
-            cornerHoldDuration
-        );
-
-        yield return Tween(
-            fadeOutDuration,
-            t => SetPreviewAlpha(1f - t)
-        );
-
-        ResetPreviewPose();
-        photoPreview.gameObject.SetActive(false);
+        card.gameObject.SetActive(false);
         photoPreview.texture = null;
 
-        ReleaseOwnedPreview();
+        yield return new WaitForSeconds(cornerHoldDuration * 0.6f);
 
+        if (albumHint != null)
+        {
+            yield return Tween(fadeOutDuration, t => albumHint.alpha = 1f - t);
+            albumHint.gameObject.SetActive(false);
+        }
+
+        ReleaseOwnedPreview();
         previewCoroutine = null;
+    }
+
+    private void SetDevelop(float amount)
+    {
+        if (developLayer != null)
+            developLayer.color = new Color(0.95f, 0.94f, 0.9f, Mathf.Clamp01(amount));
+    }
+
+    private void ShowAlbumHint(Vector2 position)
+    {
+        if (albumHint == null)
+            return;
+
+        albumHint.text = "+1 NO ÁLBUM  [F]";
+        albumHint.rectTransform.anchoredPosition = position;
+        albumHint.alpha = 1f;
+        albumHint.gameObject.SetActive(true);
+        albumHint.transform.SetAsLastSibling();
+    }
+
+    private static float EaseOutBack(float t)
+    {
+        const float c1 = 1.4f;
+        const float c3 = c1 + 1f;
+        float x = t - 1f;
+        return 1f + c3 * x * x * x + c1 * x * x;
+    }
+
+    private static float EaseInOutCubic(float t)
+    {
+        return t < 0.5f ? 4f * t * t * t : 1f - Mathf.Pow(-2f * t + 2f, 3f) / 2f;
     }
 
     private IEnumerator Tween(

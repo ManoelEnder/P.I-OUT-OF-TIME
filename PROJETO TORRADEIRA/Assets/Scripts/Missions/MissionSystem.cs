@@ -233,4 +233,12 @@ public class MissionSystem : MonoBehaviour
     {
         return pieces >= 1;
     }
+
+    // Lidos pela pagina de missoes do album.
+    public int PhotosRequired => photosRequired;
+    public int PiecesRequired => piecesRequired;
+    public int LocationsRequired => locationsRequired;
+
+    // Texto atual das missoes (o aviso discreto do HUD compara com o anterior).
+    public string CurrentText => missionText != null ? missionText.text : string.Empty;
 }

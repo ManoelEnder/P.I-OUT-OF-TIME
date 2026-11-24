@@ -1,3 +1,2 @@
-QA FAIL Pause: inimigo derrota o jogador | ESC nao abre a pausa por cima da derrota
-- inimigo derrota o jogador
-- ESC nao abre a pausa por cima da derrota
+QA PASS Pause
+

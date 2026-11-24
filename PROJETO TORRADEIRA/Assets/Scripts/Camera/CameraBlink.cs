@@ -23,8 +23,12 @@ public class CameraBlink : MonoBehaviour
     [SerializeField] private float fadeInDuration = 0.45f;
 
     [Header("Diafragma")]
-    [SerializeField] private float irisOpenSeconds = 0.42f;
-    [SerializeField] private float irisCloseSeconds = 0.3f;
+    [SerializeField] private float lensOpenSeconds = 0.85f;
+    [SerializeField] private float lensCloseSeconds = 0.6f;
+    [Tooltip("Abertura com o visor aberto (1 = laminas fora da tela). As laminas ficam nos cantos como borda da lente.")]
+    [SerializeField, Range(0.5f, 1f)] private float restAperture = 0.84f;
+    [Tooltip("Abertura no zoom maximo (substitui as faixas pretas).")]
+    [SerializeField, Range(0.3f, 1f)] private float zoomAperture = 0.62f;
     [SerializeField, Range(3, 12)] private int blades = 6;
     [Tooltip("Quanto as laminas giram (radianos) durante o movimento.")]
     [SerializeField] private float bladeTurn = 0.7f;
@@ -37,6 +41,12 @@ public class CameraBlink : MonoBehaviour
     private Image iris;
     private Material irisMaterial;
     private Coroutine animationCoroutine;
+
+    // Visor aberto: a lente fica na tela e acompanha o zoom.
+    private bool lensResting;
+    private float zoom;
+    private float restRadius;
+    private float restRotation;
 
     private void Awake()
     {
@@ -70,8 +80,9 @@ public class CameraBlink : MonoBehaviour
         SetScreenFade(0f);
         SetIrisActive(true);
 
-        float duration = Mathf.Max(0.05f, irisOpenSeconds > 0f ? irisOpenSeconds : openDuration);
-        float full = FullyOpenRadius();
+        lensResting = false;
+        float duration = Mathf.Max(0.05f, lensOpenSeconds > 0f ? lensOpenSeconds : openDuration);
+        float target = TargetRadius();
 
         SetIris(0f, bladeTurn);
         SetHUDAlpha(0f);
@@ -85,7 +96,7 @@ public class CameraBlink : MonoBehaviour
             float t = Mathf.Clamp01(time / duration);
             float k = EaseOutQuart(t);
 
-            SetIris(full * k, bladeTurn * (1f - k));
+            SetIris(target * k, bladeTurn * (1f - k));
 
             // HUD aparece na segunda metade, assentando no lugar.
             float hud = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.35f, 1f, t));
@@ -95,7 +106,10 @@ public class CameraBlink : MonoBehaviour
             yield return null;
         }
 
-        SetIrisActive(false);
+        // Fica na tela como borda da lente.
+        restRadius = target;
+        restRotation = 0f;
+        lensResting = true;
         SetHUDAlpha(1f);
         SetHUDScale(1f);
         animationCoroutine = null;
@@ -106,10 +120,12 @@ public class CameraBlink : MonoBehaviour
         SetScreenFade(0f);
         SetIrisActive(true);
 
-        float duration = Mathf.Max(0.05f, irisCloseSeconds > 0f ? irisCloseSeconds : closeDuration);
-        float full = FullyOpenRadius();
+        float duration = Mathf.Max(0.05f, lensCloseSeconds > 0f ? lensCloseSeconds : closeDuration);
+        float from = lensResting ? restRadius : TargetRadius();
+        float fromRotation = lensResting ? restRotation : 0f;
+        lensResting = false;
 
-        SetIris(full, 0f);
+        SetIris(from, fromRotation);
         SetHUDAlpha(1f);
 
         float time = 0f;
@@ -120,7 +136,7 @@ public class CameraBlink : MonoBehaviour
             float t = Mathf.Clamp01(time / duration);
             float k = EaseInCubic(t);
 
-            SetIris(full * (1f - k), -bladeTurn * k);
+            SetIris(from * (1f - k), Mathf.Lerp(fromRotation, -bladeTurn, k));
 
             float hud = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.5f, t));
             SetHUDAlpha(hud);
@@ -159,9 +175,34 @@ public class CameraBlink : MonoBehaviour
         animationCoroutine = null;
     }
 
+    // Zoom do visor (0..1): as laminas fecham um pouco, no lugar das faixas pretas.
+    public void SetZoom(float value)
+    {
+        zoom = Mathf.Clamp01(value);
+    }
+
+    private float TargetRadius()
+    {
+        return FullyOpenRadius() * Mathf.Lerp(restAperture, zoomAperture, zoom);
+    }
+
+    private void Update()
+    {
+        if (!lensResting || animationCoroutine != null)
+            return;
+
+        float k = 1f - Mathf.Exp(-10f * Time.unscaledDeltaTime);
+        restRadius = Mathf.Lerp(restRadius, TargetRadius(), k);
+        // As laminas giram um pouco junto com o zoom, como num diafragma de verdade.
+        restRotation = Mathf.Lerp(restRotation, zoom * bladeTurn * 0.35f, k);
+        SetIris(restRadius, restRotation);
+    }
+
     public void ResetBlink()
     {
         StopAnimation();
+        lensResting = false;
+        zoom = 0f;
         SetIrisActive(false);
         SetHUDAlpha(0f);
         SetHUDScale(1f);

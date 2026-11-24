@@ -38,6 +38,10 @@ public class TemporalEraserController : MonoBehaviour
     [SerializeField] private float loseSightGrace = 1.2f;
     [SerializeField] private float repathInterval = 0.15f;
 
+    [Header("Inicio")]
+    [Tooltip("Segundos de jogo (pausa e intro nao contam) antes de ele comecar a se mover.")]
+    [SerializeField] private float activationDelay = 12f;
+
     [Header("Search")]
     [SerializeField] private float searchDuration = 5f;
     [SerializeField] private float searchRadius = 8f;
@@ -56,6 +60,8 @@ public class TemporalEraserController : MonoBehaviour
     private float nextRepath;
     private float pauseUntil;
     private float stuckTimer;
+
+    private float activateAt;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -101,6 +107,8 @@ public class TemporalEraserController : MonoBehaviour
         }
 
         ReturnToRoaming();
+        activateAt = Time.time + activationDelay;
+        agent.isStopped = true;
     }
 
     private void Update()
@@ -110,6 +118,13 @@ public class TemporalEraserController : MonoBehaviour
 
         if (!agent.isOnNavMesh && !EnsureOnNavMesh())
             return;
+
+        // Comeco da partida: parado, so "existindo" (Time.time nao anda na intro nem na pausa).
+        if (Time.time < activateAt)
+        {
+            agent.isStopped = true;
+            return;
+        }
 
         bool sees = vision.CanSeePlayer();
 
@@ -145,6 +160,14 @@ public class TemporalEraserController : MonoBehaviour
         if (Notice(sees, reactionTime))
         {
             StartChasing();
+            return;
+        }
+
+        // Viu algo: para e encara o jogador ate decidir (rotacao em UpdateRotation).
+        if (sightTimer > 0f)
+        {
+            agent.isStopped = true;
+            pauseUntil = Mathf.Max(pauseUntil, Time.time + 0.6f);
             return;
         }
 
@@ -214,7 +237,7 @@ public class TemporalEraserController : MonoBehaviour
     // Precisa ver o jogador por um instante antes de reagir (sem "estalar" ao primeiro pixel).
     private bool Notice(bool sees, float time)
     {
-        sightTimer = sees ? sightTimer + Time.deltaTime : Mathf.Max(0f, sightTimer - Time.deltaTime * 2f);
+        sightTimer = sees ? sightTimer + Time.deltaTime : Mathf.Max(0f, sightTimer - Time.deltaTime * 0.5f);
         return sightTimer >= time;
     }
 
@@ -254,6 +277,14 @@ public class TemporalEraserController : MonoBehaviour
         SetRoamingDestination();
     }
 
+    // Pula a espera do comeco da partida (usado pelos testes automaticos).
+    public void ActivateNow()
+    {
+        activateAt = 0f;
+        if (agent != null && agent.isOnNavMesh)
+            agent.isStopped = false;
+    }
+
     // Chamado no "tentar de novo": volta ao ponto inicial e esquece o jogador.
     public void ResetToStart()
     {
@@ -263,6 +294,7 @@ public class TemporalEraserController : MonoBehaviour
         agent.Warp(startPosition);
         transform.rotation = startRotation;
         lastSeenTime = -999f;
+        activateAt = Time.time + activationDelay;
 
         if (agent.isOnNavMesh)
             ReturnToRoaming();
@@ -274,8 +306,9 @@ public class TemporalEraserController : MonoBehaviour
     {
         Vector3 look = agent.desiredVelocity;
 
-        // Perto do jogador, encara ele em vez da direcao do caminho.
-        if (currentState == State.Chasing && Vector3.Distance(transform.position, player.position) < 2.5f)
+        // Perto do jogador (ou percebendo ele), encara ele em vez da direcao do caminho.
+        bool noticing = currentState != State.Chasing && sightTimer > 0f;
+        if (noticing || (currentState == State.Chasing && Vector3.Distance(transform.position, player.position) < 2.5f))
             look = player.position - transform.position;
 
         look.y = 0f;
