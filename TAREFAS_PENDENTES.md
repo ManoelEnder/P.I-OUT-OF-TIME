@@ -104,3 +104,18 @@ Design: `docs/superpowers/specs/2026-11-17-revisao-completa-design.md` · Plano 
 - 2 bugs a mais corrigidos (inimigo invisível sem o visor; visor desenhando a cena duas vezes).
 - Teste manual sugerido: `docs/revisao/teste-manual.md`.
 - Fitas de isolamento continuam com o autor (pacote `ThirdParty/CautionTape` preservado para isso).
+
+## Próxima rodada (pedido de 2026-11-24)
+
+Nada disto foi feito ainda. Onde mexer em cada item:
+
+1. **Nocautear o inimigo com o flash** — ao tirar foto (`PhotoCamera.TakePhoto`), se o inimigo estiver no centro do visor e a menos de ~6 m (raio do centro da tela sem parede no meio), chamar um `Stun(segundos)` novo em `Scripts/Enemy/TemporalEraserController.cs`: para o agente, toca glitch forte (`TemporalEraserPresence`) e depois volta a procurar. Respeitar `FlashSettings` só no visual (o efeito de jogo vale sempre).
+2. **Aviso de inimigo chegando** — além do LED do `RadarDevice` (já pisca mais rápido): batida de coração/estática que aumenta com a distância (< 12 m) e leve vinheta escura nas bordas; pode reaproveitar a borda do `CameraOverheat.CreateHeatGlow`.
+3. **Animação diferente quando a câmera superaquece** — hoje `CameraOverheat.LoseCamera` usa o fechamento normal. Criar `CameraBlink.PlayOverheat()`: lâminas travando/tremendo, tela vermelha com chiado e a câmera em pixel art caindo das mãos (sprite `CameraInHands` descendo girando) em vez de descer normal.
+4. **Câmera perdida aparece no radar (azul)** — em `Scripts/Detector/RadarDevice.cs`, incluir o objeto da câmera perdida (`CameraOverheat.lostCameraInstance` / `LostCameraPickup`) como alvo com cor azul (ex.: `new Color32(70,140,255,255)`), pulsando como as peças. (Exceção à regra de "sem verde/laranja": azul é permitido aqui a pedido.)
+5. **Colocar cômodos** — mobiliar salas vazias: estender `Editor/Visual/PropScatterBuilder.cs` com conjuntos por cômodo (escritório: mesa+cadeira+PC; depósito: prateleiras+caixas), usando os modelos de `ThirdParty/PSXNostalgia-FBX` (Desk, Chair, PcScreen, PcTower) e do PSX Mega Pack.
+6. **Arrumar os relógios** — conferir as fotos `docs/revisao/qa/props/clock_*.png`; o alinhamento em `PropScatterBuilder.AlignToWall` escolhe o eixo mais fino e pode deixar o mostrador virado para a parede ou torto. Fixar a orientação do `clock_2.glb` (frente conhecida) e rodar **Ferramentas › Visual › Espalhar props PSX** de novo.
+7. **Peças aparecem antes da câmera abrir por inteiro** — `PhotoCamera.OpenCamera` chama `temporalController.SetCameraMode(true)` no início; mover para o fim de `PlayTransition` (depois que `cameraBlink.Play()` termina, quando a lente já abriu).
+8. **Marcação no PC** — destacar o computador/terminal de missão (qual objeto? confirmar com o autor) com ícone no HUD apontando a direção e/ou marcador no radar.
+9. **Eventos aleatórios** — script `RandomEvents` na Principal: a cada 25–60 s, sorteia um evento perto (8–20 m) e fora da visão: luz piscando (luzes da fase), porta abrindo/fechando sozinha (`Door.Interact`), barulho de passos. Respeitar `FlashSettings` para o piscar.
+10. **Mão do player em pixel art** — sprite em preto e branco (como `CameraInHands` em `CameraBlink.BuildCameraSprite`) segurando o radar e visível embaixo à direita; integrar no `RadarDevice` (desenhar a mão no corpo do aparelho).
