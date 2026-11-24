@@ -1,6 +1,6 @@
 # Auditoria das cenas do build
 
-Cenas auditadas: 6 · Total de itens: 558
+Cenas auditadas: 7 · Total de itens: 576
 
 ## Scripts faltando (Missing Script) (0)
 
@@ -8,7 +8,7 @@ Cenas auditadas: 6 · Total de itens: 558
 ## Prefabs sem asset (0)
 
 
-## Referências vazias ou quebradas em componentes do jogo (558)
+## Referências vazias ou quebradas em componentes do jogo (576)
 
 - `TelaInicio/Main Camera : CameraLensEffect.postProcessVolume`
 - `TelaInicio/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
@@ -305,6 +305,24 @@ Cenas auditadas: 6 · Total de itens: 558
 - `Principal/DefeatCanvas/DefeatPanel/RetryButton : ButtonHoverEffect.audioSource`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.hoverSound`
 - `Principal/DefeatCanvas/DefeatPanel/MenuButton : ButtonHoverEffect.audioSource`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.player`
+- `Principal/Baterias_Extra/Battery (1)/Cylinder_2/Object_4 : OutlineProximidade.outline`
 - `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`
 - `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetText`
 - `Victory TEMP/MenuSet/Console/Panel/Led : MenuBlinker.targetLight`

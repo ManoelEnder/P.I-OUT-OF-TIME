@@ -43,6 +43,12 @@ public class RadarDevice : MonoBehaviour
     private readonly List<Transform> pieces = new List<Transform>();
     private float nextRefresh;
 
+    // Bipe de peca proxima: mais rapido e agudo conforme chega perto (mais alto com o radar levantado).
+    [SerializeField] private float beepRange = 12f;
+    private AudioSource beepSource;
+    private AudioClip beepClip;
+    private float nextBeep;
+
     private RectTransform root;
     private RawImage screen;
     private Texture2D screenTex;
@@ -90,6 +96,58 @@ public class RadarDevice : MonoBehaviour
         player = p != null ? p.transform : null;
         movement = FindFirstObjectByType<PlayerMovement>();
         RefreshTargets();
+
+        // O detector antigo ficava no braco escondido; o radar assume o bipe.
+        foreach (DetectorPecas old in FindObjectsByType<DetectorPecas>(FindObjectsSortMode.None))
+            old.enabled = false;
+
+        beepSource = gameObject.AddComponent<AudioSource>();
+        beepSource.playOnAwake = false;
+        beepSource.spatialBlend = 0f;
+        beepClip = BuildBeep();
+    }
+
+    private void UpdateBeep()
+    {
+        float nearest = beepRange;
+        foreach (Transform piece in pieces)
+        {
+            if (piece == null || !piece.gameObject.activeInHierarchy)
+                continue;
+            float d = Vector3.Distance(piece.position, player.position);
+            if (d < nearest)
+                nearest = d;
+        }
+
+        if (nearest >= beepRange || DefeatController.IsDefeated || Time.timeScale == 0f)
+        {
+            nextBeep = 0f;
+            return;
+        }
+
+        float near = 1f - nearest / beepRange;
+        if (Time.time < nextBeep)
+            return;
+
+        nextBeep = Time.time + Mathf.Lerp(1.3f, 0.12f, near);
+        beepSource.pitch = Mathf.Lerp(1f, 1.6f, near);
+        beepSource.PlayOneShot(beepClip, Mathf.Lerp(0.06f, 0.3f, near) * Mathf.Lerp(0.5f, 1f, raise));
+    }
+
+    private static AudioClip BuildBeep()
+    {
+        const int rate = 44100;
+        int n = (int)(rate * 0.07f);
+        float[] data = new float[n];
+        for (int i = 0; i < n; i++)
+        {
+            float t = (float)i / rate;
+            float env = Mathf.Min(1f, i / (rate * 0.004f)) * (1f - (float)i / n);
+            data[i] = (Mathf.Sin(2f * Mathf.PI * 1400f * t) >= 0f ? 1f : -1f) * env * 0.5f;
+        }
+        AudioClip clip = AudioClip.Create("RadarBeep", n, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
     }
 
     // ---------- Desenho do aparelho ----------
@@ -251,6 +309,7 @@ public class RadarDevice : MonoBehaviour
 
         UpdateHand();
         UpdateLed();
+        UpdateBeep();
 
         if (Time.unscaledTime >= nextRefresh)
             RefreshTargets();
@@ -516,6 +575,7 @@ public class RadarDevice : MonoBehaviour
 
             bool isEnemy = target == enemy;
             bool isLost = overheat != null && target == overheat.LostCamera;
+            bool isGoal = DeliveryPoint.Instance != null && target == DeliveryPoint.Instance.transform;
             Vector2 p = center + new Vector2(lx, ly) * ppm;
 
             // Fora do alcance: fica na borda da tela.
@@ -524,13 +584,13 @@ public class RadarDevice : MonoBehaviour
 
             Color32 color = isEnemy ? EnemyColor : isLost ? LostCameraColor : PieceColor;
             float fade = 1f - age / 1.6f;
-            int dot = isEnemy || isLost ? 2 : 1;
+            int dot = isEnemy || isLost || isGoal ? 2 : 1;
             for (int y = -dot; y <= dot; y++)
                 for (int x = -dot; x <= dot; x++)
                     Blend((int)p.x + x, (int)p.y + y, color, fade);
 
             // Anel do pulso se abrindo.
-            float ring = (isEnemy ? 9f : 6f) * Mathf.Clamp01(age / 0.7f);
+            float ring = (isEnemy || isGoal ? 9f : 6f) * Mathf.Clamp01(age / 0.7f);
             if (age < 0.7f)
             {
                 for (int s = 0; s < 32; s++)
@@ -557,6 +617,10 @@ public class RadarDevice : MonoBehaviour
         Transform lost = overheat != null ? overheat.LostCamera : null;
         if (lost != null)
             yield return lost;
+
+        // Missao final: o ponto de montagem aparece quando da para entregar.
+        if (DeliveryPoint.Instance != null && DeliveryPoint.Instance.Active)
+            yield return DeliveryPoint.Instance.transform;
     }
 
     private static bool Crossed(float from, float to, float bearing)

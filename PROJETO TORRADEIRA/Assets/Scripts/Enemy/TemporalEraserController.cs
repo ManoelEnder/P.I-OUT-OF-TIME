@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // IA do TemporalEraser: patrulha -> persegue quando ve o jogador -> procura onde o viu por ultimo.
+// Mais esperto: guarda o rastro do jogador (migalhas a cada 1,5 m). Ao perder o jogador segue o rastro
+// fresco por alguns metros; na patrulha prefere lugares por onde o jogador passou; ouve corrida por perto.
 // O NavMeshAgent so calcula o caminho; a rotacao e suavizada aqui para ele nao "girar no eixo".
 [RequireComponent(typeof(NavMeshAgent))]
 public class TemporalEraserController : MonoBehaviour
@@ -46,6 +48,17 @@ public class TemporalEraserController : MonoBehaviour
     [SerializeField] private float searchDuration = 5f;
     [SerializeField] private float searchRadius = 8f;
     [SerializeField] private int searchAttempts = 3;
+    [SerializeField] private float searchSpeed = 3f;
+
+    [Header("Rastro e audicao")]
+    [Tooltip("Segundos depois de perder de vista em que o rastro ainda esta 'fresco'.")]
+    [SerializeField] private float trailFreshness = 7f;
+    [SerializeField] private int trailMaxSteps = 10;
+    [Tooltip("Chance de patrulhar um lugar por onde o jogador passou (0..1).")]
+    [SerializeField, Range(0f, 1f)] private float trailRoamChance = 0.6f;
+    [SerializeField] private float trailMemory = 150f;
+    [SerializeField] private float hearSprint = 11f;
+    [SerializeField] private float hearWalk = 3.5f;
 
     private NavMeshAgent agent;
     private State currentState;
@@ -67,6 +80,13 @@ public class TemporalEraserController : MonoBehaviour
 
     private Vector3 startPosition;
     private Quaternion startRotation;
+
+    private readonly System.Collections.Generic.List<Vector3> trail = new System.Collections.Generic.List<Vector3>();
+    private readonly System.Collections.Generic.List<float> trailTime = new System.Collections.Generic.List<float>();
+    private int trailIndex = -1;
+    private int trailSteps;
+    private float nextHear;
+    private PlayerMovement playerMovement;
 
     public bool IsChasing => currentState == State.Chasing;
     public bool IsStunned => Time.time < stunnedUntil;
@@ -156,7 +176,17 @@ public class TemporalEraserController : MonoBehaviour
             StartSearching();
         }
 
+        RecordTrail();
+
         bool sees = vision.CanSeePlayer();
+
+        if (!sees && currentState != State.Chasing && Hears())
+        {
+            // Ouviu: vai ate o barulho (sem saber exatamente onde o jogador esta).
+            lastKnownPlayerPosition = player.position + Random.insideUnitSphere * 1.5f;
+            lastSeenTime = Time.time;
+            StartSearching();
+        }
 
         if (sees)
         {
@@ -249,6 +279,14 @@ public class TemporalEraserController : MonoBehaviour
 
         if (HasReachedDestination())
         {
+            // Primeiro segue o rastro fresco deixado depois de sumir de vista.
+            if (NextTrailPoint(out Vector3 crumb))
+            {
+                agent.SetDestination(crumb);
+                searchTimer = Mathf.Max(searchTimer, 3f);
+                return;
+            }
+
             if (currentSearchAttempt < searchAttempts)
             {
                 currentSearchAttempt++;
@@ -289,8 +327,10 @@ public class TemporalEraserController : MonoBehaviour
 
         searchTimer = searchDuration;
         currentSearchAttempt = 0;
+        trailSteps = 0;
+        trailIndex = FirstCrumbAfter(lastSeenTime - 0.5f);
 
-        agent.speed = roamingSpeed;
+        agent.speed = searchSpeed;
         agent.isStopped = false;
         agent.SetDestination(ReachablePoint(lastKnownPlayerPosition));
     }
@@ -323,6 +363,9 @@ public class TemporalEraserController : MonoBehaviour
 
         agent.Warp(startPosition);
         transform.rotation = startRotation;
+        trail.Clear();
+        trailTime.Clear();
+        trailIndex = -1;
         lastSeenTime = -999f;
         activateAt = Time.time + activationDelay;
 
@@ -392,8 +435,95 @@ public class TemporalEraserController : MonoBehaviour
         return NavMesh.SamplePosition(target, out NavMeshHit hit, 2.5f, NavMesh.AllAreas) ? hit.position : target;
     }
 
+    // ---------- Rastro ----------
+
+    private void RecordTrail()
+    {
+        if (player == null)
+            return;
+
+        Vector3 p = player.position;
+        if (trail.Count > 0 && (trail[trail.Count - 1] - p).sqrMagnitude < 2.25f)
+            return;
+        if (!NavMesh.SamplePosition(p, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
+            return;
+
+        trail.Add(hit.position);
+        trailTime.Add(Time.time);
+        if (trail.Count > 120)
+        {
+            trail.RemoveAt(0);
+            trailTime.RemoveAt(0);
+        }
+    }
+
+    private int FirstCrumbAfter(float time)
+    {
+        for (int i = 0; i < trailTime.Count; i++)
+            if (trailTime[i] >= time)
+                return i;
+        return -1;
+    }
+
+    private bool NextTrailPoint(out Vector3 point)
+    {
+        point = Vector3.zero;
+        while (trailIndex >= 0 && trailIndex < trail.Count && trailSteps < trailMaxSteps)
+        {
+            int i = trailIndex++;
+            // So o trecho fresco (logo depois de sumir de vista) ainda tem "cheiro".
+            if (trailTime[i] > lastSeenTime + trailFreshness)
+                break;
+            if ((trail[i] - transform.position).sqrMagnitude < 2.25f)
+                continue;
+            trailSteps++;
+            point = trail[i];
+            return true;
+        }
+        trailIndex = -1;
+        return false;
+    }
+
+    private bool Hears()
+    {
+        if (Time.time < nextHear || player == null)
+            return false;
+        nextHear = Time.time + 0.25f;
+
+        if (playerMovement == null)
+            playerMovement = player.GetComponentInParent<PlayerMovement>();
+        if (playerMovement == null)
+            playerMovement = FindFirstObjectByType<PlayerMovement>();
+        if (playerMovement == null || playerMovement.MoveBlend < 0.1f)
+            return false;
+
+        float range = playerMovement.IsSprinting ? hearSprint : hearWalk;
+        Vector3 d = player.position - transform.position;
+        return Mathf.Abs(d.y) < 2.5f && d.sqrMagnitude < range * range;
+    }
+
     private void SetRoamingDestination()
     {
+        // Prefere lugares por onde o jogador passou (nao muito recentes, para nao ir direto nele).
+        if (trail.Count > 4 && Random.value < trailRoamChance)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                int k = Random.Range(0, trail.Count);
+                float age = Time.time - trailTime[k];
+                if (age < 8f || age > trailMemory)
+                    continue;
+                if (Vector3.Distance(trail[k], transform.position) < minRoamDistance)
+                    continue;
+                NavMeshPath path = new NavMeshPath();
+                if (agent.CalculatePath(trail[k], path) && path.status == NavMeshPathStatus.PathComplete)
+                {
+                    agent.SetDestination(trail[k]);
+                    return;
+                }
+            }
+        }
+
         for (int i = 0; i < 6; i++)
         {
             if (TryGetRandomNavMeshPosition(transform.position, roamingRadius, out Vector3 destination) &&

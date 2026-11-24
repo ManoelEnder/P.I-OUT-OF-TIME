@@ -50,6 +50,27 @@ public class RandomEvents : MonoBehaviour
             stepClip = BuildStep();
 
         Schedule();
+        AddFaultyLamps();
+    }
+
+    // Uma parte das lampadas da fase fica com defeito (pisca de tempos em tempos).
+    private static void AddFaultyLamps()
+    {
+        int index = 0;
+        foreach (Light light in FindObjectsByType<Light>(FindObjectsSortMode.InstanceID))
+        {
+            if (light.type == LightType.Directional || light.GetComponent<RandomLightFlicker>() != null || light.GetComponent<LampFlicker>() != null)
+                continue;
+            if (light.GetComponentInParent<DeliveryPoint>() != null || light.GetComponentInParent<Camera>() != null)
+                continue;
+
+            // Estavel entre partidas: 1 em cada 3 lampadas.
+            if (index++ % 3 != 0)
+                continue;
+
+            LampFlicker flicker = light.gameObject.AddComponent<LampFlicker>();
+            flicker.buzz = index % 2 == 0;
+        }
     }
 
     private void Schedule()
@@ -102,7 +123,7 @@ public class RandomEvents : MonoBehaviour
     private bool TryFlicker()
     {
         Light[] lights = FindObjectsByType<Light>(FindObjectsSortMode.None)
-            .Where(l => l.enabled && l.type != LightType.Directional && l.intensity > 0.05f && InRange(l.transform.position))
+            .Where(l => l.enabled && l.type != LightType.Directional && l.intensity > 0.05f && l.GetComponent<LampFlicker>() == null && InRange(l.transform.position))
             .ToArray();
         if (lights.Length == 0)
             return false;

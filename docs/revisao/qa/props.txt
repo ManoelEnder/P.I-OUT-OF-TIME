@@ -1,9 +1,12 @@
-pontos de chao: 2178
-postos de trabalho: 6
-caixas: 22
+pontos de chao: 2673
+postos de trabalho: 12
+bancadas: 10
+moveis de parede: 40
+sala de espera: 6
+caixas: 26
 carpet: 6
 brick: 10
 clock: 8
 outlet: 14
-itens em mesas: 16
+itens em mesas: 22
 occlusion culling: refeito

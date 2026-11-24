@@ -89,8 +89,8 @@ public class PauseMenu : MonoBehaviour
     {
         if (!IsPaused)
         {
-            // Intro, derrota ou outro painel modal ja congelou o jogo.
-            if (Time.timeScale <= 0f)
+            // Intro, derrota (inclusive o jumpscare) ou outro painel modal ja congelou o jogo.
+            if (Time.timeScale <= 0f || DefeatController.IsDefeated)
                 return;
 
             if (photoCamera != null && photoCamera.TryExitCameraMode())

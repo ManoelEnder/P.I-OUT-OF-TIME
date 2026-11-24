@@ -173,9 +173,9 @@ public class FieldJournal : MonoBehaviour
         TextMeshProUGUI title = Label(missionsPage, "Title", "OBJETIVOS  //  LAB 1975", 22f, Dim, TextAlignmentOptions.Left);
         Place(title.rectTransform, new Vector2(0f, 230f), new Vector2(860f, 34f));
 
-        rows = new Row[4];
+        rows = new Row[5];
         for (int i = 0; i < rows.Length; i++)
-            rows[i] = BuildRow(missionsPage, i, 150f - i * 105f);
+            rows[i] = BuildRow(missionsPage, i, 168f - i * 88f);
 
         TextMeshProUGUI footer = Label(panel, "JournalHint", "[TAB] trocar página    [ESC] fechar", 18f, Dim, TextAlignmentOptions.Center);
         RectTransform f = footer.rectTransform;
@@ -240,6 +240,7 @@ public class FieldJournal : MonoBehaviour
         SetRow(rows[1], "Coletar peças da câmera", missions.GetPieceCount(), missions.PiecesRequired);
         SetRow(rows[2], "Descobrir uma peça com o visor", missions.HasDiscoveredPiece() ? 1 : 0, 1);
         SetRow(rows[3], "Fotografar lugares marcados", missions.GetLocationCount(), missions.LocationsRequired);
+        SetRow(rows[4], missions.ReadyToDeliver ? "FINAL: entregar as peças no ponto de montagem" : "Entregar as peças no ponto de montagem", missions.Delivered ? 1 : 0, 1);
     }
 
     private static void SetRow(Row row, string title, int value, int required)

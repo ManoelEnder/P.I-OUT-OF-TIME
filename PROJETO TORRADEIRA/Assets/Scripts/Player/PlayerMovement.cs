@@ -55,6 +55,8 @@ public class PlayerMovement : MonoBehaviour
     // Lidos pelo aparelho de radar (RadarDevice) para balancar na mao.
     public float StepPhase { get; private set; }
     public float MoveBlend { get; private set; }
+    // Correndo faz barulho: o inimigo escuta de mais longe.
+    public bool IsSprinting { get; private set; }
     public Vector2 LookDelta { get; private set; }
     public float LandingOffset => landOffset;
 
@@ -117,6 +119,7 @@ public class PlayerMovement : MonoBehaviour
 
         // ---------- Horizontal com aceleracao ----------
         bool sprinting = Keyboard.current.leftShiftKey.isPressed && input.y > 0.1f && grounded;
+        IsSprinting = sprinting;
         float targetSpeed = sprinting ? sprintSpeed : moveSpeed;
         Vector3 wish = (transform.right * input.x + transform.forward * input.y) * targetSpeed;
 

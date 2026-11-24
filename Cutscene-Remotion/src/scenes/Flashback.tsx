@@ -116,7 +116,7 @@ export const SabotageScene: React.FC = () => {
   );
 };
 
-const FloorScatter: React.FC<{ t: number }> = ({ t }) => {
+export const FloorScatter: React.FC<{ t: number }> = ({ t }) => {
   const k = interpolate(t, [0, 20], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   const shake = t < 12 ? (rnd(t) - 0.5) * 8 : 0;
   const part = (dx: number, dy: number, rot: number, el: React.ReactNode, key: number) => (

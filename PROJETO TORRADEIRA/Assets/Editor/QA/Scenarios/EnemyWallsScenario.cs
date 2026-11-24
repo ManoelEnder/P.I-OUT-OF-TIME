@@ -69,6 +69,9 @@ public class EnemyWallsScenario : QAScenario
         while (Time.realtimeSinceStartup < end && !DefeatController.IsDefeated)
         {
             yield return null;
+            // O jumpscare tira o inimigo do NavMesh de proposito.
+            if (DefeatController.IsDefeated)
+                break;
             Vector3 now = enemy.transform.position;
             moved += Vector3.Distance(now, last);
 
@@ -90,6 +93,6 @@ public class EnemyWallsScenario : QAScenario
         Check(moved > 3f, "inimigo andou durante o teste (" + moved.ToString("0.0") + " m)");
         Check(crossings == 0, "inimigo nunca atravessou parede (" + crossings + " vezes em " + frames + " quadros)");
         Check(offMesh == 0, "inimigo sempre em cima do NavMesh (" + offMesh + " quadros fora)");
-        Check(agent.isOnNavMesh, "agente continua no NavMesh");
+        Check(DefeatController.IsDefeated || agent.isOnNavMesh, "agente continua no NavMesh");
     }
 }

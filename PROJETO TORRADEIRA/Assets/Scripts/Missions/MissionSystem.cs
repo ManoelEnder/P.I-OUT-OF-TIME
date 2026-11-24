@@ -25,6 +25,11 @@ public class MissionSystem : MonoBehaviour
 
     private bool changingScene;
 
+    // Missao final: com tudo pronto, entregar as pecas no ponto de montagem (DeliveryPoint).
+    public bool ReadyToDeliver { get; private set; }
+    public bool Delivered { get; private set; }
+    public event System.Action OnReadyToDeliver;
+
     private void Start()
     {
         photos = 0;
@@ -166,11 +171,19 @@ public class MissionSystem : MonoBehaviour
                 ? "[X] Fotografar lugares [" + locationsRequired + "/" + locationsRequired + "]"
                 : "Fotografar lugares [" + found + "/" + locationsRequired + "]";
 
+        string deliverMission =
+            Delivered
+                ? "[X] Entregar as peças no ponto de montagem"
+                : ReadyToDeliver
+                    ? "[ ] FINAL: entregue as peças no ponto de montagem (laboratório inicial)"
+                    : "[ ] Entregar as peças no ponto de montagem";
+
         missionText.text =
             photoMission + "\n" +
             pieceMission + "\n" +
             discoverMission + "\n" +
-            locationMission;
+            locationMission + "\n" +
+            deliverMission;
     }
 
     private void CheckMissions()
@@ -178,12 +191,26 @@ public class MissionSystem : MonoBehaviour
         if (changingScene)
             return;
 
-        if (photos >= photosRequired &&
+        if (!ReadyToDeliver &&
+            photos >= photosRequired &&
             pieces >= piecesRequired &&
             photographedLocations.Count >= locationsRequired)
         {
-            StartCoroutine(FadeAndLoad());
+            ReadyToDeliver = true;
+            UpdateMissionText();
+            OnReadyToDeliver?.Invoke();
         }
+    }
+
+    // Chamado pelo ponto de montagem: encerra a fase e toca a cutscene final.
+    public void Deliver()
+    {
+        if (!ReadyToDeliver || Delivered || changingScene)
+            return;
+
+        Delivered = true;
+        UpdateMissionText();
+        StartCoroutine(FadeAndLoad());
     }
 
     private IEnumerator FadeAndLoad()

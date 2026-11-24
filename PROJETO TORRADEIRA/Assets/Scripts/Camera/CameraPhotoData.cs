@@ -121,6 +121,8 @@ public class CameraPhotoData : MonoBehaviour
             audioSource.PlayOneShot(shutterSound);
     }
 
+    private bool lastStoredInAlbum = true;
+
     private void RegisterPhoto(Texture2D photo)
     {
         if (missionSystem != null)
@@ -129,6 +131,7 @@ public class CameraPhotoData : MonoBehaviour
         bool storedInAlbum =
             albumController != null &&
             albumController.AddPhoto(photo);
+        lastStoredInAlbum = storedInAlbum;
 
         if (!storedInAlbum)
             ownedPreviewTexture = photo;
@@ -355,7 +358,9 @@ public class CameraPhotoData : MonoBehaviour
         if (albumHint == null)
             return;
 
-        albumHint.text = "+1 NO ÁLBUM  [F]";
+        albumHint.text = lastStoredInAlbum
+            ? "+1 NO ÁLBUM  [F]"
+            : "ÁLBUM CHEIO (4/4)  [F] APAGAR";
         albumHint.rectTransform.anchoredPosition = position;
         albumHint.alpha = 1f;
         albumHint.gameObject.SetActive(true);

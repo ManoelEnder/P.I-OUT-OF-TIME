@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Fluxo completo duas vezes: tela inicial -> menu -> cutscene (pulada) -> fase -> final -> menu,
@@ -28,14 +29,24 @@ public class FlowScenario : QAScenario
         if (missions != null)
             yield return CompleteMissions(missions);
 
-        yield return WaitForScene("Victory TEMP", 20f);
+        // Missao final: entregar as pecas no ponto de montagem -> cutscene final -> creditos.
+        Check(missions != null && missions.ReadyToDeliver, "missoes completas liberam a entrega");
+        DeliveryPoint delivery = Object.FindFirstObjectByType<DeliveryPoint>();
+        Check(delivery != null && delivery.CanInteract(), "ponto de montagem na fase");
+        if (delivery != null)
+            delivery.Interact();
+
+        yield return WaitForScene("OutroCutsceneVideo", 20f);
+        yield return WaitSeconds(2f);
+        IntroVideoCutscene outro = Object.FindFirstObjectByType<IntroVideoCutscene>();
+        Check(outro != null && outro.player != null && outro.player.isPlaying, "cutscene final tocando");
+        if (outro != null)
+            outro.Finish();
+
+        yield return WaitForScene("Credits", 20f);
         yield return WaitSeconds(1f);
-        Check(GameObject.Find("FinalScreen_TV") != null, "tela final no estilo do menu (TV CRT)");
-        Button toMenu = FindButtonWithLabel("Menu");
-        Check(toMenu != null, "final tem botao para o menu");
-        Check(Cursor.visible, "cursor visivel no final");
-        if (toMenu != null)
-            toMenu.onClick.Invoke();
+        Check(SceneManager.GetActiveScene().name == "Credits", "creditos depois da cutscene final");
+        SceneManager.LoadScene("Menu");
         yield return WaitForScene("Menu", 15f);
         Check(Cursor.visible && Cursor.lockState != CursorLockMode.Locked, "cursor livre no menu");
 

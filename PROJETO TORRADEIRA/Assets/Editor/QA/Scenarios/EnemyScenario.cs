@@ -45,18 +45,24 @@ public class EnemyScenario : QAScenario
             yield return null;
         }
         Check(DefeatController.IsDefeated, "inimigo alcanca e derrota o jogador");
-        Check(Time.timeScale == 0f, "derrota congela o jogo");
+
+        // Jumpscare primeiro; a tela de derrota vem depois.
+        end = Time.realtimeSinceStartup + 6f;
+        while (Time.timeScale != 0f && Time.realtimeSinceStartup < end)
+            yield return null;
+        Check(Time.timeScale == 0f, "derrota congela o jogo depois do jumpscare");
         Check(GameObject.Find("DefeatCanvas").transform.Find("DefeatPanel").gameObject.activeSelf, "tela de derrota aparece");
         Check(Cursor.visible, "cursor livre na derrota");
 
         defeat.Retry();
         yield return null;
         yield return null;
+        yield return WaitForScene("Principal", 20f);
+        yield return WaitSeconds(1f);
 
-        Check(!DefeatController.IsDefeated && Time.timeScale == 1f, "tentar de novo retoma o jogo");
-        Check(Vector3.Distance(player.position, spawn.position) < 0.5f, "jogador volta ao PlayerSpawn");
-        Check(Vector3.Distance(enemy.transform.position, enemyStart) < 1f, "inimigo volta ao inicio");
-        Check(!enemy.IsChasing, "inimigo esquece o jogador");
+        Check(!DefeatController.IsDefeated && Time.timeScale == 1f, "tentar de novo recomeca a fase");
+        TemporalEraserController fresh = Object.FindFirstObjectByType<TemporalEraserController>();
+        Check(fresh != null && !fresh.IsChasing, "inimigo recomeca sem perseguir");
         Check(CursorCaptured, "cursor volta ao jogo");
     }
 }

@@ -50,6 +50,18 @@ public static class PropScatterBuilder
         { "desk", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/Desk.fbx", Size = 1.5f, CullHeight = 0.01f, KeepMaterials = true } },
         { "chair", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/Chair.fbx", Size = 1.0f, CullHeight = 0.01f, KeepMaterials = true } },
         { "pcscreen", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/PcScreen.fbx", Size = 0.45f, CullHeight = 0.015f, KeepMaterials = true } },
+        // Moveis grandes (laboratorios e escritorios). Tamanho real: jogador tem ~1,8 m.
+        { "metaltable", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/MetalTable.prefab", Size = 1.8f, CullHeight = 0.008f, KeepMaterials = true } },
+        { "roundtable", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/RoundTable.prefab", Size = 1.2f, CullHeight = 0.008f, KeepMaterials = true } },
+        { "bigcloset", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/BigCloset.prefab", Size = 2.1f, CullHeight = 0.006f, KeepMaterials = true } },
+        { "smallcloset", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/SmallCloset.prefab", Size = 1.4f, CullHeight = 0.008f, KeepMaterials = true } },
+        { "closet2", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/closet2.prefab", Size = 2.0f, CullHeight = 0.006f, KeepMaterials = true } },
+        { "couch", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/Couch.prefab", Size = 2.0f, CullHeight = 0.008f, KeepMaterials = true } },
+        { "armchair", new Prop { Path = "Assets/Comodos/Furniture/Prefabs/Fotel.prefab", Size = 1.4f, CullHeight = 0.01f, KeepMaterials = true } },
+        { "cupboardA", new Prop { Path = "Assets/Comodos/JustPlay/Furniture used set/Prefabs/Cupboard_A.prefab", Size = 1.9f, CullHeight = 0.006f, KeepMaterials = true } },
+        { "cupboardB", new Prop { Path = "Assets/Comodos/JustPlay/Furniture used set/Prefabs/Cupboard_B.prefab", Size = 1.9f, CullHeight = 0.006f, KeepMaterials = true } },
+        { "commodeA", new Prop { Path = "Assets/Comodos/JustPlay/Furniture used set/Prefabs/Сommode_A.prefab", Size = 1.1f, CullHeight = 0.01f, KeepMaterials = true } },
+        { "nightstand", new Prop { Path = "Assets/Comodos/JustPlay/Furniture used set/Prefabs/Nightstand_A.prefab", Size = 0.6f, CullHeight = 0.015f, KeepMaterials = true } },
         { "pctower", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/PcTower.fbx", Size = 0.45f, CullHeight = 0.015f, KeepMaterials = true } },
     };
 
@@ -167,8 +179,11 @@ public static class PropScatterBuilder
         List<Vector3> floor = FloorSamples();
         report.AppendLine("pontos de chao: " + floor.Count);
 
-        PlaceOffices(root, floor, 6);
-        PlaceWallBoxes(root, floor, 22);
+        PlaceOffices(root, floor, 12);
+        PlaceLabBenches(root, floor, 10);
+        PlaceAgainstWall(root, floor, new[] { "bigcloset", "closet2", "cupboardA", "cupboardB", "smallcloset", "commodeA", "metaltable", "nightstand" }, 40, 3.2f, "moveis de parede");
+        PlaceAgainstWall(root, floor, new[] { "couch", "armchair" }, 6, 7f, "sala de espera");
+        PlaceWallBoxes(root, floor, 26);
         PlaceFloorItems(root, floor, "carpet", 6, 2.0f, false);
         PlaceFloorItems(root, floor, "brick", 10, 0.6f, true);
         PlaceWallMounted(root, floor, "clock", 8, 1.9f, 2.4f);
@@ -321,6 +336,87 @@ public static class PropScatterBuilder
         }
 
         report.AppendLine("caixas: " + placed);
+    }
+
+    // Movel encostado numa parede de verdade, com a frente (+Z do prefab) para a sala.
+    private static void PlaceAgainstWall(Transform root, List<Vector3> floor, string[] keys, int count, float spacing, string label)
+    {
+        int placed = 0;
+        foreach (Vector3 p in floor)
+        {
+            if (placed >= count)
+                break;
+
+            if (!NavMesh.FindClosestEdge(p, out NavMeshHit edge, NavMesh.AllAreas) || edge.distance > 0.8f)
+                continue;
+            if (!FarFrom(edge.position, spacing, 2.4f) || Narrow(edge.position))
+                continue;
+
+            Vector3 normal = edge.normal.sqrMagnitude > 0.01f ? edge.normal : Vector3.forward;
+            if (!Physics.Raycast(edge.position + Vector3.up * 1.0f + normal * 0.3f, -normal, out RaycastHit wall, 1.4f, solidMask, QueryTriggerInteraction.Ignore))
+                continue;
+            if (Mathf.Abs(wall.normal.y) > 0.2f)
+                continue;
+            normal = new Vector3(wall.normal.x, 0f, wall.normal.z).normalized;
+
+            string key = keys[random.Next(keys.Length)];
+            Quaternion facing = Quaternion.LookRotation(normal, Vector3.up);
+            GameObject go = Spawn(root, key, Vector3.zero, facing, 1f, out Bounds b);
+            float depth = Vector3.Dot(b.extents, new Vector3(Mathf.Abs(normal.x), 0f, Mathf.Abs(normal.z)));
+            Vector3 basePos = new Vector3(wall.point.x, edge.position.y, wall.point.z) + normal * (depth + 0.03f);
+            go.transform.position += basePos - new Vector3(b.center.x, b.min.y, b.center.z);
+            Bounds wb = new Bounds(b.center + (basePos - new Vector3(b.center.x, b.min.y, b.center.z)), b.size);
+
+            // Espaco livre (sem parede, porta ou outro movel) e chao embaixo.
+            bool blocked = Physics.CheckBox(wb.center + Vector3.up * 0.05f, wb.extents * 0.92f - new Vector3(0f, 0.08f, 0f), Quaternion.identity, solidMask, QueryTriggerInteraction.Ignore);
+            if (blocked || wb.size.y > 2.6f)
+            {
+                Undo.DestroyObjectImmediate(go);
+                continue;
+            }
+
+            AddBoxCollider(go, wb);
+            AddObstacle(go, wb);
+            Physics.SyncTransforms();
+            used.Add(edge.position);
+            placed++;
+        }
+
+        report.AppendLine(label + ": " + placed);
+    }
+
+    // Bancadas de laboratorio no meio de salas grandes, com cadeira e itens em cima.
+    private static void PlaceLabBenches(Transform root, List<Vector3> floor, int count)
+    {
+        int placed = 0;
+        foreach (Vector3 p in floor)
+        {
+            if (placed >= count)
+                break;
+
+            NavMesh.FindClosestEdge(p, out NavMeshHit edge, NavMesh.AllAreas);
+            if (edge.distance < 2.4f || !FarFrom(p, 6f, 3f))
+                continue;
+
+            Quaternion rot = Quaternion.Euler(0f, random.Next(4) * 90f, 0f);
+            if (Physics.CheckBox(p + Vector3.up * 0.9f, new Vector3(1.4f, 0.7f, 1.4f), rot, solidMask, QueryTriggerInteraction.Ignore))
+                continue;
+
+            GameObject table = Spawn(root, "metaltable", p, rot, 1f, out Bounds tb);
+            AddBoxCollider(table, tb);
+            AddObstacle(table, tb);
+
+            Vector3 side = rot * Vector3.forward;
+            GameObject chair = Spawn(root, "chair", p + side * (Vector3.Dot(tb.extents, new Vector3(Mathf.Abs(side.x), 0f, Mathf.Abs(side.z))) + 0.35f), Quaternion.LookRotation(-side) * Quaternion.Euler(0f, (float)(random.NextDouble() * 30 - 15), 0f), 1f, out Bounds cb);
+            AddBoxCollider(chair, cb);
+            AddObstacle(chair, cb);
+            Physics.SyncTransforms();
+
+            used.Add(p);
+            placed++;
+        }
+
+        report.AppendLine("bancadas: " + placed);
     }
 
     // Posto de trabalho (mesa + cadeira + monitor + gabinete) encostado numa parede livre.
@@ -519,6 +615,8 @@ public static class PropScatterBuilder
         GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prop.Source);
         if (go == null)
             go = Object.Instantiate(prop.Source);
+        else if (PrefabUtility.IsPartOfPrefabInstance(go))
+            PrefabUtility.UnpackPrefabInstance(go, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
         Undo.RegisterCreatedObjectUndo(go, "Props");
         go.name = key;
         go.transform.SetParent(root, true);

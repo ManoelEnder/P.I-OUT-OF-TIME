@@ -26,12 +26,12 @@ public class CameraBlink : MonoBehaviour
     [SerializeField] private float fadeInDuration = 0.45f;
 
     [Header("Camera ate o rosto")]
-    [SerializeField] private float raiseTime = 0.5f;
-    [SerializeField] private float lowerTime = 0.5f;
+    [SerializeField] private float raiseTime = 0.2f;
+    [SerializeField] private float lowerTime = 0.18f;
 
     [Header("Diafragma")]
-    [SerializeField] private float irisOpenTime = 0.85f;
-    [SerializeField] private float irisCloseTime = 1.0f;
+    [SerializeField] private float irisOpenTime = 0.3f;
+    [SerializeField] private float irisCloseTime = 0.28f;
     [Tooltip("Abertura com o visor aberto (1 = laminas fora da tela). As laminas ficam nos cantos como borda da lente.")]
     [SerializeField, Range(0.5f, 1f)] private float restAperture = 0.84f;
     [Tooltip("Abertura no zoom maximo (substitui as faixas pretas).")]
@@ -176,7 +176,7 @@ public class CameraBlink : MonoBehaviour
         SetIris(ClosedRadius(), -bladeTurn);
         SetHUDAlpha(0f);
         SetHUDScale(1f);
-        yield return WaitUnscaled(0.08f);
+        yield return WaitUnscaled(0.03f);
 
         if (iris != null)
             iris.color = Color.white;
@@ -320,7 +320,7 @@ public class CameraBlink : MonoBehaviour
     // Superaquecimento: a camera sai do rosto e escorrega das maos, girando para fora da tela.
     private IEnumerator DropCamera()
     {
-        yield return RaiseCamera(false, lowerTime * 0.45f);
+        yield return RaiseCamera(false, 0.22f);
 
         RectTransform rect = held.rectTransform;
         RectTransform host = HostRect();

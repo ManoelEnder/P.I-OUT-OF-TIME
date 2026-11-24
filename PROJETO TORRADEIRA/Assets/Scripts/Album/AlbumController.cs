@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections;
@@ -28,11 +29,11 @@ public class AlbumController : MonoBehaviour
     [SerializeField] private MonoBehaviour pauseMenuScript;
 
     [Header("Album Settings")]
-    [SerializeField] private int maxPhotos = 6;
+    [SerializeField] private int maxPhotos = 4;
 
     [Header("Album Layout")]
     [SerializeField] private int columns = 2;
-    [SerializeField] private int rows = 3;
+    [SerializeField] private int rows = 2;
 
     private readonly List<AlbumPhoto> photos =
         new List<AlbumPhoto>();
@@ -71,6 +72,27 @@ public class AlbumController : MonoBehaviour
 
         TMP_FontAsset font = deleteConfirmationText != null ? deleteConfirmationText.font : null;
         journal.Init(albumPanel, photoContainer, font);
+
+        // Album de 4 fotos: grade 2x2 com cartoes de foto instantanea (proporcao do cartao ~ 4:3.6).
+        maxPhotos = Mathf.Min(maxPhotos, 4);
+        GridLayoutGroup grid = photoContainer != null ? photoContainer.GetComponent<GridLayoutGroup>() : null;
+        if (grid != null && photoContainer is RectTransform area)
+        {
+            Canvas.ForceUpdateCanvases();
+            Vector2 size = area.rect.size;
+            if (size.x < 10f || size.y < 10f)
+                size = new Vector2(640f, 520f);
+            Vector2 spacing = new Vector2(Mathf.Max(28f, size.x * 0.06f), Mathf.Max(24f, size.y * 0.06f));
+            float w = (size.x - spacing.x - grid.padding.horizontal) / columns;
+            float h = (size.y - spacing.y - grid.padding.vertical) / rows;
+            // Mantem a proporcao do cartao (foto 16:9 + margem de baixo).
+            float cardW = Mathf.Min(w, h / 0.78f);
+            grid.cellSize = new Vector2(cardW, cardW * 0.78f);
+            grid.spacing = spacing;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = columns;
+            grid.childAlignment = TextAnchor.MiddleCenter;
+        }
 
         if (albumPanel != null)
             albumPanel.SetActive(false);
