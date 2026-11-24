@@ -77,6 +77,9 @@ public class CameraOverheat : MonoBehaviour
 
     public bool IsCameraLost => cameraLost;
 
+    // Camera caida no mapa (o radar mostra em azul).
+    public Transform LostCamera => lostCameraInstance != null ? lostCameraInstance.transform : null;
+
     private void Awake()
     {
         if (photoCamera == null)

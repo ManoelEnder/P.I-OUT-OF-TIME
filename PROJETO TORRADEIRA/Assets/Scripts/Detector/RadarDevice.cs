@@ -33,11 +33,13 @@ public class RadarDevice : MonoBehaviour
     private static readonly Color32 Sweep = new Color32(120, 128, 130, 255);
     private static readonly Color32 PieceColor = new Color32(255, 255, 255, 255);
     private static readonly Color32 EnemyColor = new Color32(235, 40, 36, 255);
+    private static readonly Color32 LostCameraColor = new Color32(70, 140, 255, 255);
 
     private Transform player;
     private PlayerMovement movement;
     private Vector2 lag, lagVelocity;
     private Transform enemy;
+    private CameraOverheat overheat;
     private readonly List<Transform> pieces = new List<Transform>();
     private float nextRefresh;
 
@@ -168,6 +170,63 @@ public class RadarDevice : MonoBehaviour
         ledGlow = NewImage("LedGlow", root);
         PlacePx(ledGlow.rectTransform, 37, 16, 7, 7);
         ledGlow.transform.SetSiblingIndex(led.transform.GetSiblingIndex());
+
+        BuildHand();
+    }
+
+    // Mao do jogador em pixel art preto e branco: segura o aparelho por baixo, dedao por cima
+    // da frente e dedos dobrados na lateral; a manga escura sai pela parte de baixo da tela.
+    private void BuildHand()
+    {
+        const int w = 40, h = 46;
+        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp, name = "RadarHand" };
+        var px = new Color32[w * h];
+        Color32 clear = new Color32(0, 0, 0, 0);
+        Color32 outline = new Color32(14, 14, 14, 255);
+        Color32 skin = new Color32(176, 176, 176, 255);
+        Color32 skinShade = new Color32(124, 124, 124, 255);
+        Color32 skinLight = new Color32(214, 214, 214, 255);
+        Color32 sleeve = new Color32(46, 46, 46, 255);
+        Color32 sleeveLight = new Color32(70, 70, 70, 255);
+        for (int i = 0; i < px.Length; i++)
+            px[i] = clear;
+
+        void Box(int x0, int y0, int x1, int y1, Color32 c)
+        {
+            for (int y = y0; y <= y1; y++)
+                for (int x = x0; x <= x1; x++)
+                    if (x >= 0 && y >= 0 && x < w && y < h)
+                        px[y * w + x] = c;
+        }
+
+        // Manga.
+        Box(8, 0, 32, 13, outline);
+        Box(9, 0, 31, 12, sleeve);
+        Box(9, 11, 31, 12, sleeveLight);
+        // Palma por baixo do aparelho.
+        Box(5, 12, 35, 27, outline);
+        Box(6, 13, 34, 26, skin);
+        Box(6, 13, 34, 15, skinShade);
+        // Dedos dobrados na lateral esquerda (quatro segmentos).
+        for (int i = 0; i < 4; i++)
+        {
+            int y = 17 + i * 5;
+            Box(1, y, 8, y + 4, outline);
+            Box(2, y + 1, 7, y + 3, i % 2 == 0 ? skin : skinLight);
+        }
+        // Dedao subindo pela frente, com unha.
+        Box(27, 24, 35, 42, outline);
+        Box(28, 25, 34, 41, skin);
+        Box(29, 37, 33, 40, skinLight);
+        Box(28, 25, 29, 41, skinShade);
+
+        tex.SetPixels32(px);
+        tex.Apply(false, true);
+
+        Image hand = NewImage("Hand", root);
+        hand.sprite = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f);
+        // Em pixels do aparelho: canto de baixo, passando um pouco da borda.
+        PlacePx(hand.rectTransform, 50, -22, w, h);
     }
 
     private void BuildScreen()
@@ -267,6 +326,9 @@ public class RadarDevice : MonoBehaviour
             if (piece.isActiveAndEnabled)
                 pieces.Add(piece.transform);
         }
+
+        if (overheat == null)
+            overheat = FindFirstObjectByType<CameraOverheat>();
 
         TemporalEraserController e = FindFirstObjectByType<TemporalEraserController>();
         enemy = e != null ? e.transform : null;
@@ -453,15 +515,16 @@ public class RadarDevice : MonoBehaviour
                 continue;
 
             bool isEnemy = target == enemy;
+            bool isLost = overheat != null && target == overheat.LostCamera;
             Vector2 p = center + new Vector2(lx, ly) * ppm;
 
             // Fora do alcance: fica na borda da tela.
             p.x = Mathf.Clamp(p.x, 2f, TexW - 3f);
             p.y = Mathf.Clamp(p.y, 2f, TexH - 3f);
 
-            Color32 color = isEnemy ? EnemyColor : PieceColor;
+            Color32 color = isEnemy ? EnemyColor : isLost ? LostCameraColor : PieceColor;
             float fade = 1f - age / 1.6f;
-            int dot = isEnemy ? 2 : 1;
+            int dot = isEnemy || isLost ? 2 : 1;
             for (int y = -dot; y <= dot; y++)
                 for (int x = -dot; x <= dot; x++)
                     Blend((int)p.x + x, (int)p.y + y, color, fade);
@@ -489,6 +552,11 @@ public class RadarDevice : MonoBehaviour
 
         if (enemy != null && enemy.gameObject.activeInHierarchy && Mathf.Abs(enemy.position.y - player.position.y) < 3f)
             yield return enemy;
+
+        // Camera perdida no superaquecimento: aparece em qualquer andar.
+        Transform lost = overheat != null ? overheat.LostCamera : null;
+        if (lost != null)
+            yield return lost;
     }
 
     private static bool Crossed(float from, float to, float bearing)

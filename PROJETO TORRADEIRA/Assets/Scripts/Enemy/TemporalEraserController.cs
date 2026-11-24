@@ -62,11 +62,27 @@ public class TemporalEraserController : MonoBehaviour
     private float stuckTimer;
 
     private float activateAt;
+    private float stunnedUntil;
+    private bool wasStunned;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
 
     public bool IsChasing => currentState == State.Chasing;
+    public bool IsStunned => Time.time < stunnedUntil;
+
+    // Flash da camera de perto: fica atordoado, parado, e depois procura onde o jogador estava.
+    public void Stun(float seconds)
+    {
+        stunnedUntil = Time.time + seconds;
+        sightTimer = 0f;
+        if (player != null)
+            lastKnownPlayerPosition = player.position;
+
+        TemporalEraserPresence presence = GetComponent<TemporalEraserPresence>();
+        if (presence != null)
+            presence.Shock(Mathf.Min(seconds, 1.2f));
+    }
 
     private void Awake()
     {
@@ -124,6 +140,20 @@ public class TemporalEraserController : MonoBehaviour
         {
             agent.isStopped = true;
             return;
+        }
+
+        if (IsStunned)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+            wasStunned = true;
+            return;
+        }
+
+        if (wasStunned)
+        {
+            wasStunned = false;
+            StartSearching();
         }
 
         bool sees = vision.CanSeePlayer();

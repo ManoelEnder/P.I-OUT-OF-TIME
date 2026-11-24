@@ -122,7 +122,7 @@ Shader "OutOfTime/ApertureIris"
                 if (edge > 0.0 && edge < px * 1.5)
                     col = float3(0.42, 0.42, 0.43);
 
-                return fixed4(col, alpha * i.color.a);
+                return fixed4(col * i.color.rgb, alpha * i.color.a);
             }
             ENDCG
         }

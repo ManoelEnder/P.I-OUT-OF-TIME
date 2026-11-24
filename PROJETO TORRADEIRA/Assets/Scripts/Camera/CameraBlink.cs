@@ -55,6 +55,14 @@ public class CameraBlink : MonoBehaviour
     private Coroutine animationCoroutine;
 
     private bool lensResting;
+
+    // Fechamento por superaquecimento: laminas travando, vermelho, camera caindo das maos.
+    private bool overheatClose;
+
+    public void PrepareOverheat()
+    {
+        overheatClose = true;
+    }
     private float zoom;
     private float restRadius;
     private float restRotation;
@@ -139,12 +147,24 @@ public class CameraBlink : MonoBehaviour
         float fromRotation = lensResting ? restRotation : 0f;
         lensResting = false;
 
+        bool overheat = overheatClose;
         for (float time = 0f; time < duration; time += Time.unscaledDeltaTime)
         {
             float t = Mathf.Clamp01(time / duration);
             // Comeca devagar, acelera e desacelera quando as laminas se encontram.
             float k = EaseInOutCubic(t);
-            SetIris(Mathf.Lerp(from, ClosedRadius(), k), Mathf.Lerp(fromRotation, -bladeTurn, k));
+            float rotation = Mathf.Lerp(fromRotation, -bladeTurn, k);
+
+            if (overheat)
+            {
+                // Mecanismo travando: fecha aos trancos (6 batidas) tremendo, piscando vermelho.
+                k = Mathf.Floor(t * 6f + 0.5f) / 6f;
+                rotation += Mathf.Sin(time * 70f) * 0.06f;
+                if (iris != null)
+                    iris.color = Mathf.Repeat(time * 9f, 1f) < 0.5f ? new Color(1f, 0.35f, 0.32f) : Color.white;
+            }
+
+            SetIris(Mathf.Lerp(from, ClosedRadius(), k), rotation);
 
             float hud = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.45f, t));
             SetHUDAlpha(hud);
@@ -157,6 +177,9 @@ public class CameraBlink : MonoBehaviour
         SetHUDAlpha(0f);
         SetHUDScale(1f);
         yield return WaitUnscaled(0.08f);
+
+        if (iris != null)
+            iris.color = Color.white;
 
         // Fica preto: quem chamou troca a camera e depois usa PlayReveal (camera desce).
         SetScreenFade(1f);
@@ -173,7 +196,10 @@ public class CameraBlink : MonoBehaviour
         if (EnsureHeld())
         {
             SetScreenFade(0f);
-            yield return RaiseCamera(false, lowerTime);
+            if (overheatClose)
+                yield return DropCamera();
+            else
+                yield return RaiseCamera(false, lowerTime);
         }
         else
         {
@@ -185,6 +211,8 @@ public class CameraBlink : MonoBehaviour
                 yield return null;
             }
         }
+
+        overheatClose = false;
 
         SetScreenFade(0f);
         SetHeldVisible(false);
@@ -287,6 +315,30 @@ public class CameraBlink : MonoBehaviour
 
         if (!up)
             SetHeldVisible(false);
+    }
+
+    // Superaquecimento: a camera sai do rosto e escorrega das maos, girando para fora da tela.
+    private IEnumerator DropCamera()
+    {
+        yield return RaiseCamera(false, lowerTime * 0.45f);
+
+        RectTransform rect = held.rectTransform;
+        RectTransform host = HostRect();
+        float height = host != null ? host.rect.height : 1080f;
+        SetHeldVisible(true);
+
+        Vector2 start = new Vector2(0f, -height * 0.18f);
+        for (float time = 0f; time < 0.55f; time += Time.unscaledDeltaTime)
+        {
+            float t = Mathf.Clamp01(time / 0.55f);
+            float fall = t * t;
+            rect.anchoredPosition = start + new Vector2(t * 160f, -fall * height * 0.9f);
+            rect.localRotation = Quaternion.Euler(0f, 0f, -fall * 55f);
+            rect.localScale = Vector3.one;
+            yield return null;
+        }
+
+        SetHeldVisible(false);
     }
 
     private bool EnsureHeld()

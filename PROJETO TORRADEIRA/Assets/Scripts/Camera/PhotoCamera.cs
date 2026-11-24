@@ -314,8 +314,7 @@ public class PhotoCamera : MonoBehaviour
         if (crosshair != null)
             crosshair.SetActive(false);
 
-        temporalController.SetCameraMode(true);
-
+        // As pecas so aparecem quando a lente terminar de abrir (ver PlayTransition).
         SyncPhotoCamera();
         StartTransition(true);
     }
@@ -424,6 +423,9 @@ public class PhotoCamera : MonoBehaviour
         if (blinkAnimation != null)
             yield return blinkAnimation;
 
+        if (entering && cameraMode)
+            temporalController.SetCameraMode(true);
+
         if (playerCam != null)
             playerCam.fieldOfView = target;
 
@@ -508,6 +510,7 @@ public class PhotoCamera : MonoBehaviour
         Texture2D photo = photoCapture.Capture();
 
         photoCapture.ProcessPhoto(photo);
+        TryStunEnemy();
 
         if (photo != null && cameraOverheat != null)
             cameraOverheat.RegisterPhotoHeat();
@@ -533,6 +536,41 @@ public class PhotoCamera : MonoBehaviour
             CloseCamera();
 
         canShoot = true;
+    }
+
+    // Flash de perto, com o inimigo perto do centro do visor e sem parede no meio: nocaute.
+    [Header("Flash contra o inimigo")]
+    [SerializeField] private float stunRange = 7f;
+    [SerializeField] private float stunSeconds = 4f;
+
+    private TemporalEraserController enemyCache;
+
+    private void TryStunEnemy()
+    {
+        if (playerCam == null)
+            return;
+
+        if (enemyCache == null)
+            enemyCache = FindFirstObjectByType<TemporalEraserController>();
+        if (enemyCache == null || !enemyCache.isActiveAndEnabled)
+            return;
+
+        Vector3 chest = enemyCache.transform.position + Vector3.up * 1.3f;
+        Vector3 view = playerCam.WorldToViewportPoint(chest);
+        if (view.z <= 0f || view.z > stunRange || Mathf.Abs(view.x - 0.5f) > 0.3f || Mathf.Abs(view.y - 0.5f) > 0.35f)
+            return;
+
+        GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+        Transform playerRoot = playerGo != null ? playerGo.transform : transform;
+        Vector3 from = playerCam.transform.position;
+        foreach (RaycastHit hit in Physics.RaycastAll(from, (chest - from).normalized, Vector3.Distance(from, chest), ~0, QueryTriggerInteraction.Ignore))
+        {
+            if (hit.transform.IsChildOf(enemyCache.transform) || hit.transform.IsChildOf(playerRoot))
+                continue;
+            return;
+        }
+
+        enemyCache.Stun(stunSeconds);
     }
 
     public bool TryExitCameraMode()
@@ -620,6 +658,10 @@ public class PhotoCamera : MonoBehaviour
 
         if (!cameraMode)
             return;
+
+        // Fechamento proprio do superaquecimento (laminas travando, camera caindo).
+        if (cameraBlink != null)
+            cameraBlink.PrepareOverheat();
 
         if (isTransitioning)
             closeRequested = true;

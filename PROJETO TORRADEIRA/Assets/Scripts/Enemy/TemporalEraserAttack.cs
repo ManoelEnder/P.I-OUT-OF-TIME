@@ -23,6 +23,10 @@ public class TemporalEraserAttack : MonoBehaviour
         if (DefeatController.IsDefeated || !other.CompareTag("Player"))
             return;
 
+        TemporalEraserController stunned = GetComponentInParent<TemporalEraserController>();
+        if (stunned != null && stunned.IsStunned)
+            return;
+
         if (defeatController == null)
         {
             Debug.LogError($"{name}: DefeatController reference is missing.", this);

@@ -29,6 +29,8 @@ public static class PropScatterBuilder
         public string Texture;
         public float Size;        // maior dimensao desejada (m)
         public float CullHeight;  // fracao da tela em que some
+        public string Path;       // caminho completo (modelos de outro pacote); vazio = PSX Mega Pack
+        public bool KeepMaterials;
         public GameObject Source;
         public Material Material;
     }
@@ -44,6 +46,11 @@ public static class PropScatterBuilder
         { "floppy", new Prop { Model = "floppy_disc_1", Texture = "floppy_disc_1", Size = 0.09f, CullHeight = 0.025f } },
         { "notebook", new Prop { Model = "notebook_1", Texture = "notebook_1", Size = 0.26f, CullHeight = 0.02f } },
         { "padlock", new Prop { Model = "padlock_1", Texture = "padlock_1", Size = 0.07f, CullHeight = 0.025f } },
+        // Moveis de escritorio (PSX Nostalgia), com os materiais originais.
+        { "desk", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/Desk.fbx", Size = 1.5f, CullHeight = 0.01f, KeepMaterials = true } },
+        { "chair", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/Chair.fbx", Size = 1.0f, CullHeight = 0.01f, KeepMaterials = true } },
+        { "pcscreen", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/PcScreen.fbx", Size = 0.45f, CullHeight = 0.015f, KeepMaterials = true } },
+        { "pctower", new Prop { Path = "Assets/ThirdParty/PSXNostalgia-FBX/PSXNostalgia-FBX/ComputerSet/PcTower.fbx", Size = 0.45f, CullHeight = 0.015f, KeepMaterials = true } },
     };
 
     private static System.Random random;
@@ -160,6 +167,7 @@ public static class PropScatterBuilder
         List<Vector3> floor = FloorSamples();
         report.AppendLine("pontos de chao: " + floor.Count);
 
+        PlaceOffices(root, floor, 6);
         PlaceWallBoxes(root, floor, 22);
         PlaceFloorItems(root, floor, "carpet", 6, 2.0f, false);
         PlaceFloorItems(root, floor, "brick", 10, 0.6f, true);
@@ -184,12 +192,16 @@ public static class PropScatterBuilder
         foreach (var pair in Props)
         {
             Prop prop = pair.Value;
-            prop.Source = AssetDatabase.LoadAssetAtPath<GameObject>(Folder + "/Models/" + prop.Model + ".glb");
+            string modelPath = !string.IsNullOrEmpty(prop.Path) ? prop.Path : Folder + "/Models/" + prop.Model + ".glb";
+            prop.Source = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
             if (prop.Source == null)
             {
-                Debug.LogError("PropScatterBuilder: nao achou " + prop.Model + ".glb (importacao do glTF).");
+                Debug.LogError("PropScatterBuilder: nao achou " + modelPath);
                 return false;
             }
+
+            if (prop.KeepMaterials)
+                continue;
 
             string texPath = Folder + "/Textures/" + prop.Texture + ".png";
             TextureImporter importer = AssetImporter.GetAtPath(texPath) as TextureImporter;
@@ -311,6 +323,55 @@ public static class PropScatterBuilder
         report.AppendLine("caixas: " + placed);
     }
 
+    // Posto de trabalho (mesa + cadeira + monitor + gabinete) encostado numa parede livre.
+    private static void PlaceOffices(Transform root, List<Vector3> floor, int count)
+    {
+        int placed = 0;
+        foreach (Vector3 p in floor)
+        {
+            if (placed >= count)
+                break;
+
+            if (!NavMesh.FindClosestEdge(p, out NavMeshHit edge, NavMesh.AllAreas) || edge.distance > 0.8f)
+                continue;
+            if (!FarFrom(edge.position, 8f, 3f) || Narrow(edge.position))
+                continue;
+
+            Vector3 normal = edge.normal.sqrMagnitude > 0.01f ? edge.normal : Vector3.forward;
+            // Parede de verdade atras (raio na altura da mesa).
+            if (!Physics.Raycast(edge.position + Vector3.up * 0.9f + normal * 0.3f, -normal, 1.2f, solidMask, QueryTriggerInteraction.Ignore))
+                continue;
+
+            Vector3 deskPos = edge.position + normal * 0.45f;
+            Quaternion facing = Quaternion.LookRotation(normal, Vector3.up);
+
+            // Espaco vazio para mesa e cadeira (nada entre 0,2 e 1,3 m de altura).
+            Vector3 boxCenter = deskPos + normal * 0.4f + Vector3.up * 0.75f;
+            if (Physics.CheckBox(boxCenter, new Vector3(0.9f, 0.5f, 0.85f), facing, solidMask, QueryTriggerInteraction.Ignore))
+                continue;
+
+            GameObject desk = Spawn(root, "desk", deskPos, facing, 1f, out Bounds db);
+            AddBoxCollider(desk, db);
+            AddObstacle(desk, db);
+
+            Vector3 chairPos = deskPos + normal * 0.85f + Vector3.Cross(Vector3.up, normal) * 0.1f;
+            GameObject chair = Spawn(root, "chair", chairPos, Quaternion.LookRotation(-normal, Vector3.up) * Quaternion.Euler(0f, (float)(random.NextDouble() * 30 - 15), 0f), 1f, out Bounds cb);
+            AddBoxCollider(chair, cb);
+            AddObstacle(chair, cb);
+
+            // Em cima da mesa.
+            float top = db.max.y;
+            Vector3 right = Vector3.Cross(Vector3.up, normal).normalized;
+            Spawn(root, "pcscreen", new Vector3(deskPos.x, top, deskPos.z) - normal * 0.05f, Quaternion.LookRotation(normal, Vector3.up), 1f, out _);
+            Spawn(root, "pctower", new Vector3(deskPos.x, top, deskPos.z) + right * 0.5f - normal * 0.05f, Quaternion.LookRotation(normal, Vector3.up) * Quaternion.Euler(0f, 180f, 0f), 1f, out _);
+
+            used.Add(edge.position);
+            placed++;
+        }
+
+        report.AppendLine("postos de trabalho: " + placed);
+    }
+
     private static void PlaceFloorItems(Transform root, List<Vector3> floor, string key, int count, float clearance, bool nearWall)
     {
         int placed = 0;
@@ -364,7 +425,8 @@ public static class PropScatterBuilder
                 continue;
 
             GameObject item = Spawn(root, key, hit.point, Quaternion.identity, 1f, out Bounds b);
-            AlignToWall(item, hit.point, hit.normal);
+            // O relogio tem a frente do lado oposto ao eixo fino (a textura mostra o verso).
+            AlignToWall(item, hit.point, hit.normal, key == "clock");
             used.Add(hit.point);
             placed++;
         }
@@ -478,7 +540,8 @@ public static class PropScatterBuilder
 
         foreach (Renderer r in renderers)
         {
-            r.sharedMaterials = Enumerable.Repeat(prop.Material, r.sharedMaterials.Length).ToArray();
+            if (prop.Material != null)
+                r.sharedMaterials = Enumerable.Repeat(prop.Material, r.sharedMaterials.Length).ToArray();
             r.receiveShadows = true;
         }
 
@@ -566,7 +629,7 @@ public static class PropScatterBuilder
     }
 
     // A face mais fina do objeto vira para fora da parede, encostada nela.
-    private static void AlignToWall(GameObject go, Vector3 point, Vector3 normal)
+    private static void AlignToWall(GameObject go, Vector3 point, Vector3 normal, bool flip = false)
     {
         Renderer[] renderers = go.GetComponentsInChildren<Renderer>(true);
         go.transform.rotation = Quaternion.identity;
@@ -575,9 +638,11 @@ public static class PropScatterBuilder
 
         // Eixo mais fino (local) -> normal da parede.
         Vector3 thin = s.x <= s.y && s.x <= s.z ? Vector3.right : (s.y <= s.z ? Vector3.up : Vector3.forward);
-        Quaternion rot = Quaternion.FromToRotation(thin, normal);
+        Quaternion rot = Quaternion.FromToRotation(flip ? -thin : thin, normal);
         // Mantem o "em pe" do objeto alinhado ao mundo quando possivel.
         Vector3 up = rot * (thin == Vector3.up ? Vector3.forward : Vector3.up);
+        if (Vector3.Dot(up, normal) > 0.99f)
+            up = rot * Vector3.forward;
         rot = Quaternion.AngleAxis(Vector3.SignedAngle(up, Vector3.up, normal), normal) * rot;
         go.transform.rotation = rot;
 

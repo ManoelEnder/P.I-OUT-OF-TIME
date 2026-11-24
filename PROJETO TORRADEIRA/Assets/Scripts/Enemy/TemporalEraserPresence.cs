@@ -44,6 +44,13 @@ public class TemporalEraserPresence : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         controller = GetComponent<TemporalEraserController>();
 
+        // Aviso de proximidade (batida de coracao + bordas escuras).
+        if (controller != null && FindFirstObjectByType<EnemyProximityWarning>() == null)
+        {
+            var warning = new GameObject("EnemyProximityWarning").AddComponent<EnemyProximityWarning>();
+            warning.Init(controller);
+        }
+
         if (model != null)
             modelRest = model.localPosition;
 
@@ -148,6 +155,13 @@ public class TemporalEraserPresence : MonoBehaviour
             glitchEnd = Time.time + Random.Range(0.06f, chasing ? 0.25f : 0.15f);
             ScheduleGlitch(chasing ? 0.4f : 1f);
         }
+    }
+
+    // Glitch forte (nocaute pelo flash).
+    public void Shock(float seconds)
+    {
+        glitchEnd = Time.time + seconds;
+        ScheduleGlitch(2f);
     }
 
     private void ScheduleGlitch(float scale = 1f)
