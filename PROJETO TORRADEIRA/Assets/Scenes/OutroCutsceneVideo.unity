@@ -240,7 +240,7 @@ MonoBehaviour:
   screen: {fileID: 4741146}
   fade: {fileID: 1965119173}
   skipHint: {fileID: 777139024}
-  nextScene: Credits
+  nextScene: Agradecimentos
   exitFade: 0.4
   skipConfirmWindow: 3
 --- !u!328 &503183813

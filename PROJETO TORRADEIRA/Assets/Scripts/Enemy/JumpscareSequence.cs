@@ -25,6 +25,9 @@ public static class JumpscareSequence
     public static IEnumerator Play(MonoBehaviour host, Camera cam, TemporalEraserController enemy, float volume)
     {
         bool flashes = FlashSettings.Enabled;
+        // O Cinemachine para de mexer na camera: o jumpscare controla ela direto.
+        if (RunCameraRig.Instance != null) RunCameraRig.Instance.SetBrainEnabled(false);
+        if (CameraFlashlight.Instance != null) CameraFlashlight.Instance.Set(false, false);
 
         // ---- Som ----
         AudioSource source = host.gameObject.AddComponent<AudioSource>();

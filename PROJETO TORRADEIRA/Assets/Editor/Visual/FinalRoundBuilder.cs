@@ -23,9 +23,11 @@ public static class FinalRoundBuilder
 
     public static void BuildBatch()
     {
-        // A mobilia (sala por sala) chama este Build depois de mobiliar.
+        EditorSceneManager.OpenScene("Assets/Scenes/Principal.unity", OpenSceneMode.Single);
         report.Clear();
-        RoomFurnisher.BuildBatch();
+        Build();
+        StaticOcclusionCulling.Compute();
+        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
         CaptureDelivery();
     }
 

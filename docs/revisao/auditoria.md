@@ -1,6 +1,6 @@
 # Auditoria das cenas do build
 
-Cenas auditadas: 7 · Total de itens: 576
+Cenas auditadas: 9 · Total de itens: 576
 
 ## Scripts faltando (Missing Script) (0)
 

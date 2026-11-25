@@ -59,6 +59,8 @@ public class PlayerMovement : MonoBehaviour
     public bool IsSprinting { get; private set; }
     public Vector2 LookDelta { get; private set; }
     public float LandingOffset => landOffset;
+    // Entrada de movimento atual (-1..1), lida pela inclinacao da corrida (RunCameraRig).
+    public Vector2 MoveInput { get; private set; }
 
     private const string SensitivityKey = "MouseSensitivity";
 
@@ -112,13 +114,14 @@ public class PlayerMovement : MonoBehaviour
 
         float dt = Time.deltaTime;
         Vector2 input = ReadMoveInput();
+        MoveInput = input;
         bool grounded = controller.isGrounded;
 
         if (grounded)
             lastGroundedTime = Time.time;
 
         // ---------- Horizontal com aceleracao ----------
-        bool sprinting = Keyboard.current.leftShiftKey.isPressed && input.y > 0.1f && grounded;
+        bool sprinting = Keyboard.current.leftShiftKey.isPressed && input.y > 0.1f && grounded && PlayerStamina.CanSprint;
         IsSprinting = sprinting;
         float targetSpeed = sprinting ? sprintSpeed : moveSpeed;
         Vector3 wish = (transform.right * input.x + transform.forward * input.y) * targetSpeed;

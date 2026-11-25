@@ -36,16 +36,23 @@ public class FlowScenario : QAScenario
         if (delivery != null)
             delivery.Interact();
 
-        yield return WaitForScene("OutroCutsceneVideo", 20f);
+        // Entrega leva a sala da garra; a garra monta e segue para a cutscene final.
+        yield return WaitForScene(MissionSystem.AssemblyScene, 20f);
+        yield return WaitSeconds(1.5f);
+        AssemblyRoom room = Object.FindFirstObjectByType<AssemblyRoom>();
+        Check(room != null, "sala da garra mecanica");
+        if (room != null)
+            room.PlaceAllForTest();
+        yield return WaitForScene("OutroCutsceneVideo", 120f);
         yield return WaitSeconds(2f);
         IntroVideoCutscene outro = Object.FindFirstObjectByType<IntroVideoCutscene>();
         Check(outro != null && outro.player != null && outro.player.isPlaying, "cutscene final tocando");
         if (outro != null)
             outro.Finish();
 
-        yield return WaitForScene("Credits", 20f);
+        yield return WaitForScene("Agradecimentos", 20f);
         yield return WaitSeconds(1f);
-        Check(SceneManager.GetActiveScene().name == "Credits", "creditos depois da cutscene final");
+        Check(SceneManager.GetActiveScene().name == "Agradecimentos", "agradecimentos depois da cutscene final");
         SceneManager.LoadScene("Menu");
         yield return WaitForScene("Menu", 15f);
         Check(Cursor.visible && Cursor.lockState != CursorLockMode.Locked, "cursor livre no menu");

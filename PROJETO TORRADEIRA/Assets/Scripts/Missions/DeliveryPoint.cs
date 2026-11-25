@@ -91,7 +91,7 @@ public class DeliveryPoint : MonoBehaviour, IInteractable
             return string.Empty;
 
         if (missions.ReadyToDeliver)
-            return "E para montar o protótipo";
+            return "E para levar as peças à sala de montagem";
 
         int missing = Mathf.Max(0, missions.PiecesRequired - missions.GetPieceCount());
         return missing > 0
