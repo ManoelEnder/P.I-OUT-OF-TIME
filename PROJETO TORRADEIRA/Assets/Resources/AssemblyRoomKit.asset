@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841b21475b45af943938040414b095b8, type: 3}
+  m_Name: AssemblyRoomKit
+  m_EditorClassIdentifier: Assembly-CSharp::AssemblyRoomKit
+  floorTiles: {fileID: 2800000, guid: 16a3389640b8f914c84624c58cec956d, type: 3}
+  floorTilesNormal: {fileID: 2800000, guid: 58d9c68db56387b4f9a8e46418fda6bd, type: 3}
+  metalPanel: {fileID: 2800000, guid: 1be236dbcef98a04f8f80ef812f26b51, type: 3}
+  metalPanelNormal: {fileID: 2800000, guid: 07e8bd4dd545c104197934f7247b8799, type: 3}
+  metalPanelMetallic: {fileID: 2800000, guid: 19285ee5f5c5a3e4a8fc6bfaba96536b, type: 3}
+  bench: {fileID: 1970964019002176582, guid: 204da6aadc13e164eac745605815a273, type: 3}
+  crtScreen: {fileID: 919132149155446097, guid: 2fa4d8abdb3c5ee488a687f87d60c9ca, type: 3}
+  pcTower: {fileID: 919132149155446097, guid: 6cb808775499be949a92b5adabb7b20a, type: 3}
+  keyboard: {fileID: 919132149155446097, guid: af80b09514a1e7d439c600e704171fa3, type: 3}
+  deskLamp: {fileID: 919132149155446097, guid: cfad7d31b6bd46b4b87cb34e78fc2e35, type: 3}
+  speaker: {fileID: 919132149155446097, guid: 416111c77e5f027498308ca1f2214f03, type: 3}
+  chair: {fileID: 919132149155446097, guid: 25d9d9eb670db9743893365be65e0817, type: 3}
+  smallItems:
+  - {fileID: 919132149155446097, guid: f37b6b76be12d2141a8d61e7e399f35a, type: 3}
+  - {fileID: 919132149155446097, guid: 8cbce954d38dd014da294246b56cbdd9, type: 3}
+  - {fileID: 919132149155446097, guid: 6992935b09ede2a4dae8c7a96c7dc081, type: 3}
+  - {fileID: 919132149155446097, guid: 337bf1d9afd4c62448c0770e4190942b, type: 3}
+  - {fileID: 919132149155446097, guid: ec52cbc03cae31a4e92761635ca12b1f, type: 3}
+  - {fileID: 8771091787928289351, guid: 17595552df566194da275d1d76652e7e, type: 3}
+  - {fileID: 8771091787928289351, guid: 758019e0c43c4d74c8c46d04d6f8d813, type: 3}
+  - {fileID: 8771091787928289351, guid: fba58ff1c3168c04f86e64c99ca15a0e, type: 3}
+  shelf: {fileID: 919132149155446097, guid: 874d5dd726e06fe4b84ac77bc3e92bb0, type: 3}
+  drawer: {fileID: 919132149155446097, guid: 333a6775d83fc7f418ed2f39401ade2a, type: 3}
+  safe: {fileID: 919132149155446097, guid: d53b17d27b6dd6e4c8894bbb333f8b7f, type: 3}
+  radiator: {fileID: 919132149155446097, guid: 2a30a93cd75782b4e96dd5a4f2369a51, type: 3}
+  bin: {fileID: 919132149155446097, guid: 74ba7c86cf18bf84e9bfe566abf7d9a1, type: 3}
+  clock: {fileID: 8771091787928289351, guid: 1f4ddbc4626668647a402014dd3e4189, type: 3}
+  clockMaterial: {fileID: 2100000, guid: 27e4d8d8163894b439094f706b57003e, type: 2}
+  wallLight: {fileID: 919132149155446097, guid: ab7cd95df67b479499dc78e5c6268f00, type: 3}
+  ceilingLight: {fileID: 919132149155446097, guid: 8033401020ec3624d98146bd3291b24a, type: 3}
+  crates:
+  - {fileID: 771767897774407553, guid: 11c133880fc5c054bb79080bdc403769, type: 3}
+  - {fileID: 9210463991391930213, guid: 867e4c47bf8b57d488a3e60bab968923, type: 3}
+  - {fileID: 6929012121652475321, guid: 1f0df83dad5d3b84da8fbf51ed20d131, type: 3}
+  - {fileID: 1480534028375626487, guid: a1e3305bf9bf5434abc52cd1f049776a, type: 3}
+  coil: {fileID: 4652372681009794825, guid: 706810835ac00d944b34a4fff52b0897, type: 3}
+  console: {fileID: 919132149155446097, guid: 0addde42b00a7394581e92dd4c6e3199, type: 3}

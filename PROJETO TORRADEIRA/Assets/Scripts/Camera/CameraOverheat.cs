@@ -251,16 +251,36 @@ public class CameraOverheat : MonoBehaviour
         instance.transform.position += Vector3.up * (floor - bounds.min.y);
     }
 
+    // A camera perdida nunca cai dentro da sala de montagem (pedestal, garra e moveis la dentro).
+    private bool Usable(Transform point)
+    {
+        if (point == null) return false;
+        if (!anyOutsideRoom) return true;
+        AssemblyStation st = AssemblyStation.Instance;
+        if (st == null) return true;
+        Vector3 d = point.position - st.floorCenter;
+        return Mathf.Abs(d.y) > 3f || Mathf.Abs(d.x) > st.size.x * 0.5f + 0.5f || Mathf.Abs(d.z) > st.size.y * 0.5f + 0.5f;
+    }
+
+    private bool anyOutsideRoom = true;
+
     private Transform GetRandomPoint()
     {
         if (teleportPoints == null || teleportPoints.Length == 0)
             return null;
 
+        anyOutsideRoom = true;
+        bool found = false;
+        foreach (Transform point in teleportPoints)
+            if (point != null && Usable(point)) { found = true; break; }
+        // So pontos dentro da sala: usa mesmo assim (melhor do que nao reaparecer).
+        anyOutsideRoom = found;
+
         int validCount = 0;
 
         foreach (Transform point in teleportPoints)
         {
-            if (point != null)
+            if (Usable(point))
                 validCount++;
         }
 
@@ -271,7 +291,7 @@ public class CameraOverheat : MonoBehaviour
 
         foreach (Transform point in teleportPoints)
         {
-            if (point == null)
+            if (!Usable(point))
                 continue;
 
             if (selected == 0)

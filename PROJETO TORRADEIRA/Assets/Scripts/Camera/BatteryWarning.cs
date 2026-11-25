@@ -2,17 +2,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Aviso de "SEM BATERIA" no centro da tela: aparece quando a bateria zera e toda vez que o jogador
-// tenta abrir a camera (ou ligar a lanterna) sem carga. Icone de pilha vazia em pixel art + bipe
-// de recusa. Com flashes desligados, nao pisca (so aparece e some).
+// Aviso de sem bateria: so o icone de pilha vermelha riscada, perto do centro da tela. Aparece quando
+// a bateria zera e toda vez que o jogador tenta abrir a camera (ou ligar a lanterna) sem carga,
+// com um bipe de recusa. Com flashes desligados, nao pisca.
 public class BatteryWarning : MonoBehaviour
 {
     private static BatteryWarning instance;
     private static AudioClip denied;
 
     private CanvasGroup group;
-    private TextMeshProUGUI title, sub;
-    private Image[] cells;
+    private RectTransform icon;
     private AudioSource source;
     private float shownAt = -99f;
     private const float Duration = 2.4f;
@@ -39,41 +38,40 @@ public class BatteryWarning : MonoBehaviour
 
     private void Build(GameObject hud)
     {
+        // So o icone: pilha vermelha com um risco diagonal atravessando (sem texto, sem fundo).
         RectTransform root = (RectTransform)transform;
         root.anchorMin = root.anchorMax = new Vector2(0.5f, 0.5f);
-        root.anchoredPosition = new Vector2(0f, -120f);
-        root.sizeDelta = new Vector2(520f, 150f);
+        root.anchoredPosition = new Vector2(0f, -110f);
+        root.sizeDelta = new Vector2(120f, 70f);
+        root.localScale = Vector3.one * 2f;
         group = GetComponent<CanvasGroup>();
         group.alpha = 0f;
         group.blocksRaycasts = false;
 
-        Image backdrop = NewImage("Fundo", root, new Color(0f, 0f, 0f, 0.6f));
-        backdrop.rectTransform.anchorMin = Vector2.zero;
-        backdrop.rectTransform.anchorMax = Vector2.one;
-        backdrop.rectTransform.offsetMin = backdrop.rectTransform.offsetMax = Vector2.zero;
-
-        // Pilha vazia: contorno, polo e 4 celulas (todas apagadas, a primeira pisca em vermelho).
-        Color line = new Color(0.9f, 0.9f, 0.88f, 1f);
-        RectTransform icon = new GameObject("Pilha", typeof(RectTransform)).GetComponent<RectTransform>();
-        icon.SetParent(root, false);
-        icon.anchorMin = icon.anchorMax = new Vector2(0f, 0.5f);
-        icon.anchoredPosition = new Vector2(70f, 0f);
-        icon.sizeDelta = new Vector2(96f, 48f);
-        Frame(icon, new Vector2(-4f, 0f), new Vector2(88f, 48f), 5f, line);
-        Image pole = NewImage("Polo", icon, line);
-        pole.rectTransform.anchoredPosition = new Vector2(46f, 0f);
-        pole.rectTransform.sizeDelta = new Vector2(8f, 20f);
-        cells = new Image[4];
-        for (int i = 0; i < 4; i++)
+        Color red = new Color(0.86f, 0.18f, 0.16f, 1f);
+        Color dark = new Color(0.05f, 0.02f, 0.02f, 0.9f);
+        icon = root;
+        // Sombra (contorno escuro) e pilha vermelha por cima.
+        Frame(root, new Vector2(-2f, -2f), new Vector2(92f, 52f), 9f, dark);
+        Frame(root, new Vector2(-4f, 0f), new Vector2(88f, 48f), 6f, red);
+        Image pole = NewImage("Polo", root, red);
+        pole.rectTransform.anchoredPosition = new Vector2(44f, 0f);
+        pole.rectTransform.sizeDelta = new Vector2(9f, 20f);
+        // Risco diagonal (pixelado: degraus pequenos).
+        for (int k = 0; k < 13; k++)
         {
-            cells[i] = NewImage("Celula", icon, new Color(0.18f, 0.18f, 0.18f, 1f));
-            cells[i].rectTransform.anchoredPosition = new Vector2(-34f + i * 19f, 0f);
-            cells[i].rectTransform.sizeDelta = new Vector2(14f, 30f);
+            Vector2 p = new Vector2(-50f + k * 8.4f, 28f - k * 4.7f);
+            Image sh = NewImage("RiscoSombra", root, dark);
+            sh.rectTransform.anchoredPosition = p + new Vector2(2f, -2f);
+            sh.rectTransform.sizeDelta = new Vector2(10f, 9f);
         }
-
-        TMP_Text any = hud.GetComponentInChildren<TMP_Text>(true);
-        title = NewText(root, "SEM BATERIA", 34f, new Color(0.86f, 0.2f, 0.18f), new Vector2(60f, 22f), any);
-        sub = NewText(root, "Procure pilhas pelo laboratório", 18f, new Color(0.85f, 0.85f, 0.82f, 0.85f), new Vector2(60f, -24f), any);
+        for (int k = 0; k < 13; k++)
+        {
+            Vector2 p = new Vector2(-50f + k * 8.4f, 28f - k * 4.7f);
+            Image st = NewImage("Risco", root, red);
+            st.rectTransform.anchoredPosition = p;
+            st.rectTransform.sizeDelta = new Vector2(9f, 7f);
+        }
 
         source = gameObject.AddComponent<AudioSource>();
         source.playOnAwake = false;
@@ -84,7 +82,6 @@ public class BatteryWarning : MonoBehaviour
     private void Trigger(bool attempted)
     {
         shownAt = Time.unscaledTime;
-        sub.text = attempted ? "A câmera não liga  //  procure pilhas" : "Procure pilhas pelo laboratório";
         source.PlayOneShot(denied, 0.7f);
         transform.SetAsLastSibling();
     }
@@ -97,14 +94,11 @@ public class BatteryWarning : MonoBehaviour
             group.alpha = Mathf.MoveTowards(group.alpha, 0f, Time.unscaledDeltaTime * 4f);
             return;
         }
-        group.alpha = Mathf.MoveTowards(group.alpha, 1f, Time.unscaledDeltaTime * 10f);
-        // Pequeno tranco ao aparecer.
+        // Pequeno tranco ao aparecer e pisca (sem piscar com flashes desligados).
         float shake = t < 0.25f ? Mathf.Sin(t * 80f) * 6f * (1f - t / 0.25f) : 0f;
-        ((RectTransform)transform).anchoredPosition = new Vector2(shake, -120f);
-
-        bool blinkOn = !FlashSettings.Enabled || Mathf.Repeat(t * 3f, 1f) < 0.6f;
-        cells[0].color = blinkOn ? new Color(0.86f, 0.2f, 0.18f, 1f) : new Color(0.25f, 0.06f, 0.05f, 1f);
-        title.alpha = blinkOn ? 1f : 0.45f;
+        ((RectTransform)transform).anchoredPosition = new Vector2(shake, -110f);
+        bool blinkOn = !FlashSettings.Enabled || Mathf.Repeat(t * 3f, 1f) < 0.65f;
+        group.alpha = Mathf.MoveTowards(group.alpha, blinkOn ? 1f : 0.35f, Time.unscaledDeltaTime * 14f);
     }
 
     private static void Frame(RectTransform parent, Vector2 center, Vector2 size, float thick, Color c)
@@ -124,24 +118,6 @@ public class BatteryWarning : MonoBehaviour
         img.color = color;
         img.raycastTarget = false;
         return img;
-    }
-
-    private static TextMeshProUGUI NewText(RectTransform parent, string text, float size, Color color, Vector2 pos, TMP_Text fontFrom)
-    {
-        TextMeshProUGUI t = new GameObject("Texto", typeof(RectTransform), typeof(TextMeshProUGUI)).GetComponent<TextMeshProUGUI>();
-        t.gameObject.layer = parent.gameObject.layer;
-        t.transform.SetParent(parent, false);
-        if (fontFrom != null) t.font = fontFrom.font;
-        t.text = text;
-        t.fontSize = size;
-        t.color = color;
-        t.alignment = TextAlignmentOptions.Left;
-        t.enableWordWrapping = false;
-        t.raycastTarget = false;
-        t.rectTransform.anchorMin = t.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        t.rectTransform.sizeDelta = new Vector2(360f, 40f);
-        t.rectTransform.anchoredPosition = pos + new Vector2(40f, 0f);
-        return t;
     }
 
     private static AudioClip BuildDenied()

@@ -48,6 +48,11 @@ public class AssemblyStation : MonoBehaviour
     private void Start()
     {
         MakeMaterials();
+
+        // Mede a sala real (paredes, piso, teto) e decora depois de montar a estacao.
+        AssemblyRoomDecor decor = gameObject.AddComponent<AssemblyRoomDecor>();
+        decor.Measure(floorCenter, size);
+        floorCenter = decor.Center;
         Vector3 c = floorCenter;
         float back = -doorSide;  // fundo da sala (oposto a porta)
 
@@ -93,6 +98,7 @@ public class AssemblyStation : MonoBehaviour
         beacon.enabled = false;
 
         BuildSparks();
+        decor.Build();
         sfx = gameObject.AddComponent<AudioSource>();
         sfx.spatialBlend = 0.4f;
         hum = gameObject.AddComponent<AudioSource>();
