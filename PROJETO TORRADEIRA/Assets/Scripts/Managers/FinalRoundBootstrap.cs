@@ -26,6 +26,17 @@ public static class FinalRoundBootstrap
                 Object.Destroy(mobilia.gameObject);
         }
 
+        // Sala de montagem na propria fase: a mesa antiga perto do inicio sai, a estacao da garra entra.
+        GameObject oldPoint = GameObject.Find("PontoDeMontagem");
+        if (oldPoint != null)
+            Object.Destroy(oldPoint);
+        if (Object.FindFirstObjectByType<AssemblyStation>() == null)
+        {
+            TemporalObjectPickup sample = Object.FindFirstObjectByType<TemporalObjectPickup>(FindObjectsInactive.Include);
+            AssemblyStation station = new GameObject("SalaMontagem").AddComponent<AssemblyStation>();
+            station.pieceModel = sample != null ? sample.gameObject : null;
+        }
+
         PlayerMovement movement = Object.FindFirstObjectByType<PlayerMovement>();
         if (movement == null)
             return;

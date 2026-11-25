@@ -36,13 +36,8 @@ public class FlowScenario : QAScenario
         if (delivery != null)
             delivery.Interact();
 
-        // Entrega leva a sala da garra; a garra monta e segue para a cutscene final.
-        yield return WaitForScene(MissionSystem.AssemblyScene, 20f);
-        yield return WaitSeconds(1.5f);
-        AssemblyRoom room = Object.FindFirstObjectByType<AssemblyRoom>();
-        Check(room != null, "sala da garra mecanica");
-        if (room != null)
-            room.PlaceAllForTest();
+        // A garra da sala de montagem (dentro da fase) monta e segue para a cutscene final.
+        Check(AssemblyStation.Instance != null && AssemblyStation.Instance.Running, "garra comeca a montar");
         yield return WaitForScene("OutroCutsceneVideo", 120f);
         yield return WaitSeconds(2f);
         IntroVideoCutscene outro = Object.FindFirstObjectByType<IntroVideoCutscene>();

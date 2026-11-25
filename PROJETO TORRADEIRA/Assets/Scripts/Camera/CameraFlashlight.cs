@@ -71,7 +71,11 @@ public class CameraFlashlight : MonoBehaviour
         }
 
         if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
+        {
+            if (!IsOn && battery != null && battery.IsEmpty)
+                BatteryWarning.Show(true);
             Set(!IsOn && CameraAvailable, true);
+        }
 
         if (IsOn && !CameraAvailable)
             Set(false, true);
@@ -83,6 +87,8 @@ public class CameraFlashlight : MonoBehaviour
             {
                 drainTimer = 0f;
                 battery.Use(1);
+                if (battery.IsEmpty)
+                    BatteryWarning.Show(false);
             }
 
             // Bateria baixa: tremula.

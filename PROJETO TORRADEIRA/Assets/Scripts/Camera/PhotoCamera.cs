@@ -165,7 +165,10 @@ public class PhotoCamera : MonoBehaviour
         battery.UpdateLowWarning(true);
 
         if (battery.IsEmpty)
+        {
+            BatteryWarning.Show(false);
             CloseCamera();
+        }
     }
 
     private void LateUpdate()
@@ -296,6 +299,12 @@ public class PhotoCamera : MonoBehaviour
 
     private void OpenCamera()
     {
+        if (hasCamera && !cameraMode && !isTransitioning && battery.IsEmpty)
+        {
+            BatteryWarning.Show(true);
+            return;
+        }
+
         if (
             !hasCamera ||
             cameraMode ||

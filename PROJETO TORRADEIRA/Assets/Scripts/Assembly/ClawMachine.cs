@@ -8,8 +8,8 @@ public class ClawMachine : MonoBehaviour
     public float ceilingY = 4.1f;
     public Vector2 railX = new Vector2(-3.2f, 3.2f);
     public Vector2 railZ = new Vector2(-2.6f, 3.2f);
-    public float travelSpeed = 1.6f;
-    public float dropSpeed = 1.1f;
+    public float travelSpeed = 2.4f;
+    public float dropSpeed = 1.7f;
 
     private Transform bridge, carriage, armOuter, armInner, head;
     private Transform[] fingers = new Transform[3];

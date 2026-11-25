@@ -57,7 +57,8 @@ public class CameraBattery : MonoBehaviour
     {
         int limit = Mathf.Min(rechargeLimit, maxBattery);
 
-        if (rechargeInterval <= 0f || currentBattery >= limit)
+        // Bateria zerada nao recarrega sozinha: so com pilha do mapa (a camera fica travada).
+        if (rechargeInterval <= 0f || currentBattery <= 0 || currentBattery >= limit)
         {
             rechargeTimer = 0f;
             return;

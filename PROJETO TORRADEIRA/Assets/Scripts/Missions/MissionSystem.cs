@@ -30,7 +30,6 @@ public class MissionSystem : MonoBehaviour
     public bool Delivered { get; private set; }
     public event System.Action OnReadyToDeliver;
 
-    public const string AssemblyScene = "SalaMontagem";
     // Quantas pecas o jogador levou para a sala de montagem.
     public static int DeliveredPieces = 4;
 
@@ -215,8 +214,18 @@ public class MissionSystem : MonoBehaviour
         Delivered = true;
         DeliveredPieces = Mathf.Max(1, pieces);
         UpdateMissionText();
-        // Entrega leva para a sala da garra mecanica (montagem do prototipo).
-        finalSceneName = AssemblyScene;
+        // A garra mecanica da sala de montagem monta o prototipo e depois chama LoadFinalScene.
+        if (AssemblyStation.Instance != null)
+            AssemblyStation.Instance.Begin(DeliveredPieces, this);
+        else
+            StartCoroutine(FadeAndLoad());
+    }
+
+    public void LoadFinalScene(string sceneName)
+    {
+        if (changingScene)
+            return;
+        finalSceneName = sceneName;
         StartCoroutine(FadeAndLoad());
     }
 

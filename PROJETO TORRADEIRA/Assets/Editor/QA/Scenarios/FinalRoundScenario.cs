@@ -29,6 +29,18 @@ public class FinalRoundScenario : QAScenario
         Check(stamina != null && flashlight != null && rig != null, "stamina, lanterna e camera Cinemachine ativos");
         Check(Object.FindFirstObjectByType<Unity.Cinemachine.CinemachineBrain>() != null, "CinemachineBrain na camera");
 
+        // Vira para a direcao mais livre (corredor) antes de correr.
+        Transform runner = GameObject.FindGameObjectWithTag("Player").transform;
+        float bestDist = 0f; float bestYaw = 0f;
+        for (int k = 0; k < 16; k++)
+        {
+            Vector3 dir = Quaternion.Euler(0f, k * 22.5f, 0f) * Vector3.forward;
+            float d = Physics.Raycast(runner.position + Vector3.up, dir, out RaycastHit h, 40f, ~0, QueryTriggerInteraction.Ignore) ? h.distance : 40f;
+            if (d > bestDist) { bestDist = d; bestYaw = k * 22.5f; }
+        }
+        runner.rotation = Quaternion.Euler(0f, bestYaw, 0f);
+        yield return null;
+
         // Corrida: Shift + W por 2,5 s, inclinando; captura no meio.
         yield return Shot("00_parado");
         QAInput.Hold(Key.W, true);
@@ -73,32 +85,67 @@ public class FinalRoundScenario : QAScenario
         yield return WaitSeconds(0.3f);
         Check(flashlight != null && !flashlight.IsOn, "L desliga a lanterna");
 
-        // Sala da garra.
-        MissionSystem.DeliveredPieces = 4;
-        SceneManager.LoadScene(MissionSystem.AssemblyScene);
-        yield return WaitForScene(MissionSystem.AssemblyScene, 20f);
-        yield return WaitSeconds(1.6f);
-        AssemblyRoom room = Object.FindFirstObjectByType<AssemblyRoom>();
-        Check(room != null, "sala da garra carrega");
-        if (room == null) yield break;
-        yield return Shot("10_sala_entrada");
-        room.PlaceAllForTest();
+        // Bateria zerada: a camera nao abre e aparece o aviso.
+        if (battery != null)
+        {
+            battery.Use(battery.Current);
+            yield return QAInput.Tap(Key.C);
+            yield return WaitSeconds(0.6f);
+            PhotoCamera photo = Object.FindFirstObjectByType<PhotoCamera>();
+            Check(photo == null || !photo.IsCameraMode, "camera nao abre sem bateria");
+            Check(GameObject.Find("BatteryWarning") != null, "aviso de sem bateria aparece");
+            yield return Shot("05_sem_bateria");
+            battery.Add(battery.Max);
+        }
+
+        // Sala de montagem dentro da fase: anda ate a porta e entra.
+        AssemblyStation station = AssemblyStation.Instance;
+        Check(station != null, "estacao da garra na fase");
+        if (station == null) yield break;
+        Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+        CharacterController cc = player.GetComponent<CharacterController>();
+        Vector3 door = station.floorCenter + new Vector3(0f, 0.1f, station.doorSide * (station.size.y * 0.5f + 1.2f));
+        if (cc != null) cc.enabled = false;
+        player.position = door;
+        player.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -station.doorSide));
+        if (cc != null) cc.enabled = true;
+        yield return WaitSeconds(0.6f);
+        // Abre a porta mais proxima (se estiver fechada).
+        Door nearest = null;
+        foreach (Door d in Object.FindObjectsByType<Door>(FindObjectsSortMode.None))
+            if (nearest == null || Vector3.Distance(d.transform.position, door) < Vector3.Distance(nearest.transform.position, door))
+                nearest = d;
+        Debug.Log("QA TRACE porta mais proxima " + (nearest != null ? nearest.transform.position.ToString("F1") + " dist=" + Vector3.Distance(nearest.transform.position, door).ToString("F1") : "-") + " estacao=" + station.floorCenter);
+        if (nearest != null && Vector3.Distance(nearest.transform.position, door) < 4f && nearest.CanInteract())
+            nearest.Interact();
+        yield return WaitSeconds(1.2f);
+        yield return Shot("10_porta_sala");
+        if (cc != null) cc.enabled = false;
+        player.position = station.floorCenter + new Vector3(0f, 0.1f, station.doorSide * station.size.y * 0.38f);
+        player.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -station.doorSide));
+        if (cc != null) cc.enabled = true;
+        if (flashlight != null) flashlight.Set(true, false);
+        yield return WaitSeconds(0.6f);
+        yield return Shot("11_dentro_sala");
+
+        MissionSystem missions = Object.FindFirstObjectByType<MissionSystem>();
+        station.Begin(4, missions);
         float start = Time.realtimeSinceStartup;
         float[] marks = { 2f, 6f, 11f, 17f, 24f };
         int i = 0;
-        while (!room.Finished && Time.realtimeSinceStartup - start < 90f)
+        while (!station.Finished && Time.realtimeSinceStartup - start < 90f)
         {
             if (i < marks.Length && Time.realtimeSinceStartup - start >= marks[i])
             {
-                yield return Shot("1" + (i + 1) + "_garra_" + marks[i].ToString("0") + "s");
+                yield return Shot("1" + (i + 2) + "_garra_" + marks[i].ToString("0") + "s");
                 i++;
             }
             yield return null;
         }
-        Check(room.Finished, "garra monta todas as pecas (" + (Time.realtimeSinceStartup - start).ToString("0") + " s)");
+        Check(station.Finished, "garra monta todas as pecas (" + (Time.realtimeSinceStartup - start).ToString("0") + " s)");
         yield return Shot("19_prototipo_pronto");
 
-        yield return WaitForScene("OutroCutsceneVideo", 15f);
+        yield return WaitForScene("OutroCutsceneVideo", 20f);
         Check(SceneManager.GetActiveScene().name == "OutroCutsceneVideo", "segue para a cutscene final");
         var outro = Object.FindFirstObjectByType<IntroVideoCutscene>();
         yield return WaitSeconds(2f);
@@ -108,10 +155,8 @@ public class FinalRoundScenario : QAScenario
         Check(SceneManager.GetActiveScene().name == "Agradecimentos", "cutscene termina na cena de agradecimento");
         yield return WaitSeconds(2.5f);
         yield return Shot("20_agradecimentos");
-        yield return WaitSeconds(14f);
+        yield return WaitSeconds(8f);
         yield return Shot("21_agradecimentos_equipe");
-        yield return WaitSeconds(16f);
-        yield return Shot("22_agradecimentos_assets");
     }
 
     private IEnumerator Shot(string name)

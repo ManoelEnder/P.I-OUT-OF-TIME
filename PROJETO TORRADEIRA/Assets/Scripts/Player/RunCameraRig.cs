@@ -108,7 +108,9 @@ public class RunCameraRig : MonoBehaviour
     }
 
     // Chamado pelo FovBridge antes do Brain: a corrida abre um pouco o FOV pedido pelos outros scripts.
-    public float RunFov(float baseFov) => baseFov * Mathf.Lerp(1f, runFovBoost, run);
+    // O FOV nao muda na corrida: os scripts do visor leem o FOV da camera e recalculam a partir dele
+    // a cada quadro (zoom), entao qualquer aumento aqui virava uma bola de neve com o visor aberto.
+    public float RunFov(float baseFov) => baseFov;
 
     private void Update()
     {
