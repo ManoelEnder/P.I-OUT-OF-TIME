@@ -31,7 +31,6 @@ public class DefeatController : MonoBehaviour
 
     private bool isDefeated;
     private DefeatScreenView view;
-    private static AudioClip scream;
 
     // Outros scripts (movimento, camera) param enquanto a derrota acontece.
     public static bool IsDefeated { get; private set; }
@@ -79,105 +78,11 @@ public class DefeatController : MonoBehaviour
         if (photo != null)
             photo.TryExitCameraMode();
 
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.spatialBlend = 0f;
-        source.priority = 0;
-        source.ignoreListenerPause = true;
-        if (scream == null)
-            scream = BuildScream();
-        source.PlayOneShot(scream, screamVolume);
+        yield return JumpscareSequence.Play(this, cam, enemy, screamVolume);
 
-        Image flash = CreateOverlay();
-
-        if (cam != null && enemy != null)
-        {
-            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
-            if (agent != null)
-                agent.enabled = false;
-            enemy.enabled = false;
-
-            Animator animator = enemy.GetComponentInChildren<Animator>();
-            if (animator != null)
-                animator.SetFloat("Speed", 4.1f);
-
-            Renderer[] renderers = enemy.GetComponentsInChildren<Renderer>();
-            Bounds b = renderers.Length > 0 ? renderers[0].bounds : new Bounds(enemy.transform.position, Vector3.one * 2f);
-            foreach (Renderer r in renderers)
-                b.Encapsulate(r.bounds);
-            float faceHeight = Mathf.Max(0.5f, b.max.y - enemy.transform.position.y - 0.28f);
-
-            Vector3 forward = cam.transform.forward;
-            forward.y = 0f;
-            if (forward.sqrMagnitude < 0.01f)
-                forward = cam.transform.up;
-            forward.Normalize();
-
-            float startFov = cam.fieldOfView;
-            Vector3 camPos = cam.transform.position;
-            Quaternion camRot = cam.transform.rotation;
-
-            for (float t = 0f; t < jumpscareSeconds; t += Time.unscaledDeltaTime)
-            {
-                float k = Mathf.Clamp01(t / 0.22f);
-                float lunge = 1f - (1f - k) * (1f - k) * (1f - k);
-                float dist = Mathf.Lerp(1.7f, 0.55f, lunge);
-
-                Vector3 face = camPos + forward * dist;
-                enemy.transform.position = face - Vector3.up * faceHeight;
-                enemy.transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
-
-                // Tremor forte na camera, olhando para o rosto.
-                float shake = Mathf.Lerp(0.6f, 0.2f, t / jumpscareSeconds);
-                Vector3 jitter = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f) * shake * 3f;
-                cam.transform.rotation = Quaternion.LookRotation(face - camPos) * Quaternion.Euler(jitter);
-                cam.fieldOfView = Mathf.Lerp(startFov, startFov * 0.8f, lunge);
-
-                // Estatica e flashes (so escurece com flashes desligados).
-                float strobe = FlashSettings.Enabled
-                    ? (Random.value < 0.35f ? Random.Range(0.25f, 0.7f) : 0f)
-                    : 0.15f;
-                flash.color = FlashSettings.Enabled && Random.value < 0.5f
-                    ? new Color(0.8f, 0.05f, 0.05f, strobe)
-                    : new Color(0.9f, 0.9f, 0.9f, strobe * 0.6f);
-
-                yield return null;
-            }
-
-            cam.fieldOfView = startFov;
-            cam.transform.rotation = camRot;
-        }
-        else
-        {
-            for (float t = 0f; t < 0.6f; t += Time.unscaledDeltaTime)
-                yield return null;
-        }
-
-        // Corte seco para o preto.
-        flash.color = Color.black;
-        for (float t = 0f; t < 0.35f; t += Time.unscaledDeltaTime)
-            yield return null;
-
-        Destroy(flash.canvas.gameObject);
         ShowDefeatPanel();
-    }
-
-    private Image CreateOverlay()
-    {
-        GameObject canvasGo = new GameObject("JumpscareOverlay", typeof(Canvas));
-        Canvas canvas = canvasGo.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 5000;
-
-        GameObject img = new GameObject("Flash", typeof(RectTransform), typeof(Image));
-        img.transform.SetParent(canvasGo.transform, false);
-        RectTransform rect = img.GetComponent<RectTransform>();
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = rect.offsetMax = Vector2.zero;
-        Image image = img.GetComponent<Image>();
-        image.color = new Color(0f, 0f, 0f, 0f);
-        image.raycastTarget = false;
-        return image;
+        // O preto do circulo some por cima da tela de derrota (que tambem e escura): sem piscar o jogo.
+        yield return JumpscareSequence.FadeOutOverlay();
     }
 
     private void ShowDefeatPanel()
@@ -216,35 +121,6 @@ public class DefeatController : MonoBehaviour
     public void SetSpawnPoint(Transform spawnPoint)
     {
         currentSpawnPoint = spawnPoint;
-    }
-
-    // Grito: serra grave descendo + chiado agudo + ruido, saturado (alto e aspero).
-    private static AudioClip BuildScream()
-    {
-        const int rate = 44100;
-        const float seconds = 1.6f;
-        int n = (int)(rate * seconds);
-        float[] data = new float[n];
-        var rng = new System.Random(66);
-        float phaseA = 0f, phaseB = 0f, phaseC = 0f;
-        for (int i = 0; i < n; i++)
-        {
-            float t = (float)i / rate;
-            float env = Mathf.Min(1f, t / 0.015f) * Mathf.Clamp01((seconds - t) / 0.5f);
-            float wobble = Mathf.Sin(t * 2f * Mathf.PI * 17f) * 30f;
-            phaseA += (Mathf.Lerp(420f, 140f, t / seconds) + wobble) / rate;
-            phaseB += (Mathf.Lerp(1900f, 1300f, t / seconds) + wobble * 4f) / rate;
-            phaseC += 61f / rate;
-            float saw = (phaseA % 1f) * 2f - 1f;
-            float screech = Mathf.Sin(phaseB * 2f * Mathf.PI);
-            float rumble = Mathf.Sin(phaseC * 2f * Mathf.PI);
-            float noise = (float)(rng.NextDouble() * 2.0 - 1.0);
-            float mix = saw * 0.6f + screech * 0.45f + noise * 0.5f + rumble * 0.5f;
-            data[i] = (float)System.Math.Tanh(mix * 2.2f) * env * 0.95f;
-        }
-        AudioClip clip = AudioClip.Create("JumpscareScream", n, 1, rate, false);
-        clip.SetData(data, 0);
-        return clip;
     }
 }
 

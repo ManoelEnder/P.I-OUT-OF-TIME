@@ -1,2 +1,2 @@
-QA FAIL Enemy: inimigo ve o jogador e persegue
-- inimigo ve o jogador e persegue
+QA PASS Enemy
+
