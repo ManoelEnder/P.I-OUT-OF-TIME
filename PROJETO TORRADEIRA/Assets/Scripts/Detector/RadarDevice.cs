@@ -20,7 +20,7 @@ public class RadarDevice : MonoBehaviour
     [SerializeField] private Key raiseKey = Key.Q;
 
     // Tamanhos em pixels do desenho (exibido em escala 4x).
-    private const int DeviceW = 80, DeviceH = 96, Scale = 4;
+    private const int DeviceW = 80, DeviceH = 96, Scale = 5;
     private const int ScreenX = 13, ScreenY = 37, ScreenW = 54, ScreenH = 40;
     private const int TexW = 108, TexH = 80; // tela em meia-resolucao do aparelho
     private const float CellSize = 0.5f;
@@ -228,63 +228,6 @@ public class RadarDevice : MonoBehaviour
         ledGlow = NewImage("LedGlow", root);
         PlacePx(ledGlow.rectTransform, 37, 16, 7, 7);
         ledGlow.transform.SetSiblingIndex(led.transform.GetSiblingIndex());
-
-        BuildHand();
-    }
-
-    // Mao do jogador em pixel art preto e branco: segura o aparelho por baixo, dedao por cima
-    // da frente e dedos dobrados na lateral; a manga escura sai pela parte de baixo da tela.
-    private void BuildHand()
-    {
-        const int w = 40, h = 46;
-        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp, name = "RadarHand" };
-        var px = new Color32[w * h];
-        Color32 clear = new Color32(0, 0, 0, 0);
-        Color32 outline = new Color32(14, 14, 14, 255);
-        Color32 skin = new Color32(176, 176, 176, 255);
-        Color32 skinShade = new Color32(124, 124, 124, 255);
-        Color32 skinLight = new Color32(214, 214, 214, 255);
-        Color32 sleeve = new Color32(46, 46, 46, 255);
-        Color32 sleeveLight = new Color32(70, 70, 70, 255);
-        for (int i = 0; i < px.Length; i++)
-            px[i] = clear;
-
-        void Box(int x0, int y0, int x1, int y1, Color32 c)
-        {
-            for (int y = y0; y <= y1; y++)
-                for (int x = x0; x <= x1; x++)
-                    if (x >= 0 && y >= 0 && x < w && y < h)
-                        px[y * w + x] = c;
-        }
-
-        // Manga.
-        Box(8, 0, 32, 13, outline);
-        Box(9, 0, 31, 12, sleeve);
-        Box(9, 11, 31, 12, sleeveLight);
-        // Palma por baixo do aparelho.
-        Box(5, 12, 35, 27, outline);
-        Box(6, 13, 34, 26, skin);
-        Box(6, 13, 34, 15, skinShade);
-        // Dedos dobrados na lateral esquerda (quatro segmentos).
-        for (int i = 0; i < 4; i++)
-        {
-            int y = 17 + i * 5;
-            Box(1, y, 8, y + 4, outline);
-            Box(2, y + 1, 7, y + 3, i % 2 == 0 ? skin : skinLight);
-        }
-        // Dedao subindo pela frente, com unha.
-        Box(27, 24, 35, 42, outline);
-        Box(28, 25, 34, 41, skin);
-        Box(29, 37, 33, 40, skinLight);
-        Box(28, 25, 29, 41, skinShade);
-
-        tex.SetPixels32(px);
-        tex.Apply(false, true);
-
-        Image hand = NewImage("Hand", root);
-        hand.sprite = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f);
-        // Em pixels do aparelho: canto de baixo, passando um pouco da borda.
-        PlacePx(hand.rectTransform, 50, -22, w, h);
     }
 
     private void BuildScreen()
@@ -338,7 +281,7 @@ public class RadarDevice : MonoBehaviour
 
         // Abaixado: so a metade de cima aparece no canto. Levantado: sobe e chega mais perto do centro.
         float lowered = -DeviceH * Scale * 0.2f;
-        Vector2 pos = new Vector2(Mathf.Lerp(-70f, -420f, e), Mathf.Lerp(lowered, 60f, e));
+        Vector2 pos = new Vector2(Mathf.Lerp(-70f, -150f, e), Mathf.Lerp(lowered, 60f, e));
 
         // Balanca com os passos e atrasa um pouco quando a camera gira (aparelho na mao).
         if (movement != null && Time.timeScale > 0f)
@@ -362,7 +305,7 @@ public class RadarDevice : MonoBehaviour
 
         root.anchoredPosition = pos;
         root.localRotation = Quaternion.Euler(0f, 0f, -lag.x * 0.08f + Mathf.Lerp(4f, 0f, e));
-        root.localScale = Vector3.one * Mathf.Lerp(0.85f, 1.25f, e);
+        root.localScale = Vector3.one * Mathf.Lerp(0.85f, 1.05f, e);
     }
 
     private void UpdateLed()
