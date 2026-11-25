@@ -1,2 +1,2 @@
-QA PASS Looks
-
+QA FAIL Looks: tempo esgotado (120 s)
+- tempo esgotado (120 s)

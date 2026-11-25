@@ -1,0 +1,25 @@
+spawn (-4.6, 12.1, -155.3)
+andar 0: amostras alcancaveis=1222
+  origem (-49.49, -184.25) grade 215x222
+andar 3: amostras alcancaveis=184
+  origem (-50.44, -172.70) grade 154x218
+andar 6,5: amostras alcancaveis=33
+  origem (-49.49, -176.50) grade 149x233
+andar 8,5: amostras alcancaveis=32
+  origem (-49.49, -215.65) grade 252x390
+andar 9: amostras alcancaveis=27
+  origem (-49.49, -215.65) grade 252x390
+andar 9,5: amostras alcancaveis=15
+  origem (-49.49, -215.65) grade 252x390
+andar 10: amostras alcancaveis=14
+  origem (-42.54, -215.65) grade 224x390
+andar 10,5: amostras alcancaveis=10
+  origem (-45.44, -210.65) grade 196x291
+andar 11,5: amostras alcancaveis=12
+  origem (-45.44, -210.65) grade 195x409
+andar 12: amostras alcancaveis=959
+  origem (-45.44, -210.65) grade 195x409
+andar 12,5: amostras alcancaveis=7
+  origem (-44.99, -210.65) grade 193x409
+andar 13,5: amostras alcancaveis=0
+andar 18: amostras alcancaveis=0

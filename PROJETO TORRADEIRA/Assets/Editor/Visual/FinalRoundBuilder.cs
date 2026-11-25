@@ -8,7 +8,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Rodada final: moveis (PropScatterBuilder), baterias extras espalhadas e o ponto de montagem
+// Rodada final: baterias extras espalhadas e o ponto de montagem
 // da missao final perto do PlayerSpawn. Pode rodar de novo (apaga e recria os grupos).
 public static class FinalRoundBuilder
 {
@@ -23,13 +23,9 @@ public static class FinalRoundBuilder
 
     public static void BuildBatch()
     {
-        EditorSceneManager.OpenScene("Assets/Scenes/Principal.unity", OpenSceneMode.Single);
+        // A mobilia (sala por sala) chama este Build depois de mobiliar.
         report.Clear();
-        ConvertFurnitureMaterials();
-        PropScatterBuilder.Build(true);
-        Build();
-        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-        PropScatterBuilder.CaptureShots();
+        RoomFurnisher.BuildBatch();
         CaptureDelivery();
     }
 
@@ -230,6 +226,18 @@ public static class FinalRoundBuilder
                 battery.transform.position += Vector3.up * (pos.y - b.min.y + 0.005f);
             }
 
+            // Nada encostado nela (movel, parede).
+            Bounds bb = new Bounds(battery.transform.position, Vector3.zero);
+            foreach (Renderer r in battery.GetComponentsInChildren<Renderer>()) bb.Encapsulate(r.bounds);
+            Collider[] own = battery.GetComponentsInChildren<Collider>();
+            bool blocked = Physics.OverlapBox(bb.center + Vector3.up * 0.01f, bb.extents * 0.98f, Quaternion.identity, solidMask, QueryTriggerInteraction.Ignore)
+                .Any(c => !own.Contains(c));
+            if (blocked)
+            {
+                Object.DestroyImmediate(battery);
+                continue;
+            }
+
             taken.Add(p);
             placed++;
         }
@@ -248,6 +256,9 @@ public static class FinalRoundBuilder
             if (above < 0.55f || above > 1.3f || hit.normal.y < 0.95f)
                 continue;
             if (hit.collider.GetComponentInParent<Door>() != null)
+                continue;
+            // Moveis novos tem itens decorativos sem colisor no tampo: bateria so no chao.
+            if (hit.collider.transform.root.name == "Environment" && hit.collider.GetComponentInParent<Transform>().GetComponentsInParent<Transform>().Any(t => t.name == "Mobilia"))
                 continue;
             if (Physics.Raycast(hit.point + Vector3.up * 0.03f, Vector3.up, 0.3f, solidMask, QueryTriggerInteraction.Ignore))
                 continue;

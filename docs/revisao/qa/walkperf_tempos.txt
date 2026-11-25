@@ -1,4 +1,4 @@
-parado: 31 quadros, media 99,65 ms (10 FPS), pior 102,8 ms
-girando: 16 quadros, media 99,13 ms (10 FPS), pior 101,2 ms
-andando: 16 quadros, media 99,70 ms (10 FPS), pior 104,5 ms
-correndo: 16 quadros, media 99,50 ms (10 FPS), pior 101,8 ms
+parado: 538 quadros, media 5,64 ms (177 FPS), pior 33,6 ms
+girando: 247 quadros, media 5,72 ms (175 FPS), pior 8,0 ms
+andando: 260 quadros, media 5,74 ms (174 FPS), pior 16,3 ms
+correndo: 283 quadros, media 5,26 ms (190 FPS), pior 6,9 ms

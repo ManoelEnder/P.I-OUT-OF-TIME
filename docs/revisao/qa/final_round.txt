@@ -1,7 +1,7 @@
 materiais convertidos para URP: 0
-particula da peca Piece_04: estava a 0,00 m, agora no centro (raio 0,18)
-particula da peca Piece_01: estava a 0,00 m, agora no centro (raio 0,29)
 particula da peca Piece_02: estava a 0,00 m, agora no centro (raio 0,10)
+particula da peca Piece_04: estava a 0,00 m, agora no centro (raio 0,18)
 particula da peca Piece_03: estava a 0,00 m, agora no centro (raio 0,14)
+particula da peca Piece_01: estava a 0,00 m, agora no centro (raio 0,29)
 baterias extras: 9
-ponto de montagem: (-4.0, 12.0, -161.1) (5,9 m do inicio)
+ponto de montagem: (-0.9, 12.0, -158.6) (5,0 m do inicio)

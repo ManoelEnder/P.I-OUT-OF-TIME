@@ -1,0 +1,27 @@
+player escala=(1.00, 0.71, 1.00) pos=(-15.73, 0.36, -155.76)
+CharacterController altura=1,28 raio=0,25
+olhos acima dos pes=1,83
+porta (1.74, 2.94, 0.32) em (0.4, 13.6, -161.2)
+porta (1.74, 2.94, 0.32) em (-22.6, 13.6, -118.6)
+porta (0.32, 2.94, 1.74) em (-6.1, 13.6, -171.3)
+porta (1.74, 2.94, 0.32) em (-2.3, 13.6, -151.7)
+pe-direito em (-14, 1, -155): 7,65
+pe-direito em (-34, 1, -155): ?
+pe-direito em (-22, 13, -160): 5,92
+pe-direito em (-23, 13, -114): 5,40
+existente chair_office_42_Material__109_0 tamanho=(1.31, 1.54, 1.35)
+existente chair3_Material__109_0 (1) tamanho=(1.21, 1.25, 1.21)
+existente desk_closed2_Material__26_0 tamanho=(1.46, 1.05, 2.56)
+existente desk_closed2_Material__26_0 (1) tamanho=(2.14, 1.05, 2.88)
+existente chair2_Material__109_0 (1) tamanho=(1.11, 1.25, 1.11)
+existente desk_closed_23_Material__26_0 tamanho=(2.54, 1.02, 1.24)
+existente chair3_Material__109_0 tamanho=(1.21, 1.25, 1.21)
+existente chair_37_Material__109_0 tamanho=(1.11, 1.25, 1.11)
+existente chair_office_42_Material__109_0 (1) tamanho=(1.90, 1.17, 1.52)
+existente chair_37_Material__109_0 (1) tamanho=(1.11, 1.25, 1.11)
+existente chair2_Material__109_0 tamanho=(1.11, 1.25, 1.11)
+existente desk_closed_23_Material__26_0 (1) tamanho=(2.48, 1.02, 2.79)
+existente chair_office3_68_Material__109_0 tamanho=(0.98, 1.54, 1.05)
+existente chair_office2_62_Material__109_0 tamanho=(1.43, 1.54, 1.42)
+existente desk_open_65_Material__26_0 tamanho=(1.65, 1.02, 2.54)
+existente chair3_Material__109_0 (2) tamanho=(1.42, 1.25, 1.42)

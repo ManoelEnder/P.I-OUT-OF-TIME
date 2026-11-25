@@ -1,0 +1,77 @@
+MeshLodUtility: UnityEditor.MeshLodUtility
+  Void GenerateMeshLods(UnityEngine.Mesh, Int32)
+  Void GenerateMeshLods(UnityEngine.Mesh, LodGenerationFlags, Int32)
+ModelImporter lod props: generateMeshLods,meshLodGenerationFlags,maximumMeshLod
+ANDAR y=0 grade 215x222 portas=0
+  sala 2 area=1198,1 caixa=(49.3, 53.8) centro=(-21.4, 0.0, -156.7) portas=0
+  sala 1 area=20,3 caixa=(3.8, 8.0) centro=(-46.8, 0.0, -175.2) portas=0
+  sala 3 area=9,8 caixa=(4.3, 3.0) centro=(-30.3, 0.0, -173.2) portas=0
+ANDAR y=3 grade 154x218 portas=0
+  sala 3 area=193,8 caixa=(26.0, 15.3) centro=(-34.8, 3.0, -135.6) portas=0
+  sala 4 area=27,4 caixa=(8.0, 5.8) centro=(-36.5, 3.0, -121.9) portas=0
+  sala 5 area=14,8 caixa=(4.8, 6.8) centro=(-15.3, 3.0, -134.8) portas=0
+  sala 2 area=4,6 caixa=(3.5, 2.8) centro=(-46.0, 3.0, -170.4) portas=0
+ANDAR y=6,5 grade 149x233 portas=0
+  sala 2 area=23,6 caixa=(7.3, 4.8) centro=(-35.2, 6.5, -121.4) portas=0
+  sala 3 area=18,1 caixa=(7.5, 3.0) centro=(-29.6, 6.5, -136.7) portas=0
+  sala 4 area=7,6 caixa=(3.8, 2.3) centro=(-22.2, 6.5, -136.8) portas=0
+  sala 5 area=5,5 caixa=(3.5, 3.0) centro=(-15.2, 6.5, -134.4) portas=0
+  sala 1 area=4,5 caixa=(3.8, 1.3) centro=(-46.8, 6.5, -175.6) portas=0
+ANDAR y=8,5 grade 252x390 portas=0
+  sala 5 area=64,4 caixa=(11.5, 12.3) centro=(6.1, 8.5, -208.2) portas=0
+  sala 1 area=14,8 caixa=(4.8, 4.8) centro=(-46.1, 8.5, -180.1) portas=0
+  sala 2 area=5,6 caixa=(1.5, 3.8) centro=(-40.7, 8.5, -181.0) portas=0
+  sala 4 area=5,2 caixa=(3.5, 2.3) centro=(-14.9, 8.5, -138.0) portas=0
+  sala 3 area=4,6 caixa=(1.3, 3.8) centro=(-29.9, 8.5, -121.0) portas=0
+ANDAR y=9 grade 252x390 portas=0
+  sala 5 area=147,3 caixa=(20.0, 15.0) centro=(3.0, 9.0, -206.8) portas=0
+  sala 1 area=13,9 caixa=(5.0, 4.3) centro=(-45.9, 9.0, -180.4) portas=0
+  sala 2 area=5,6 caixa=(1.5, 3.8) centro=(-40.7, 9.0, -181.0) portas=0
+  sala 3 area=5,5 caixa=(1.5, 3.8) centro=(-29.0, 9.0, -121.1) portas=0
+  sala 4 area=5,4 caixa=(3.8, 3.0) centro=(-15.3, 9.0, -139.0) portas=0
+ANDAR y=9,5 grade 252x390 portas=0
+  sala 6 area=106,3 caixa=(14.8, 12.3) centro=(-3.5, 9.5, -204.7) portas=0
+  sala 2 area=52,5 caixa=(12.5, 8.8) centro=(-33.6, 9.5, -169.4) portas=0
+  sala 3 area=37,5 caixa=(9.8, 4.5) centro=(-34.5, 9.5, -141.4) portas=0
+  sala 8 area=6,6 caixa=(5.3, 4.8) centro=(7.3, 9.5, -203.1) portas=0
+  sala 5 area=5,3 caixa=(3.8, 3.3) centro=(-15.5, 9.5, -139.4) portas=0
+  sala 4 area=4,7 caixa=(1.5, 3.8) centro=(-28.1, 9.5, -121.0) portas=0
+  sala 1 area=4,5 caixa=(1.3, 3.8) centro=(-43.4, 9.5, -181.0) portas=0
+ANDAR y=10 grade 224x390 portas=0
+  sala 4 area=306,7 caixa=(31.3, 14.5) centro=(-15.8, 10.0, -201.9) portas=0
+  sala 2 area=52,6 caixa=(12.5, 8.8) centro=(-33.7, 10.0, -169.4) portas=0
+  sala 3 area=37,5 caixa=(9.8, 4.5) centro=(-34.6, 10.0, -141.4) portas=0
+  sala 6 area=5,3 caixa=(3.3, 3.5) centro=(-16.2, 10.0, -140.2) portas=0
+  sala 5 area=4,6 caixa=(1.3, 3.8) centro=(-27.7, 10.0, -121.1) portas=0
+  sala 1 area=2,4 caixa=(0.8, 3.8) centro=(-42.2, 10.0, -181.0) portas=0
+ANDAR y=10,5 grade 196x291 portas=0
+  sala 2 area=304,1 caixa=(29.0, 17.8) centro=(-18.6, 10.5, -202.0) portas=0
+  sala 3 area=5,4 caixa=(3.0, 4.0) centro=(-17.1, 10.5, -140.8) portas=0
+  sala 1 area=4,6 caixa=(1.3, 3.8) centro=(-42.1, 10.5, -181.0) portas=0
+ANDAR y=11,5 grade 195x409 portas=4
+  sala 1 area=140,6 caixa=(14.3, 11.8) centro=(-38.0, 11.5, -204.3) portas=0
+  sala 3 area=5,4 caixa=(1.5, 3.8) centro=(-25.4, 11.5, -121.1) portas=0
+  sala 4 area=5,0 caixa=(2.0, 3.8) centro=(-18.4, 11.5, -141.3) portas=0
+  sala 2 area=4,9 caixa=(1.3, 4.0) centro=(-40.3, 11.5, -181.1) portas=0
+ANDAR y=12 grade 195x409 portas=4
+  sala 3 area=935,2 caixa=(46.5, 85.3) centro=(-15.8, 12.0, -159.4) portas=4
+  sala 5 area=43,8 caixa=(5.8, 8.8) centro=(-23.4, 12.0, -113.9) portas=1
+  sala 7 area=41,7 caixa=(8.0, 10.8) centro=(-1.6, 12.0, -168.3) portas=2
+  sala 9 area=24,1 caixa=(5.8, 6.3) centro=(-0.9, 12.0, -147.9) portas=1
+  sala 1 area=15,0 caixa=(12.0, 1.3) centro=(-38.2, 12.0, -209.3) portas=0
+  sala 4 area=14,2 caixa=(4.5, 3.8) centro=(-26.6, 12.0, -141.4) portas=0
+  sala 2 area=12,2 caixa=(12.0, 1.5) centro=(-38.1, 12.0, -199.1) portas=0
+  sala 6 area=3,8 caixa=(1.5, 3.8) centro=(-25.3, 12.0, -168.9) portas=0
+ANDAR y=12,5 grade 193x409 portas=4
+  sala 6 area=7,6 caixa=(3.8, 3.0) centro=(-0.6, 12.5, -170.7) portas=0
+  sala 10 area=3,9 caixa=(1.8, 2.8) centro=(1.4, 12.5, -163.3) portas=1
+  sala 1 area=2,6 caixa=(1.8, 3.0) centro=(-14.9, 12.5, -165.0) portas=0
+  sala 8 area=2,3 caixa=(2.0, 1.8) centro=(0.6, 12.5, -156.6) portas=0
+  sala 9 area=2,2 caixa=(1.8, 2.0) centro=(0.6, 12.5, -167.1) portas=0
+ANDAR y=13,5 grade 193x202 portas=0
+  sala 1 area=87,8 caixa=(17.0, 11.3) centro=(-37.3, 13.5, -194.0) portas=0
+ANDAR y=18 grade 50x169 portas=0
+  sala 2 area=48,6 caixa=(10.8, 13.8) centro=(-19.6, 18.0, -156.9) portas=0
+  sala 1 area=27,3 caixa=(2.3, 13.3) centro=(-21.7, 18.0, -173.1) portas=0
+  sala 5 area=12,7 caixa=(2.3, 6.5) centro=(-21.6, 18.0, -141.9) portas=0
+  sala 3 area=3,4 caixa=(2.3, 2.3) centro=(-21.6, 18.0, -148.1) portas=0

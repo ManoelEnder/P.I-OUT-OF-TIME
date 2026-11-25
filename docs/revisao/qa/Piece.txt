@@ -1,2 +1,3 @@
-QA PASS Piece
-
+QA FAIL Piece: E coleta a peca | missao conta a peca (0 -> 0)
+- E coleta a peca
+- missao conta a peca (0 -> 0)

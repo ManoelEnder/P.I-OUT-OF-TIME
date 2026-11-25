@@ -1,0 +1,76 @@
+T1_laboratorio: 5797 celulas, 114 entradas, 10 paredes (13,5, 7,3, 5,0, 2,3, 2,0, 1,8, 1,5, 1,3, 1,0, 1,0)
+   recusas: colide=59, caminho=13, fora=1  | bate em: Floor_B=23, bench=11, crateA=5, drawerB=4
+T1_laboratorio (Lab): 147 pecas
+T2_escritorio: 3037 celulas, 136 entradas, 7 paredes (5,8, 5,0, 3,8, 2,3, 2,0, 1,3, 1,3)
+   recusas: caminho=20, frente=14, colide=26  | bate em: Floor_B=24, commode=2
+T2_escritorio (Office): 79 pecas
+T3_diretoria: 465 celulas, 40 entradas, 1 paredes (3,3)
+   recusas: colide=32  | bate em: chairE=14, officedesk=13, Floor_B=5
+T3_diretoria (Director): 13 pecas
+T4_arquivo: 516 celulas, 30 entradas, 4 paredes (5,0, 4,0, 3,0, 1,8)
+   recusas: caminho=7, colide=27, frente=35, fora=1  | bate em: Floor_B=15, crate2=6, crate4=3, drawerB=1
+T4_arquivo (Archive): 18 pecas
+T5_deposito: 300 celulas, 40 entradas, 3 paredes (3,0, 1,0, 1,0)
+   recusas: colide=31, caminho=14, sem chao=1  | bate em: Floor_B=10, crate10=9, crate2=6, crate4=5
+T5_deposito (Storage): 10 pecas
+T6_copa: 446 celulas, 51 entradas, 1 paredes (1,0)
+   recusas: caminho=5, colide=5  | bate em: Floor_B=5
+T6_copa (Break): 7 pecas
+T7_corredor_norte: 692 celulas, 27 entradas, 5 paredes (6,5, 3,8, 1,3, 1,3, 1,3)
+   recusas: caminho=3  | bate em: 
+T7_corredor_norte (Corridor): 2 pecas
+T8_corredor_sul: 1374 celulas, 54 entradas, 9 paredes (9,3, 4,8, 4,3, 2,5, 2,3, 1,5, 1,3, 1,3, 1,3)
+   recusas: caminho=3  | bate em: 
+T8_corredor_sul (Corridor): 9 pecas
+T9_corredor_leste: 535 celulas, 24 entradas, 6 paredes (3,3, 2,8, 2,5, 1,5, 1,5, 1,3)
+   recusas: caminho=1  | bate em: 
+T9_corredor_leste (Corridor): 2 pecas
+M1_arquivo: 1453 celulas, 60 entradas, 13 paredes (7,0, 5,0, 4,3, 4,3, 3,5, 2,5, 2,3, 1,8, 1,8, 1,3, 1,3, 1,3, 1,3)
+   recusas: caminho=100, colide=43, reservado=55  | bate em: Floor_B=30, Floor_B_Stairs_0=5, drawerB=3, shelfE=2
+M1_arquivo (Archive): 24 pecas
+M2_arquivo_corredor: 822 celulas, 6 entradas, 6 paredes (6,3, 5,0, 2,0, 1,5, 1,5, 1,5)
+   recusas: colide=1  | bate em: chairD=1
+M2_arquivo_corredor (Corridor): 4 pecas
+S1_diretoria: 567 celulas, 0 entradas, 5 paredes (4,5, 3,0, 2,5, 2,0, 1,3)
+   recusas: colide=63, porta=35, fora=5, caminho=2, sem chao=1  | bate em: Floor_A=19, commode=15, officedesk=12, chairE=11
+S1_diretoria (Director): 24 pecas
+S2_deposito: 162 celulas, 32 entradas, 1 paredes (1,0)
+   recusas: colide=7  | bate em: crate4=4, Floor_A=2, shelfD=1
+S2_deposito (Storage): 2 pecas
+S3_copa: 272 celulas, 11 entradas, 2 paredes (3,8, 1,8)
+   recusas: colide=9, caminho=9  | bate em: Floor_A=5, cupboardC=4
+S3_copa (Break): 14 pecas
+S4_espera: 1057 celulas, 92 entradas, 0 paredes ()
+   recusas:   | bate em: 
+S4_espera (Waiting): 1 pecas
+S5_corredor_oeste: 1969 celulas, 99 entradas, 9 paredes (8,8, 8,8, 6,8, 5,0, 3,0, 2,8, 1,5, 1,5, 1,3)
+   recusas: reservado=3, caminho=1  | bate em: 
+S5_corredor_oeste (Corridor): 7 pecas
+S6_corredor_sul: 1712 celulas, 171 entradas, 4 paredes (9,8, 8,5, 1,8, 1,3)
+   recusas: caminho=3  | bate em: 
+S6_corredor_sul (Corridor): 5 pecas
+S7_corredor_leste: 1358 celulas, 45 entradas, 3 paredes (18,8, 10,0, 5,8)
+   recusas: colide=8, caminho=1  | bate em: Floor_A=8
+S7_corredor_leste (Corridor): 6 pecas
+total: 374
+occlusion culling: refeito
+AUDITORIA: 374 pecas | flutuando=0 | sobrepostas=0 | colisor errado=0 | sem LOD=0 | sem occludee=0 | ocultadores=36
+CONTEUDO:
+  T1_laboratorio: benchx17 chairCx6 padlockx7 cigpackx1 floppyx5 chairDx2 booksrowx6 notesx2 book2x5 speakerPx6 progbookx3 mugBx4 tableBx1 fanx4 ashtrayx4 phonex5 chairBx6 globex4 book1x2 tableAx2 chairAx5 flashlightx7 notebookPx4 lampx1 smallboxx1 crateAx1 crate9x1 crate10x1 drawerBx4 shelfCx5 shelfEx1 cupboardBx3 shelfDx3 radiatorx2 fridgeBx2 shelfBx2 kitchensinkx3 wallshelfAx2 booksBx3 cupboardCx1 binx2 clockx1
+  T2_escritorio: deskx11 chairEx5 phonex5 progbookx4 mugBx4 chairx6 vasex1 cigpackx2 crtx6 floppyx4 mugx2 book1x1 speakerPx4 shelfDx4 booksBx1 booksrowx1 ashtrayx3 smallclosetx1 wallshelfBx2 flashlightx1 shelfEx1 radiatorx2 tvstandx2 commodex1 book2x1 shelfAx1 globex1 drawerAx1 clockx1
+  T3_diretoria: carpetBx1 officedeskx1 chairEx1 ashtrayx3 globex1 safeBx1 booksrowx1 booksBx1 wallshelfAx1 flashlightx1 clockx1
+  T4_arquivo: shelfDx3 crate4x1 crate2x1 cardboardAx1 cardboard2x2 cardboardBx1 drawerBx2 speakerPx1 shelfEx1 booksrowx2 booksBx1 ladderx2
+  T5_deposito: crate9x1 crate10x3 crate2x1 crate4x1 shelfCx1 cardboard2x1 cardboardBx2
+  T6_copa: roundBx1 chairAx3 ashtrayx1 phonex1 clockx1
+  T7_corredor_norte: commodex1 drawerBx1
+  T8_corredor_sul: plantAx4 binx1 drawerBx2 chairAx2
+  T9_corredor_leste: plantAx1 plantBx1
+  M1_arquivo: drawerBx4 booksBx1 book2x1 shelfCx1 booksrowx3 shelfEx2 shelfAx2 shelfDx1 mugx2 wallshelfAx1 cardboardAx2 cardboard4x1 ladderx2 cardboard2x1
+  M2_arquivo_corredor: chairDx1 crate7x1 broomx2
+  S1_diretoria: carpetBx1 officedeskx1 chairEx1 ashtrayx2 book1x2 book2x3 globex1 shelfBx1 commodex1 tvstandx2 wallshelfAx1 flashlightx1 shelfCx1 booksrowx1 sofaCx1 roundCx1 glassx1 binx1 clockx1
+  S2_deposito: crate4x1 shelfDx1
+  S3_copa: cupboardCx3 kettlex3 kitchenrollx1 wallshelfBx1 flashlightx1 glassx1 mugx1 broomx2 clockx1
+  S4_espera: carpetBx1
+  S5_corredor_oeste: plantBx2 binx1 radiatorx1 plantAx3
+  S6_corredor_sul: broomx2 commodex1 binx2
+  S7_corredor_leste: binx1 drawerBx1 radiatorx1 lampBx1 cardboard2x1 plantBx1
