@@ -28,6 +28,7 @@ public class FieldJournal : MonoBehaviour
     private TMP_FontAsset font;
 
     private Row[] rows;
+    private TextMeshProUGUI albumCounter;
     private int page;
     private int openedFrame = -1;
     private Coroutine slide;
@@ -177,7 +178,13 @@ public class FieldJournal : MonoBehaviour
         for (int i = 0; i < rows.Length; i++)
             rows[i] = BuildRow(missionsPage, i, 168f - i * 88f);
 
-        TextMeshProUGUI footer = Label(panel, "JournalHint", "[TAB] trocar página    [ESC] fechar", 18f, Dim, TextAlignmentOptions.Center);
+        TextMeshProUGUI footer = Label(panel, "JournalHint", "[SETAS] escolher foto    [X] apagar foto    [TAB] missões    [ESC] fechar", 18f, Dim, TextAlignmentOptions.Center);
+        albumCounter = Label(panel, "AlbumCounter", "", 22f, Ink, TextAlignmentOptions.Right);
+        RectTransform ac = albumCounter.rectTransform;
+        ac.anchorMin = ac.anchorMax = new Vector2(1f, 1f);
+        ac.pivot = new Vector2(1f, 1f);
+        ac.sizeDelta = new Vector2(420f, 30f);
+        ac.anchoredPosition = new Vector2(-30f, -22f);
         RectTransform f = footer.rectTransform;
         f.anchorMin = f.anchorMax = new Vector2(0.5f, 0f);
         f.pivot = new Vector2(0.5f, 0f);
@@ -225,8 +232,34 @@ public class FieldJournal : MonoBehaviour
 
     // ---------- Dados ----------
 
+    // Contador de fotos do album (atualiza tambem depois de apagar uma foto).
+    private void LateUpdate()
+    {
+        if (built && panel != null && panel.gameObject.activeInHierarchy)
+            RefreshCounter();
+    }
+
     private void Refresh()
     {
+        RefreshCounter();
+        RefreshMissions();
+    }
+
+    private void RefreshCounter()
+    {
+        AlbumController album = GetComponent<AlbumController>();
+        if (albumCounter != null && album != null)
+        {
+            albumCounter.text = album.IsFull
+                ? "<color=#D23A32>ÁLBUM CHEIO " + album.Count + "/" + album.Max + "</color>  apague com [X]"
+                : "FOTOS " + album.Count + "/" + album.Max;
+            albumCounter.alpha = page == 0 ? 1f : 0f;
+        }
+    }
+
+    private void RefreshMissions()
+    {
+
         if (!built || rows == null)
             return;
 

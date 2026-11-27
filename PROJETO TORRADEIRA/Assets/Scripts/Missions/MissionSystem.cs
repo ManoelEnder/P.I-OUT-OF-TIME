@@ -145,6 +145,10 @@ public class MissionSystem : MonoBehaviour
 
             locationsRequired = locationIds.Count;
         }
+
+        // Todos os lugares marcados contam (os extras sao criados pelo PhotoSpots ao carregar a fase).
+        if (locationIds.Count > locationsRequired)
+            locationsRequired = locationIds.Count;
     }
 
     private void UpdateMissionText()

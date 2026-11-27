@@ -65,6 +65,10 @@ public class PhotoCamera : MonoBehaviour
     private Coroutine pauseRestoreCoroutine;
 
     public bool IsCameraMode => cameraMode;
+
+    // 0 = sem zoom, 1 = zoom maximo (lido pela foto escondida, que so aparece no zoom).
+    // Medido a partir do FOV de quando o visor abre (zoomFOV): so o zoom do scroll conta.
+    public float ZoomAmount => playerCam == null ? 0f : Mathf.Clamp01(Mathf.InverseLerp(zoomFOV, minZoomFOV, playerCam.fieldOfView));
     public bool HasCamera => hasCamera;
     public bool IsTransitioning => isTransitioning;
 
@@ -487,6 +491,13 @@ public class PhotoCamera : MonoBehaviour
 
     private IEnumerator TakePhoto()
     {
+        AlbumController albumCheck = FindFirstObjectByType<AlbumController>();
+        if (albumCheck != null && albumCheck.IsFull && cameraMode && !isTransitioning)
+        {
+            CameraHudFx.Message("ÁLBUM CHEIO (4/4)  //  [F] abrir álbum e [X] apagar uma foto");
+            yield break;
+        }
+
         if (
             !hasCamera ||
             !canShoot ||

@@ -34,6 +34,7 @@ public class RadarDevice : MonoBehaviour
     private static readonly Color32 PieceColor = new Color32(255, 255, 255, 255);
     private static readonly Color32 EnemyColor = new Color32(235, 40, 36, 255);
     private static readonly Color32 LostCameraColor = new Color32(70, 140, 255, 255);
+    private static readonly Color32 PhotoSpotColor = new Color32(60, 220, 100, 255);
 
     private Transform player;
     private PlayerMovement movement;
@@ -519,13 +520,14 @@ public class RadarDevice : MonoBehaviour
             bool isEnemy = target == enemy;
             bool isLost = overheat != null && target == overheat.LostCamera;
             bool isGoal = DeliveryPoint.Instance != null && target == DeliveryPoint.Instance.transform;
+            bool isPhoto = target.GetComponent<PhotoLocation>() != null;
             Vector2 p = center + new Vector2(lx, ly) * ppm;
 
             // Fora do alcance: fica na borda da tela.
             p.x = Mathf.Clamp(p.x, 2f, TexW - 3f);
             p.y = Mathf.Clamp(p.y, 2f, TexH - 3f);
 
-            Color32 color = isEnemy ? EnemyColor : isLost ? LostCameraColor : PieceColor;
+            Color32 color = isEnemy ? EnemyColor : isLost ? LostCameraColor : isPhoto ? PhotoSpotColor : PieceColor;
             float fade = 1f - age / 1.6f;
             int dot = isEnemy || isLost || isGoal ? 2 : 1;
             for (int y = -dot; y <= dot; y++)
@@ -564,6 +566,11 @@ public class RadarDevice : MonoBehaviour
         // Missao final: o ponto de montagem aparece quando da para entregar.
         if (DeliveryPoint.Instance != null && DeliveryPoint.Instance.Active)
             yield return DeliveryPoint.Instance.transform;
+
+        // Lugares que ainda faltam fotografar (ponto verde), no andar atual.
+        foreach (PhotoLocation loc in PhotoLocation.All)
+            if (loc != null && !loc.Photographed && Mathf.Abs(loc.transform.position.y - player.position.y) < 3.5f)
+                yield return loc.transform;
     }
 
     private static bool Crossed(float from, float to, float bearing)

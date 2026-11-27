@@ -151,7 +151,9 @@ public class AlbumController : MonoBehaviour
         HandleAlbumNavigation();
 
         if (
-            Keyboard.current.deleteKey.wasPressedThisFrame
+            Keyboard.current.deleteKey.wasPressedThisFrame ||
+            Keyboard.current.xKey.wasPressedThisFrame ||
+            Keyboard.current.backspaceKey.wasPressedThisFrame
         )
         {
             StartDeleteConfirmation();
@@ -427,6 +429,9 @@ public class AlbumController : MonoBehaviour
 
     public bool IsFull =>
         photos.Count >= maxPhotos;
+
+    public int Count => photos.Count;
+    public int Max => maxPhotos;
 
     public bool AddPhoto(Texture2D texture)
     {

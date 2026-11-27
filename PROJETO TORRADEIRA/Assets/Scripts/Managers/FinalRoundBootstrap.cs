@@ -37,6 +37,12 @@ public static class FinalRoundBootstrap
             station.pieceModel = sample != null ? sample.gameObject : null;
         }
 
+        // Lugares para fotografar: marcadores, lugares extras e a figura escondida atras das janelas.
+        PhotoSpots.Setup();
+        // Efeito de camera no HUD do visor (varredura, granulado, REC, zoom).
+        if (Object.FindFirstObjectByType<CameraHudFx>() == null)
+            new GameObject("CameraHudFx").AddComponent<CameraHudFx>();
+
         PlayerMovement movement = Object.FindFirstObjectByType<PlayerMovement>();
         if (movement == null)
             return;

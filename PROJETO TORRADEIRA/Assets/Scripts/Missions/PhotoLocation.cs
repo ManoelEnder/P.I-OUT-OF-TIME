@@ -18,6 +18,10 @@ public class PhotoLocation : MonoBehaviour
     [SerializeField] private float bobHeight = 0.15f;
     [SerializeField] private float bobSpeed = 2f;
 
+    // Configurado em codigo (PhotoSpots): exige zoom do visor e ignora vidro/o proprio objeto na visao.
+    private bool requireZoom;
+    private Transform losOwner;
+
     private Renderer[] renderers;
     private Vector3 markerStartLocalPos;
     private Camera mainCam;
@@ -82,8 +86,34 @@ public class PhotoLocation : MonoBehaviour
         }
     }
 
+    public void Configure(string id, string name, GameObject newMarker, float distance, bool zoomOnly, Transform owner)
+    {
+        locationId = id;
+        displayName = name;
+        maxDistance = distance;
+        requireZoom = zoomOnly;
+        losOwner = owner;
+        useRendererBounds = false;
+        debugLog = false;
+        bobHeight = 0.08f;
+        if (newMarker != null)
+        {
+            // O marcador antigo da cena da lugar ao brilho.
+            if (marker != null && marker != newMarker)
+                marker.SetActive(false);
+            marker = newMarker;
+            markerStartLocalPos = marker.transform.localPosition;
+        }
+        renderers = CollectRenderers();
+    }
+
+    public bool HasMarker => marker != null;
+
+    public bool Photographed { get; private set; }
+
     public void MarkPhotographed()
     {
+        Photographed = true;
         if (marker != null && hideMarkerWhenPhotographed)
             marker.SetActive(false);
     }
@@ -100,6 +130,16 @@ public class PhotoLocation : MonoBehaviour
             return false;
         }
 
+        if (requireZoom)
+        {
+            PhotoCamera photo = FindFirstObjectByType<PhotoCamera>();
+            if (photo == null || photo.ZoomAmount < 0.45f)
+            {
+                Log("precisa de zoom");
+                return false;
+            }
+        }
+
         Vector3 vp = cam.WorldToViewportPoint(pos);
 
         if (vp.z <= 0f || vp.x < 0f || vp.x > 1f || vp.y < 0f || vp.y > 1f)
@@ -108,12 +148,19 @@ public class PhotoLocation : MonoBehaviour
             return false;
         }
 
-        if (requireLineOfSight &&
-            Physics.Linecast(cam.transform.position, pos, out RaycastHit hit))
+        if (requireLineOfSight)
         {
-            if (hit.transform != transform && !hit.transform.IsChildOf(transform))
+            // Vidro e o proprio objeto fotografado nao bloqueiam.
+            foreach (RaycastHit hit in Physics.RaycastAll(cam.transform.position, (pos - cam.transform.position).normalized,
+                         Vector3.Distance(cam.transform.position, pos) - 0.05f, ~0, QueryTriggerInteraction.Ignore))
             {
-                Log("bloqueado por " + hit.transform.name);
+                Transform t = hit.transform;
+                if (t == transform || t.IsChildOf(transform)) continue;
+                if (losOwner != null && (t == losOwner || t.IsChildOf(losOwner))) continue;
+                if (t.CompareTag("Player") || t.root.CompareTag("Player")) continue;
+                string n = t.name.ToLowerInvariant();
+                if (n.Contains("glass") || n.Contains("vidro") || n.Contains("window") || n.Contains("janela")) continue;
+                Log("bloqueado por " + t.name);
                 return false;
             }
         }

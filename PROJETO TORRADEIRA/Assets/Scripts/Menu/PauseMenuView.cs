@@ -309,7 +309,7 @@ public class PauseMenuView : MonoBehaviour
             list.lineSpacing = 12f;
             list.text = list.text.Replace("<pos=130>", "<pos=170>");
             if (!list.text.Contains("Levantar radar"))
-                list.text = list.text.Replace("<color=#FFFFFF>TAB</color>", "<color=#FFFFFF>Q</color><pos=170>Levantar radar\n<color=#FFFFFF>L</color><pos=170>Lanterna\n<color=#FFFFFF>TAB</color>");
+                list.text = list.text.Replace("<color=#FFFFFF>TAB</color>", "<color=#FFFFFF>Q</color><pos=170>Levantar radar\n<color=#FFFFFF>L</color><pos=170>Lanterna (com o visor)\n<color=#FFFFFF>TAB</color>");
         }
 
         BackHint(root, -240f);

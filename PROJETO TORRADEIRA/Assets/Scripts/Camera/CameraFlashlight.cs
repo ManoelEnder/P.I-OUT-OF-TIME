@@ -9,9 +9,9 @@ public class CameraFlashlight : MonoBehaviour
 {
     [SerializeField] private Key toggleKey = Key.L;
     [SerializeField] private float drainInterval = 6f;
-    [SerializeField] private float intensity = 2.6f;
-    [SerializeField] private float range = 16f;
-    [SerializeField] private float spotAngle = 52f;
+    [SerializeField] private float intensity = 14f;
+    [SerializeField] private float range = 26f;
+    [SerializeField] private float spotAngle = 62f;
 
     public static CameraFlashlight Instance { get; private set; }
     public bool IsOn { get; private set; }
@@ -19,6 +19,9 @@ public class CameraFlashlight : MonoBehaviour
     private Light spot;
     private CameraBattery battery;
     private CameraOverheat overheat;
+    private PhotoCamera photo;
+    // A lanterna so funciona com o visor aberto; ao fechar o visor ela apaga.
+    private bool CameraOpen => photo != null && photo.IsCameraMode;
     private AudioSource clickSource;
     private static AudioClip click;
     private float drainTimer;
@@ -46,12 +49,13 @@ public class CameraFlashlight : MonoBehaviour
         spot.color = new Color(0.86f, 0.92f, 1f);
         spot.range = range;
         spot.spotAngle = spotAngle;
-        spot.innerSpotAngle = spotAngle * 0.45f;
+        spot.innerSpotAngle = spotAngle * 0.6f;
         spot.intensity = intensity;
         spot.shadows = LightShadows.Soft;
         spot.enabled = false;
 
         battery = FindFirstObjectByType<CameraBattery>();
+        photo = FindFirstObjectByType<PhotoCamera>();
         overheat = FindFirstObjectByType<CameraOverheat>();
         clickSource = gameObject.AddComponent<AudioSource>();
         clickSource.playOnAwake = false;
@@ -70,7 +74,10 @@ public class CameraFlashlight : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
+        if (IsOn && !CameraOpen)
+            Set(false, true);
+
+        if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame && CameraOpen)
         {
             if (!IsOn && battery != null && battery.IsEmpty)
                 BatteryWarning.Show(true);
@@ -97,7 +104,7 @@ public class CameraFlashlight : MonoBehaviour
         }
 
         if (label != null)
-            label.alpha = Mathf.MoveTowards(label.alpha, IsOn ? 0.9f : 0.35f, Time.deltaTime * 4f);
+            label.alpha = Mathf.MoveTowards(label.alpha, !CameraOpen ? 0f : IsOn ? 0.9f : 0.45f, Time.deltaTime * 4f);
     }
 
     public void Set(bool on, bool sound)
