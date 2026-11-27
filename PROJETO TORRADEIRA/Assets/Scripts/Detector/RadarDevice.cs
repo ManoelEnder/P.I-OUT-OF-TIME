@@ -51,11 +51,11 @@ public class RadarDevice : MonoBehaviour
     private float nextBeep;
 
     private RectTransform root;
-    private RawImage screen;
+    [SerializeField, HideInInspector] private RawImage screen;
     private Texture2D screenTex;
     private Color32[] pixels;
-    private Image led;
-    private Image ledGlow;
+    [SerializeField, HideInInspector] private Image led;
+    [SerializeField, HideInInspector] private Image ledGlow;
     private float raise;
     private float nextFrame;
 
@@ -74,6 +74,9 @@ public class RadarDevice : MonoBehaviour
 
     public static RadarDevice Create(Transform parent)
     {
+        RadarDevice existing = parent.GetComponentInChildren<RadarDevice>(true);
+        if (existing != null)
+            return existing;
         GameObject go = new GameObject("RadarDevice", typeof(RectTransform));
         go.layer = parent.gameObject.layer;
         go.transform.SetParent(parent, false);
@@ -87,8 +90,32 @@ public class RadarDevice : MonoBehaviour
         root.pivot = new Vector2(1f, 0f);
         root.sizeDelta = new Vector2(DeviceW * Scale, DeviceH * Scale);
 
+        if (screen == null)
+        {
+            BuildBody();
+            BuildScreen();
+        }
+        else
+        {
+            screenTex = new Texture2D(TexW, TexH, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp, name = "RadarScreen" };
+            pixels = new Color32[TexW * TexH];
+            screen.texture = screenTex;
+        }
+    }
+
+    // Desenha o aparelho de novo (editor; fica salvo na cena).
+    public void Rebuild()
+    {
+        root = (RectTransform)transform;
+        root.anchorMin = root.anchorMax = new Vector2(1f, 0f);
+        root.pivot = new Vector2(1f, 0f);
+        root.sizeDelta = new Vector2(DeviceW * Scale, DeviceH * Scale);
+        for (int i = transform.childCount - 1; i >= 0; i--)
+            SceneBake.Kill(transform.GetChild(i).gameObject);
         BuildBody();
         BuildScreen();
+        screen.texture = null;
+        screenTex = null;
     }
 
     private void Start()

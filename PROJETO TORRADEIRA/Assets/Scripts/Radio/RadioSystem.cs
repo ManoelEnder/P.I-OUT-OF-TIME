@@ -40,6 +40,10 @@ public class RadioSystem : MonoBehaviour
 
         while (true)
         {
+            // Com o visor da camera aberto o radio espera.
+            while (RadioMessageUI.CameraOpen)
+                yield return null;
+
             PlayRandomTransmission();
 
             yield return new WaitForSeconds(
@@ -82,8 +86,14 @@ public class RadioSystem : MonoBehaviour
             return;
         }
 
-        RadioTransmission transmission =
-            transmissions[index];
+        StartCoroutine(PlayWhenCameraClosed(transmissions[index]));
+    }
+
+    // Transmissoes pedidas com o visor aberto tocam quando ele fechar.
+    IEnumerator PlayWhenCameraClosed(RadioTransmission transmission)
+    {
+        while (RadioMessageUI.CameraOpen)
+            yield return null;
 
         if (radioMessageUI != null)
         {

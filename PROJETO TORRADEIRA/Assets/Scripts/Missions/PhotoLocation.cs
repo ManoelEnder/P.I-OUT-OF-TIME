@@ -19,8 +19,8 @@ public class PhotoLocation : MonoBehaviour
     [SerializeField] private float bobSpeed = 2f;
 
     // Configurado em codigo (PhotoSpots): exige zoom do visor e ignora vidro/o proprio objeto na visao.
-    private bool requireZoom;
-    private Transform losOwner;
+    [SerializeField, HideInInspector] private bool requireZoom;
+    [SerializeField, HideInInspector] private Transform losOwner;
 
     private Renderer[] renderers;
     private Vector3 markerStartLocalPos;

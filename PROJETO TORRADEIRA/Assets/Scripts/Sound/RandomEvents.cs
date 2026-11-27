@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 // Eventos aleatorios na fase: luz piscando, porta abrindo/fechando sozinha e passos atras do
 // jogador. Um a cada 25-60 s de jogo, perto (5-20 m) e de preferencia fora da visao.
-// Cria-se sozinho quando a cena Principal carrega.
+// Fica salvo na cena Principal (Tools > OUT OF TIME > Montar tudo na cena).
 public class RandomEvents : MonoBehaviour
 {
     [SerializeField] private Vector2 interval = new Vector2(25f, 60f);
@@ -18,18 +18,12 @@ public class RandomEvents : MonoBehaviour
     private AudioSource steps;
     private static AudioClip stepClip;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void Hook()
+    // Lampadas com defeito ja colocadas na cena pelo editor.
+    [SerializeField, HideInInspector] private bool lampsBaked;
+    public void BakeLamps()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-    }
-
-    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Principal" && FindFirstObjectByType<RandomEvents>() == null)
-            new GameObject("RandomEvents").AddComponent<RandomEvents>();
+        AddFaultyLamps();
+        lampsBaked = true;
     }
 
     private void Start()
@@ -50,7 +44,8 @@ public class RandomEvents : MonoBehaviour
             stepClip = BuildStep();
 
         Schedule();
-        AddFaultyLamps();
+        if (!lampsBaked)
+            AddFaultyLamps();
     }
 
     // Uma parte das lampadas da fase fica com defeito (pisca de tempos em tempos).

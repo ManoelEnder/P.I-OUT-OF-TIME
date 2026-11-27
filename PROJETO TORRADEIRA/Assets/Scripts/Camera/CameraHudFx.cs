@@ -13,10 +13,11 @@ public class CameraHudFx : MonoBehaviour
     private static CameraHudFx instance;
 
     private PhotoCamera photo;
-    private RectTransform hud;
-    private RawImage scan, noise, band;
-    private Image recDot;
-    private TextMeshProUGUI recText, modeText, zoomText, message;
+    // Montado no editor (Tools > OUT OF TIME > Montar tudo na cena) e salvo na cena.
+    [SerializeField, HideInInspector] private RectTransform hud;
+    [SerializeField, HideInInspector] private RawImage scan, noise, band;
+    [SerializeField, HideInInspector] private Image recDot;
+    [SerializeField, HideInInspector] private TextMeshProUGUI recText, modeText, zoomText, message;
     private Texture2D noiseTex;
     private float openedAt;
     private bool wasOpen;
@@ -43,18 +44,38 @@ public class CameraHudFx : MonoBehaviour
     private void Start()
     {
         photo = FindFirstObjectByType<PhotoCamera>();
+        if (hud == null)
+            Build();
+        if (photo == null || hud == null || noise == null)
+        {
+            enabled = false;
+            return;
+        }
+        // Ajusta a camada ao tamanho real da tela e cria o granulado (muda a cada quadro).
+        Canvas canvas = hud.GetComponentInParent<Canvas>(true);
+        if (canvas != null)
+        {
+            RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
+            hud.position = canvasRect.position;
+            hud.sizeDelta = canvasRect.rect.size;
+        }
+        noiseTex = new Texture2D(192, 108, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
+        noise.texture = noiseTex;
+        message.alpha = 0f;
+    }
+
+    public void Build()
+    {
+        photo = FindFirstObjectByType<PhotoCamera>(FindObjectsInactive.Include);
         if (photo == null || photo.cameraHUD == null)
-        {
-            enabled = false;
             return;
-        }
+        if (hud != null) SceneBake.Kill(hud.gameObject);
+        Transform oldLayer = photo.cameraHUD.transform.Find("EfeitoCamera");
+        if (oldLayer != null) SceneBake.Kill(oldLayer.gameObject);
         RectTransform hudRoot = photo.cameraHUD.GetComponent<RectTransform>();
-        Canvas canvas = photo.cameraHUD.GetComponentInParent<Canvas>();
+        Canvas canvas = photo.cameraHUD.GetComponentInParent<Canvas>(true);
         if (hudRoot == null || canvas == null)
-        {
-            enabled = false;
             return;
-        }
         // Camada do tamanho da tela inteira, dentro do HUD do visor (o objeto do HUD tem tamanho zero).
         RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
         hud = new GameObject("EfeitoCamera", typeof(RectTransform)).GetComponent<RectTransform>();
@@ -63,7 +84,7 @@ public class CameraHudFx : MonoBehaviour
         hud.anchorMin = hud.anchorMax = new Vector2(0.5f, 0.5f);
         hud.pivot = new Vector2(0.5f, 0.5f);
         hud.position = canvasRect.position;
-        hud.sizeDelta = canvasRect.rect.size;
+        hud.sizeDelta = canvasRect.rect.size.x > 10f ? canvasRect.rect.size : new Vector2(1920f, 1080f);
         hud.SetAsFirstSibling();
 
         TMP_FontAsset font = null;
@@ -84,8 +105,7 @@ public class CameraHudFx : MonoBehaviour
         scan = Raw("Varredura", lines);
         scan.uvRect = new Rect(0f, 0f, 1f, 240f);
 
-        noiseTex = new Texture2D(192, 108, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
-        noise = Raw("Granulado", noiseTex);
+        noise = Raw("Granulado", null);
         noise.color = new Color(1f, 1f, 1f, 0.5f);
 
         Texture2D bandTex = new Texture2D(1, 32, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
@@ -151,7 +171,7 @@ public class CameraHudFx : MonoBehaviour
 
     private void Update()
     {
-        if (photo == null || hud == null || recDot == null)
+        if (photo == null || hud == null || recDot == null || noiseTex == null)
             return;
 
         bool open = photo.IsCameraMode;

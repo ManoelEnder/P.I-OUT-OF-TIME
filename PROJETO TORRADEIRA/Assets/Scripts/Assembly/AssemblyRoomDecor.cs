@@ -14,13 +14,13 @@ public class AssemblyRoomDecor : MonoBehaviour
     private const float S = 1.25f; // escala do mundo (a fase e maior que o real)
 
     private AssemblyRoomKit kit;
-    private Vector3 c;            // centro do piso
-    private float xMin, xMax, zMin, zMax, floorY, ceilY;
-    private Material matFloor, matPanel, matDark, matMetal, matStripe, matScreenA, matScreenB, matBtnOn, matBtnOff, matBtnRed, matLight, matCable;
+    [SerializeField, HideInInspector] private Vector3 c;            // centro do piso
+    [SerializeField, HideInInspector] private float xMin, xMax, zMin, zMax, floorY, ceilY;
+    [SerializeField, HideInInspector] private Material matFloor, matPanel, matDark, matMetal, matStripe, matScreenA, matScreenB, matBtnOn, matBtnOff, matBtnRed, matLight, matCable;
     private Texture2D scopeA, scopeB;
     private Color32[] scopePx;
-    private readonly List<Renderer> buttons = new List<Renderer>();
-    private readonly List<Light> fixtures = new List<Light>();
+    [SerializeField, HideInInspector] private List<Renderer> buttons = new List<Renderer>();
+    [SerializeField, HideInInspector] private List<Light> fixtures = new List<Light>();
     private float nextScope, nextBlink;
     private int solidMask;
 
@@ -120,7 +120,7 @@ public class AssemblyRoomDecor : MonoBehaviour
         if (block.Length > 0)
         {
             Debug.Log("Sala: painel recusado, bate em " + block[0].name);
-            Destroy(panel.gameObject);
+            SceneBake.Kill(panel.gameObject);
             return;
         }
         Box("Gabinete", panel, new Vector3(0f, 0.55f, 0f), new Vector3(1.2f, 1.1f, 0.6f), matPanel, true, new Vector2(1.2f, 1.1f));
@@ -250,6 +250,19 @@ public class AssemblyRoomDecor : MonoBehaviour
 
     // ---------- Animacao (telas e botoes) ----------
 
+    // Texturas das telas (osciloscopio) sao recriadas no jogo e ligadas aos materiais salvos.
+    private void Start()
+    {
+        if (matScreenA == null || matScreenB == null) return;
+        scopeA = new Texture2D(64, 48, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
+        scopeB = new Texture2D(64, 48, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
+        scopePx = new Color32[64 * 48];
+        matScreenA.SetTexture("_BaseMap", scopeA);
+        matScreenA.SetTexture("_EmissionMap", scopeA);
+        matScreenB.SetTexture("_BaseMap", scopeB);
+        matScreenB.SetTexture("_EmissionMap", scopeB);
+    }
+
     private void Update()
     {
         if (Time.time >= nextScope && scopeA != null)
@@ -346,7 +359,7 @@ public class AssemblyRoomDecor : MonoBehaviour
             if (h.transform.IsChildOf(go.transform)) continue;
             if (h.name == "Piso") continue;
             Debug.Log("Sala: " + prefab.name + " recusado, bate em " + h.name);
-            Destroy(go);
+            SceneBake.Kill(go);
             return null;
         }
         if (solid)
@@ -363,8 +376,8 @@ public class AssemblyRoomDecor : MonoBehaviour
 
     private static void Strip(GameObject go)
     {
-        foreach (Collider col in go.GetComponentsInChildren<Collider>(true)) Destroy(col);
-        foreach (LODGroup g in go.GetComponentsInChildren<LODGroup>(true)) Destroy(g);
+        foreach (Collider col in go.GetComponentsInChildren<Collider>(true)) SceneBake.Kill(col);
+        foreach (LODGroup g in go.GetComponentsInChildren<LODGroup>(true)) SceneBake.Kill(g);
         foreach (Transform t in go.GetComponentsInChildren<Transform>(true)) t.gameObject.tag = "Untagged";
     }
 
@@ -432,7 +445,7 @@ public class AssemblyRoomDecor : MonoBehaviour
     {
         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = name;
-        if (!collider) Destroy(go.GetComponent<Collider>());
+        if (!collider) SceneBake.Kill(go.GetComponent<Collider>());
         go.transform.SetParent(parent, false);
         if (world) go.transform.position = pos; else go.transform.localPosition = pos;
         go.transform.localScale = size;
@@ -450,7 +463,7 @@ public class AssemblyRoomDecor : MonoBehaviour
     {
         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         go.name = name;
-        Destroy(go.GetComponent<Collider>());
+        SceneBake.Kill(go.GetComponent<Collider>());
         go.transform.SetParent(parent, false);
         if (world) go.transform.position = pos; else go.transform.localPosition = pos;
         go.transform.localScale = size;

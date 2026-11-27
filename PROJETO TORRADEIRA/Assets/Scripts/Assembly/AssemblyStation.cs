@@ -25,15 +25,19 @@ public class AssemblyStation : MonoBehaviour
     public bool Running { get; private set; }
     public bool Finished { get; private set; }
 
-    private ClawMachine claw;
-    private Transform tray, prototype;
-    private Renderer protoLens, ringRenderer, trayRing;
-    private readonly List<Vector3> sockets = new List<Vector3>();
-    private Light beacon;
-    private Transform beaconPivot;
-    private ParticleSystem sparks;
+    // Montado no editor (Ferramentas > OUT OF TIME > Montar tudo na cena) e salvo na cena.
+    [SerializeField, HideInInspector] private bool built;
+    [SerializeField, HideInInspector] private ClawMachine claw;
+    [SerializeField, HideInInspector] private Transform tray, prototype;
+    [SerializeField, HideInInspector] private Renderer protoLens, ringRenderer, trayRing;
+    [SerializeField, HideInInspector] private List<Vector3> sockets = new List<Vector3>();
+    [SerializeField, HideInInspector] private Light beacon;
+    [SerializeField, HideInInspector] private Transform beaconPivot;
+    [SerializeField, HideInInspector] private ParticleSystem sparks;
+    [SerializeField, HideInInspector] private Material matMetal, matDark, matAccent, matStripe, matLampOn, matGlowOn, matGlowOff;
     private AudioSource sfx, hum;
-    private Material matMetal, matDark, matAccent, matStripe, matLampOn, matGlowOn, matGlowOff;
+
+    public bool Built => built;
 
     private void Awake()
     {
@@ -47,10 +51,34 @@ public class AssemblyStation : MonoBehaviour
 
     private void Start()
     {
+        if (!built)
+            Build();
+
+        sfx = gameObject.AddComponent<AudioSource>();
+        sfx.spatialBlend = 0.4f;
+        hum = gameObject.AddComponent<AudioSource>();
+        hum.spatialBlend = 1f;
+        hum.minDistance = 2f;
+        hum.maxDistance = 14f;
+        hum.loop = true;
+        hum.volume = 0.25f;
+        hum.clip = Hum();
+        hum.Play();
+    }
+
+    // Monta a sala inteira (editor ou, se nao estiver na cena, ao iniciar).
+    public void Build()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+            SceneBake.Kill(transform.GetChild(i).gameObject);
+        foreach (AssemblyRoomDecor old in GetComponents<AssemblyRoomDecor>())
+            SceneBake.Kill(old);
+        sockets.Clear();
         MakeMaterials();
 
         // Mede a sala real (paredes, piso, teto) e decora depois de montar a estacao.
         AssemblyRoomDecor decor = gameObject.AddComponent<AssemblyRoomDecor>();
+        Physics.SyncTransforms();
         decor.Measure(floorCenter, size);
         floorCenter = decor.Center;
         Vector3 c = floorCenter;
@@ -99,16 +127,7 @@ public class AssemblyStation : MonoBehaviour
 
         BuildSparks();
         decor.Build();
-        sfx = gameObject.AddComponent<AudioSource>();
-        sfx.spatialBlend = 0.4f;
-        hum = gameObject.AddComponent<AudioSource>();
-        hum.spatialBlend = 1f;
-        hum.minDistance = 2f;
-        hum.maxDistance = 14f;
-        hum.loop = true;
-        hum.volume = 0.25f;
-        hum.clip = Hum();
-        hum.Play();
+        built = true;
     }
 
     private void Update()
@@ -283,8 +302,8 @@ public class AssemblyStation : MonoBehaviour
         if (pieceModel != null)
         {
             piece = Instantiate(pieceModel);
-            foreach (Collider col in piece.GetComponentsInChildren<Collider>()) Destroy(col);
-            foreach (MonoBehaviour mb in piece.GetComponentsInChildren<MonoBehaviour>()) Destroy(mb);
+            foreach (Collider col in piece.GetComponentsInChildren<Collider>()) SceneBake.Kill(col);
+            foreach (MonoBehaviour mb in piece.GetComponentsInChildren<MonoBehaviour>()) SceneBake.Kill(mb);
             Renderer[] rs = piece.GetComponentsInChildren<Renderer>();
             if (rs.Length > 0)
             {
@@ -298,7 +317,7 @@ public class AssemblyStation : MonoBehaviour
         else
         {
             piece = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Destroy(piece.GetComponent<Collider>());
+            SceneBake.Kill(piece.GetComponent<Collider>());
             piece.transform.localScale = new Vector3(0.14f, 0.07f, 0.1f);
             piece.GetComponent<Renderer>().sharedMaterial = matAccent;
         }
@@ -339,7 +358,7 @@ public class AssemblyStation : MonoBehaviour
     {
         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = name;
-        if (!collider) Destroy(go.GetComponent<Collider>());
+        if (!collider) SceneBake.Kill(go.GetComponent<Collider>());
         go.transform.SetParent(parent, false);
         go.transform.localPosition = pos;
         go.transform.localScale = size;
@@ -351,7 +370,7 @@ public class AssemblyStation : MonoBehaviour
     {
         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         go.name = name;
-        Destroy(go.GetComponent<Collider>());
+        SceneBake.Kill(go.GetComponent<Collider>());
         if (collider) go.AddComponent<BoxCollider>();
         go.transform.SetParent(parent, false);
         if (parent == transform) go.transform.position = pos; else go.transform.localPosition = pos;

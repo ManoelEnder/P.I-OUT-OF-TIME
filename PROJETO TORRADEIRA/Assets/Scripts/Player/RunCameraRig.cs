@@ -27,10 +27,12 @@ public class RunCameraRig : MonoBehaviour
 
     private PlayerMovement movement;
     private Camera cam;
-    private CinemachineBrain brain;
-    private CinemachineCamera vcam;
-    private CinemachineRecomposer recomposer;
-    private CinemachineBasicMultiChannelPerlin noise;
+    // Montado no editor e salvo na cena.
+    [SerializeField, HideInInspector] private CinemachineBrain brain;
+    [SerializeField, HideInInspector] private CinemachineCamera vcam;
+    [SerializeField, HideInInspector] private CinemachineRecomposer recomposer;
+    [SerializeField, HideInInspector] private CinemachineBasicMultiChannelPerlin noise;
+    public NoiseSettings noiseProfile;
     private float tilt, dutch, run;
 
     public void SetBrainEnabled(bool on)
@@ -51,11 +53,40 @@ public class RunCameraRig : MonoBehaviour
     private void Start()
     {
         movement = GetComponent<PlayerMovement>();
-        cam = Camera.main;
-        if (movement == null || cam == null || movement.cameraTransform == null)
-        {
+        cam = brain != null ? brain.GetComponent<Camera>() : Camera.main;
+        if (vcam == null)
+            Build();
+        if (vcam == null)
             enabled = false;
+    }
+
+    // Cria anchor, CinemachineCamera, Brain e ponte de FOV (editor; no jogo so se faltar).
+    public void Build()
+    {
+        movement = GetComponent<PlayerMovement>();
+        // Camera do jogador (o objeto do PhotoCamera tambem tem a tag MainCamera, entao nao usa Camera.main).
+        PhotoCamera pc = FindFirstObjectByType<PhotoCamera>(FindObjectsInactive.Include);
+        cam = pc != null && pc.playerCam != null ? pc.playerCam : Camera.main;
+        if (movement == null || cam == null || movement.cameraTransform == null)
             return;
+        // Tira Brain e ponte de FOV que tenham ido parar em outra camera.
+        foreach (Camera other in FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (other == cam) continue;
+            foreach (FovBridge fb in other.GetComponents<FovBridge>()) SceneBake.Kill(fb);
+            foreach (CinemachineBrain b in other.GetComponents<CinemachineBrain>()) SceneBake.Kill(b);
+        }
+        if (vcam != null)
+            SceneBake.Kill(vcam.gameObject);
+        foreach (FovBridge fb in cam.GetComponents<FovBridge>())
+            SceneBake.Kill(fb);
+        if (movement.cameraTransform.name == "CameraAnchor")
+        {
+            // Rebuild: volta o PlayerMovement para a camera real antes de recriar o anchor.
+            Transform oldAnchor = movement.cameraTransform;
+            movement.cameraTransform = cam.transform.parent == oldAnchor.parent ? cam.transform : oldAnchor;
+            if (movement.cameraTransform == oldAnchor) return;
+            SceneBake.Kill(oldAnchor.gameObject);
         }
 
         // Anchor no lugar exato da camera real (mundo); o PlayerMovement passa a mexer nele.
@@ -97,7 +128,7 @@ public class RunCameraRig : MonoBehaviour
         recomposer.LookAtAttachment = 1f;
         recomposer.ApplyAfter = CinemachineCore.Stage.Aim;
         noise = vgo.AddComponent<CinemachineBasicMultiChannelPerlin>();
-        noise.NoiseProfile = BuildNoise();
+        noise.NoiseProfile = noiseProfile != null ? noiseProfile : BuildNoise();
         noise.AmplitudeGain = noiseWalk;
         noise.FrequencyGain = 1f;
 
@@ -141,7 +172,7 @@ public class RunCameraRig : MonoBehaviour
     }
 
     // Ruido de "camera na mao": posicao quase parada, rotacao balancando devagar.
-    private static NoiseSettings BuildNoise()
+    public static NoiseSettings BuildNoise()
     {
         NoiseSettings n = ScriptableObject.CreateInstance<NoiseSettings>();
         n.name = "RunHandheld";
@@ -170,41 +201,5 @@ public class RunCameraRig : MonoBehaviour
             },
         };
         return n;
-    }
-}
-
-// Copia o FOV que os scripts do jogo escrevem na Camera para a lente da CinemachineCamera,
-// antes do Brain aplicar (ordem de execucao bem cedo no LateUpdate).
-[DefaultExecutionOrder(-10000)]
-public class FovBridge : MonoBehaviour
-{
-    private Camera cam;
-    private CinemachineCamera vcam;
-    private RunCameraRig rig;
-    private float lastApplied = -1f;
-    private float requested;
-
-    public void Init(Camera c, CinemachineCamera v, RunCameraRig r, float startFov)
-    {
-        cam = c;
-        vcam = v;
-        rig = r;
-        requested = startFov;
-        lastApplied = startFov;
-    }
-
-    private void LateUpdate()
-    {
-        if (cam == null || vcam == null)
-            return;
-        // Se alguem mudou o FOV da camera desde o ultimo quadro, esse e o novo pedido.
-        if (Mathf.Abs(cam.fieldOfView - lastApplied) > 0.001f && cam.fieldOfView > 1f)
-            requested = cam.fieldOfView;
-        float fov = rig != null ? rig.RunFov(requested) : requested;
-        LensSettings lens = vcam.Lens;
-        lens.FieldOfView = fov;
-        lens.NearClipPlane = cam.nearClipPlane;
-        vcam.Lens = lens;
-        lastApplied = fov;
     }
 }

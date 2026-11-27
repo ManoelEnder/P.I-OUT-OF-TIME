@@ -16,8 +16,10 @@ public class ArmToggle : MonoBehaviour
             // sempre no canvas principal do HUD.
             GameObject hudCanvas = GameObject.Find("HUDCanvas");
             Transform hud = hudCanvas != null ? hudCanvas.transform : radar.transform.parent;
-            radar.SetActive(false);
-            radar = RadarDevice.Create(hud).gameObject;
+            RadarDevice device = RadarDevice.Create(hud);
+            if (radar != device.gameObject)
+                radar.SetActive(false);
+            radar = device.gameObject;
             radar.SetActive(true);
         }
     }

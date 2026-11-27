@@ -26,9 +26,9 @@ public class PlayerStamina : MonoBehaviour
     private AudioSource breath;
     private static AudioClip pant;
 
-    private RectTransform barRoot;
-    private Image fill;
-    private CanvasGroup group;
+    [SerializeField, HideInInspector] private RectTransform barRoot;
+    [SerializeField, HideInInspector] private Image fill;
+    [SerializeField, HideInInspector] private CanvasGroup group;
 
     private void Awake()
     {
@@ -49,7 +49,8 @@ public class PlayerStamina : MonoBehaviour
         breath.spatialBlend = 0f;
         breath.volume = 0.55f;
         if (pant == null) pant = BuildPant();
-        BuildBar();
+        if (fill == null)
+            BuildBar();
     }
 
     private void Update()
@@ -86,8 +87,10 @@ public class PlayerStamina : MonoBehaviour
 
     // ---------- Barra ----------
 
-    private void BuildBar()
+    public void BuildBar()
     {
+        if (barRoot != null)
+            SceneBake.Kill(barRoot.gameObject);
         GameObject hud = GameObject.Find("HUDCanvas");
         if (hud == null)
             return;

@@ -14,11 +14,12 @@ public class ThanksScreen : MonoBehaviour
     public string menuScene = "Menu";
     public float scrollSpeed = 48f;
 
-    private RectTransform content;
-    private TextMeshProUGUI body;
-    private RawImage noise;
+    [SerializeField, HideInInspector] private GameObject canvasRoot;
+    [SerializeField, HideInInspector] private RectTransform content;
+    [SerializeField, HideInInspector] private TextMeshProUGUI body;
+    [SerializeField, HideInInspector] private RawImage noise;
+    [SerializeField, HideInInspector] private Image fade;
     private Texture2D noiseTex;
-    private Image fade;
     private bool leaving;
 
     private const string Accent = "#D23A32";
@@ -75,7 +76,22 @@ public class ThanksScreen : MonoBehaviour
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = Color.black;
 
-        GameObject c = new GameObject("Agradecimentos", typeof(Canvas), typeof(CanvasScaler));
+        if (content == null)
+            Build();
+        noiseTex = new Texture2D(160, 90, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
+        noise.texture = noiseTex;
+        content.anchoredPosition = new Vector2(0f, -760f);
+        fade.color = Color.black;
+        StartCoroutine(Run());
+    }
+
+    // Monta a tela (editor; fica salva na cena).
+    public void Build()
+    {
+        if (canvasRoot != null) DestroyNow(canvasRoot);
+        GameObject c = new GameObject("TelaAgradecimentos", typeof(Canvas), typeof(CanvasScaler));
+        c.transform.SetParent(transform, false);
+        canvasRoot = c;
         Canvas canvas = c.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         CanvasScaler scaler = c.GetComponent<CanvasScaler>();
@@ -111,13 +127,11 @@ public class ThanksScreen : MonoBehaviour
         br.sizeDelta = new Vector2(880f, 100f);
         body.ForceMeshUpdate();
         br.sizeDelta = new Vector2(880f, body.preferredHeight + 40f);
-        content.anchoredPosition = new Vector2(0f, -760f);
+        content.anchoredPosition = new Vector2(0f, -120f);
 
-        noiseTex = new Texture2D(160, 90, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
         noise = new GameObject("Estatica", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
         noise.transform.SetParent(c.transform, false);
         Stretch(noise.rectTransform);
-        noise.texture = noiseTex;
         noise.color = new Color(1f, 1f, 1f, 0.035f);
         noise.raycastTarget = false;
 
@@ -142,8 +156,12 @@ public class ThanksScreen : MonoBehaviour
         rec.rectTransform.anchoredPosition = new Vector2(28f, -22f);
         rec.rectTransform.sizeDelta = new Vector2(400f, 30f);
 
-        fade = Full(c.transform, "Fade", Color.black);
-        StartCoroutine(Run());
+        fade = Full(c.transform, "Fade", Color.clear);
+    }
+
+    private static void DestroyNow(Object o)
+    {
+        if (Application.isPlaying) Destroy(o); else DestroyImmediate(o);
     }
 
     private IEnumerator Run()

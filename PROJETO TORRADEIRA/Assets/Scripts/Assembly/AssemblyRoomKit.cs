@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Referencias de modelos e texturas usados para decorar a sala de montagem (carregado de Resources,
-// porque a estacao e criada em tempo de jogo pelo FinalRoundBootstrap).
+// a estacao e montada no editor por Tools > OUT OF TIME > Montar tudo na cena).
 [CreateAssetMenu(menuName = "OUT OF TIME/Kit da sala de montagem")]
 public class AssemblyRoomKit : ScriptableObject
 {

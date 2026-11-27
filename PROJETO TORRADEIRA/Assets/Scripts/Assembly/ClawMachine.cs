@@ -11,13 +11,13 @@ public class ClawMachine : MonoBehaviour
     public float travelSpeed = 2.4f;
     public float dropSpeed = 1.7f;
 
-    private Transform bridge, carriage, armOuter, armInner, head;
-    private Transform[] fingers = new Transform[3];
+    [SerializeField, HideInInspector] private Transform bridge, carriage, armOuter, armInner, head;
+    [SerializeField, HideInInspector] private Transform[] fingers = new Transform[3];
     private AudioSource motor, sfx;
     private static AudioClip servo, clank;
-    private float armLength = 0.6f;   // comprimento estendido abaixo do carro
-    private Material metal, dark, accent, lamp;
-    private Light headLight;
+    [SerializeField, HideInInspector] private float armLength = 0.6f;   // comprimento estendido abaixo do carro
+    [SerializeField, HideInInspector] private Material metal, dark, accent, lamp;
+    [SerializeField, HideInInspector] private Light headLight;
 
     public void Build(Material metalMat, Material darkMat, Material accentMat, Material lampMat)
     {
@@ -91,6 +91,12 @@ public class ClawMachine : MonoBehaviour
         headLight.intensity = 0f;
         headLight.color = new Color(1f, 0.95f, 0.85f);
 
+        SetArm(0.6f);
+        SetGrip(0f);
+    }
+
+    private void Start()
+    {
         motor = gameObject.AddComponent<AudioSource>();
         motor.loop = true;
         motor.spatialBlend = 0.6f;
@@ -101,9 +107,6 @@ public class ClawMachine : MonoBehaviour
         if (clank == null) clank = BuildClank();
         motor.clip = servo;
         motor.Play();
-
-        SetArm(0.6f);
-        SetGrip(0f);
     }
 
     public Vector3 HeadPosition => head.position;
@@ -234,7 +237,7 @@ public class ClawMachine : MonoBehaviour
     {
         GameObject go = GameObject.CreatePrimitive(type);
         go.name = name;
-        Object.Destroy(go.GetComponent<Collider>());
+        SceneBake.Kill(go.GetComponent<Collider>());
         go.transform.SetParent(parent, false);
         go.transform.localPosition = pos;
         go.transform.localScale = size;

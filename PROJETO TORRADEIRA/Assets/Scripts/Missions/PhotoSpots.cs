@@ -13,9 +13,30 @@ public static class PhotoSpots
     private static readonly Vector3 WindowPoint = new Vector3(-23.935f, 14.0591f, -155.9081f);
 
     private static Texture2D markerTex;
+    public const string RootName = "LugaresDeFoto";
+    private static Transform root;
+
+    // Refaz tudo (editor): apaga o grupo e os brilhos antigos e monta de novo.
+    public static void Rebuild()
+    {
+        GameObject old = GameObject.Find(RootName);
+        if (old != null) SceneBake.Kill(old);
+        foreach (PhotoLocation loc in Object.FindObjectsByType<PhotoLocation>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            Transform glow = loc.transform.Find("BrilhoFoto");
+            if (glow != null) SceneBake.Kill(glow.gameObject);
+        }
+        markerTex = null;
+        Setup();
+    }
 
     public static void Setup()
     {
+        // Ja montado na cena (editor): nada a fazer.
+        if (GameObject.Find(RootName) != null)
+            return;
+        root = new GameObject(RootName).transform;
+
         foreach (PhotoLocation loc in Object.FindObjectsByType<PhotoLocation>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             AttachMarker(loc, loc.TargetPoint + Vector3.up * 0.5f, 1.0f, null);
 
@@ -35,6 +56,7 @@ public static class PhotoSpots
             return;
         Bounds b = Bounds(target);
         GameObject go = new GameObject("FotoLugar_" + id);
+        go.transform.SetParent(root, true);
         go.transform.position = b.center;
         PhotoLocation loc = go.AddComponent<PhotoLocation>();
         AttachMarker(loc, new Vector3(b.center.x, b.max.y + 0.6f, b.center.z), 1f, target.transform);
@@ -88,8 +110,9 @@ public static class PhotoSpots
         float width = height * photo.width / photo.height;
 
         GameObject fig = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        fig.transform.SetParent(root, true);
         fig.name = "EasterEgg";
-        Object.Destroy(fig.GetComponent<Collider>());
+        SceneBake.Kill(fig.GetComponent<Collider>());
         fig.transform.position = new Vector3(spot.x, floor + 0.55f + height * 0.5f, spot.z);
         fig.transform.rotation = Quaternion.LookRotation(back);   // a frente do quad aponta para as janelas
         fig.transform.localScale = new Vector3(width, height, 1f);
@@ -166,7 +189,7 @@ public static class PhotoSpots
                     }
                 small[y * w + x] = n > 0 ? sum / n : Color.clear;
             }
-        Object.Destroy(src);
+        SceneBake.Kill(src);
 
         // Imagem inteira (opaca).
         var alpha = new float[w * h];
@@ -214,7 +237,7 @@ public static class PhotoSpots
             markerTex = BuildGlowTexture();
         GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
         quad.name = "BrilhoFoto";
-        Object.Destroy(quad.GetComponent<Collider>());
+        SceneBake.Kill(quad.GetComponent<Collider>());
         quad.transform.SetParent(loc.transform, false);
         quad.transform.position = worldPos;
         quad.transform.localScale = Vector3.one * 1.6f * size;
@@ -273,49 +296,5 @@ public static class PhotoSpots
         Bounds b = rs[0].bounds;
         foreach (Renderer r in rs) b.Encapsulate(r.bounds);
         return b;
-    }
-}
-
-// Brilho do lugar de foto: pulsa devagar.
-public class PhotoMarkerPulse : MonoBehaviour
-{
-    private Renderer rend;
-    private PhotoCamera photo;
-
-    private void Start()
-    {
-        rend = GetComponent<Renderer>();
-        photo = FindFirstObjectByType<PhotoCamera>();
-    }
-
-    private void Update()
-    {
-        float s = 1f + Mathf.Sin(Time.time * 2.2f) * 0.12f;
-        transform.localScale = Vector3.one * 1.6f * s;
-    }
-}
-
-// Figura escondida: so aparece no visor da camera com zoom (com um leve tremor ao surgir).
-public class HiddenFigure : MonoBehaviour
-{
-    private Renderer rend;
-    private PhotoCamera photo;
-    private float shownSince = -1f;
-
-    private void Start()
-    {
-        rend = GetComponent<Renderer>();
-        photo = FindFirstObjectByType<PhotoCamera>();
-        rend.enabled = false;
-    }
-
-    private void Update()
-    {
-        bool show = photo != null && photo.IsCameraMode && photo.ZoomAmount > 0.45f;
-        if (show && shownSince < 0f) shownSince = Time.time;
-        if (!show) shownSince = -1f;
-        // Ao surgir, pisca algumas vezes (como interferencia de fita).
-        float t = shownSince < 0f ? 0f : Time.time - shownSince;
-        rend.enabled = show && (t > 0.35f || Mathf.Repeat(t * 14f, 1f) < 0.5f);
     }
 }

@@ -16,7 +16,7 @@ public class CameraFlashlight : MonoBehaviour
     public static CameraFlashlight Instance { get; private set; }
     public bool IsOn { get; private set; }
 
-    private Light spot;
+    [SerializeField, HideInInspector] private Light spot;
     private CameraBattery battery;
     private CameraOverheat overheat;
     private PhotoCamera photo;
@@ -25,7 +25,7 @@ public class CameraFlashlight : MonoBehaviour
     private AudioSource clickSource;
     private static AudioClip click;
     private float drainTimer;
-    private TextMeshProUGUI label;
+    [SerializeField, HideInInspector] private TextMeshProUGUI label;
 
     private void Awake()
     {
@@ -39,7 +39,35 @@ public class CameraFlashlight : MonoBehaviour
 
     private void Start()
     {
-        Camera cam = Camera.main;
+        if (spot == null)
+            BuildLight();
+        spot.enabled = false;
+
+        battery = FindFirstObjectByType<CameraBattery>();
+        photo = FindFirstObjectByType<PhotoCamera>();
+        overheat = FindFirstObjectByType<CameraOverheat>();
+        clickSource = gameObject.AddComponent<AudioSource>();
+        clickSource.playOnAwake = false;
+        clickSource.spatialBlend = 0f;
+        if (click == null) click = BuildClick();
+        if (label == null)
+            BuildLabel();
+    }
+
+    // Monta a luz (filha da camera do jogador) e o texto do HUD.
+    public void BuildAll()
+    {
+        if (spot != null) SceneBake.Kill(spot.gameObject);
+        if (label != null) SceneBake.Kill(label.gameObject);
+        BuildLight();
+        BuildLabel();
+    }
+
+    private void BuildLight()
+    {
+        // Camera do jogador (a do PhotoCamera tambem tem a tag MainCamera, entao nao usa Camera.main).
+        PhotoCamera pc = FindFirstObjectByType<PhotoCamera>(FindObjectsInactive.Include);
+        Camera cam = pc != null && pc.playerCam != null ? pc.playerCam : Camera.main;
         GameObject lightGo = new GameObject("Lanterna", typeof(Light));
         lightGo.transform.SetParent(cam != null ? cam.transform : transform, false);
         lightGo.transform.localPosition = new Vector3(0.08f, -0.06f, 0.1f);
@@ -53,15 +81,6 @@ public class CameraFlashlight : MonoBehaviour
         spot.intensity = intensity;
         spot.shadows = LightShadows.Soft;
         spot.enabled = false;
-
-        battery = FindFirstObjectByType<CameraBattery>();
-        photo = FindFirstObjectByType<PhotoCamera>();
-        overheat = FindFirstObjectByType<CameraOverheat>();
-        clickSource = gameObject.AddComponent<AudioSource>();
-        clickSource.playOnAwake = false;
-        clickSource.spatialBlend = 0f;
-        if (click == null) click = BuildClick();
-        BuildLabel();
     }
 
     private bool CameraAvailable => (overheat == null || overheat.LostCamera == null) && (battery == null || !battery.IsEmpty);

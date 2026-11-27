@@ -10,14 +10,16 @@ public class BatteryWarning : MonoBehaviour
     private static BatteryWarning instance;
     private static AudioClip denied;
 
-    private CanvasGroup group;
-    private RectTransform icon;
+    [SerializeField, HideInInspector] private CanvasGroup group;
+    [SerializeField, HideInInspector] private RectTransform icon;
     private AudioSource source;
     private float shownAt = -99f;
     private const float Duration = 2.4f;
 
     public static void Show(bool attempted)
     {
+        if (instance == null)
+            instance = FindFirstObjectByType<BatteryWarning>(FindObjectsInactive.Include);
         if (instance == null)
         {
             GameObject hud = GameObject.Find("HUDCanvas");
@@ -34,6 +36,37 @@ public class BatteryWarning : MonoBehaviour
     private void OnDestroy()
     {
         if (instance == this) instance = null;
+    }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void Start()
+    {
+        if (source == null)
+        {
+            source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.spatialBlend = 0f;
+        }
+        if (denied == null) denied = BuildDenied();
+        group.alpha = 0f;
+    }
+
+    // Cria o aviso escondido dentro do HUD (editor).
+    public static BatteryWarning CreateIn(GameObject hud)
+    {
+        foreach (BatteryWarning old in hud.GetComponentsInChildren<BatteryWarning>(true))
+            SceneBake.Kill(old.gameObject);
+        GameObject go = new GameObject("BatteryWarning", typeof(RectTransform), typeof(CanvasGroup));
+        go.layer = hud.layer;
+        go.transform.SetParent(hud.transform, false);
+        BatteryWarning w = go.AddComponent<BatteryWarning>();
+        w.Build(hud);
+        w.group.alpha = 0f;
+        return w;
     }
 
     private void Build(GameObject hud)
@@ -73,14 +106,11 @@ public class BatteryWarning : MonoBehaviour
             st.rectTransform.sizeDelta = new Vector2(9f, 7f);
         }
 
-        source = gameObject.AddComponent<AudioSource>();
-        source.playOnAwake = false;
-        source.spatialBlend = 0f;
-        if (denied == null) denied = BuildDenied();
     }
 
     private void Trigger(bool attempted)
     {
+        if (source == null) Start();
         shownAt = Time.unscaledTime;
         source.PlayOneShot(denied, 0.7f);
         transform.SetAsLastSibling();

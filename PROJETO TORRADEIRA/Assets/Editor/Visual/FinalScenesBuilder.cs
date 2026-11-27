@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 // Cria a cena de Agradecimentos (creditos) e coloca no Build Settings.
-// (A sala da garra fica dentro da fase Principal: AssemblyStation, criada pelo FinalRoundBootstrap.)
+// (A sala da garra fica dentro da fase Principal: AssemblyStation, montada por Tools > OUT OF TIME > Montar tudo na cena.)
 public static class FinalScenesBuilder
 {
     private const string FontPath = "Assets/Fonts/VCR_OSD_MONO SDF.asset";
@@ -23,6 +23,7 @@ public static class FinalScenesBuilder
         cam.tag = "MainCamera";
         var screen = new GameObject("Agradecimentos").AddComponent<ThanksScreen>();
         screen.font = font;
+        screen.Build();
         EditorSceneManager.SaveScene(thanks, "Assets/Scenes/Agradecimentos.unity");
 
         var scenes = EditorBuildSettings.scenes.ToList();
