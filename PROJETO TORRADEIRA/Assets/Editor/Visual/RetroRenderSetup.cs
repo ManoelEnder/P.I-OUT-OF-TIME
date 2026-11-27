@@ -138,28 +138,33 @@ public static class RetroRenderSetup
 
         ColorAdjustments color = Get<ColorAdjustments>(profile);
         color.postExposure.Override(0.2f);
-        color.contrast.Override(18f);
-        color.saturation.Override(0f);
-        color.colorFilter.Override(Color.white);
+        color.contrast.Override(22f);
+        color.saturation.Override(-20f);
+        // Filtro levemente frio de filmadora antiga.
+        color.colorFilter.Override(new Color(0.94f, 0.97f, 1f));
 
         Bloom bloom = Get<Bloom>(profile);
         bloom.threshold.Override(0.9f);
-        bloom.intensity.Override(0.8f);
+        bloom.intensity.Override(1f);
         bloom.scatter.Override(0.6f);
         bloom.tint.Override(Color.white);
 
         Vignette vignette = Get<Vignette>(profile);
         vignette.color.Override(Color.black);
-        vignette.intensity.Override(0.35f);
-        vignette.smoothness.Override(0.5f);
+        vignette.intensity.Override(0.5f);
+        vignette.smoothness.Override(0.4f);
 
         FilmGrain grain = Get<FilmGrain>(profile);
         grain.type.Override(FilmGrainLookup.Medium1);
-        grain.intensity.Override(0.25f);
+        grain.intensity.Override(0.45f);
         grain.response.Override(0.8f);
 
-        Get<ChromaticAberration>(profile).intensity.Override(0.08f);
-        Get<LensDistortion>(profile).intensity.Override(-0.05f);
+        Get<ChromaticAberration>(profile).intensity.Override(0.25f);
+
+        // Lente de filmadora: borda curvada e zoom leve para esconder o canto esticado.
+        LensDistortion lens = Get<LensDistortion>(profile);
+        lens.intensity.Override(-0.2f);
+        lens.scale.Override(1.05f);
 
         EditorUtility.SetDirty(profile);
         AssetDatabase.SaveAssets();
