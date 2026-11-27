@@ -148,6 +148,8 @@ public class RadioMessageUI : MonoBehaviour
         messageText.color = color;
         if (radioImage != null) radioImage.color = new Color(1f, 1f, 1f, a);
         if (led != null) { Color c = led.color; c.a = a; led.color = c; }
+        // A antena tambem some junto (antes ficava um risco escuro solto no canto).
+        if (antenna != null) antenna.GetComponent<Image>().color = new Color(0.12f, 0.12f, 0.12f, a);
     }
 
     void HideImmediate()
