@@ -20,9 +20,15 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Pulo e gravidade")]
     public float gravity = -9.81f;
-    public float jumpForce = 2f;
+    [Tooltip("Altura do pulo em metros.")]
+    public float jumpForce = 1f;
+    [Tooltip("Gravidade extra subindo / caindo: pulo rapido e firme, sem flutuar.")]
+    public float riseGravityMultiplier = 1.7f;
+    public float fallGravityMultiplier = 2.3f;
     [Tooltip("Ainda da para pular logo depois de sair de um degrau.")]
     public float coyoteTime = 0.12f;
+    [Tooltip("Apertar espaco um pouco antes de pousar ainda pula.")]
+    public float jumpBuffer = 0.12f;
 
     [Header("Mouse")]
     public float mouseSensitivity = 2f;
@@ -70,6 +76,8 @@ public class PlayerMovement : MonoBehaviour
     private float lastGroundedTime;
     private bool wasGrounded = true;
     private float fallSpeed;
+    private float jumpPressedTime = -999f;
+    private float airSpeed;
 
     private float stepDistance;
     private int stepCount;
@@ -124,6 +132,12 @@ public class PlayerMovement : MonoBehaviour
         bool sprinting = Keyboard.current.leftShiftKey.isPressed && input.y > 0.1f && grounded && PlayerStamina.CanSprint;
         IsSprinting = sprinting;
         float targetSpeed = sprinting ? sprintSpeed : moveSpeed;
+        // Saiu do chao sem pular (beirada, degrau): guarda a velocidade que tinha.
+        if (!grounded && wasGrounded && airSpeed <= 0f)
+            airSpeed = new Vector3(planarVelocity.x, 0f, planarVelocity.z).magnitude;
+        // No ar mantem a velocidade da decolagem (pular correndo nao freia no meio do pulo).
+        if (!grounded)
+            targetSpeed = Mathf.Max(targetSpeed, airSpeed);
         Vector3 wish = (transform.right * input.x + transform.forward * input.y) * targetSpeed;
 
         float rate = wish.sqrMagnitude > planarVelocity.sqrMagnitude ? acceleration : deceleration;
@@ -135,19 +149,33 @@ public class PlayerMovement : MonoBehaviour
         if (grounded && yVelocity < 0f)
             yVelocity = -2f;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && Time.time - lastGroundedTime <= coyoteTime)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            jumpPressedTime = Time.time;
+
+        if (Time.time - jumpPressedTime <= jumpBuffer && Time.time - lastGroundedTime <= coyoteTime)
         {
-            yVelocity = Mathf.Sqrt(jumpForce * -2f * gravity);
+            // Velocidade para chegar exatamente a jumpForce metros com a gravidade de subida.
+            yVelocity = Mathf.Sqrt(jumpForce * -2f * gravity * riseGravityMultiplier);
             lastGroundedTime = -999f;
+            jumpPressedTime = -999f;
+            airSpeed = new Vector3(planarVelocity.x, 0f, planarVelocity.z).magnitude;
+            // Leve impulso da camera para baixo ao tomar impulso.
+            landVelocity -= landingDip * 3f;
         }
 
-        yVelocity += gravity * dt;
+        // Subindo: gravidade de subida; caindo: cai mais rapido (pulo firme, altura sempre igual).
+        float g = gravity * (yVelocity > 0f ? riseGravityMultiplier : fallGravityMultiplier);
+        yVelocity += g * dt;
         if (!grounded)
             fallSpeed = Mathf.Max(fallSpeed, -yVelocity);
 
         Vector3 motion = planarVelocity;
         motion.y = yVelocity;
         CollisionFlags flags = controller.Move(motion * dt);
+
+        // Bateu a cabeca no teto: comeca a cair na hora (nao fica grudado).
+        if ((flags & CollisionFlags.Above) != 0 && yVelocity > 0f)
+            yVelocity = 0f;
 
         // Bateu numa parede: perde a velocidade nessa direcao (nao "gruda" deslizando rapido).
         if ((flags & CollisionFlags.Sides) != 0)
@@ -159,7 +187,10 @@ public class PlayerMovement : MonoBehaviour
 
         bool groundedNow = controller.isGrounded;
         if (groundedNow && !wasGrounded)
+        {
             Land();
+            airSpeed = 0f;
+        }
         wasGrounded = groundedNow;
 
         Look();
