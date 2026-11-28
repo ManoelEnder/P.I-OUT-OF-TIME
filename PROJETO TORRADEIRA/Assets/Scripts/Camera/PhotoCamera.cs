@@ -245,6 +245,7 @@ public class PhotoCamera : MonoBehaviour
 
         if (scroll != 0f)
         {
+            float before = targetFOV;
             targetFOV -= scroll * zoomSpeed;
 
             targetFOV = Mathf.Clamp(
@@ -252,7 +253,12 @@ public class PhotoCamera : MonoBehaviour
                 minZoomFOV,
                 maxZoomFOV
             );
+
+            // So faz som se a lente realmente mexeu (no limite fica quieta).
+            if (!Mathf.Approximately(before, targetFOV))
+                PlayZoomSound(targetFOV < before);
         }
+        UpdateZoomSound();
 
         if (playerCam != null)
         {
@@ -340,8 +346,64 @@ public class PhotoCamera : MonoBehaviour
         StartTransition(false);
     }
 
+    // Som do visor ligando/desligando (tubo CRT da camera).
+    private AudioSource visorAudio;
+
+    private void PlayVisorSound(bool entering)
+    {
+        // Gravacao real de camera: clique do botao + motor da lente.
+        AudioClip clip = Resources.Load<AudioClip>(entering ? "Sfx/cam_on" : "Sfx/cam_off");
+        if (clip == null) return;
+        if (visorAudio == null)
+        {
+            visorAudio = gameObject.AddComponent<AudioSource>();
+            visorAudio.playOnAwake = false;
+            visorAudio.spatialBlend = 0f;
+        }
+        visorAudio.pitch = Random.Range(0.97f, 1.03f);
+        visorAudio.PlayOneShot(clip, 0.45f);
+        StopZoomSound();
+    }
+
+    // Zoom: motor da lente em loop enquanto o scroll mexe; mais agudo aproximando.
+    private AudioSource zoomAudio;
+    private float zoomSoundUntil;
+
+    private void PlayZoomSound(bool zoomingIn)
+    {
+        if (zoomAudio == null)
+        {
+            zoomAudio = gameObject.AddComponent<AudioSource>();
+            zoomAudio.playOnAwake = false;
+            zoomAudio.loop = true;
+            zoomAudio.spatialBlend = 0f;
+            zoomAudio.clip = Resources.Load<AudioClip>("Sfx/zoom_loop");
+        }
+        if (zoomAudio.clip == null) return;
+        zoomSoundUntil = Time.unscaledTime + 0.14f;
+        zoomAudio.pitch = zoomingIn ? 1.12f : 0.88f;
+        zoomAudio.volume = 0.3f;
+        if (!zoomAudio.isPlaying) zoomAudio.Play();
+    }
+
+    private void UpdateZoomSound()
+    {
+        if (zoomAudio == null || !zoomAudio.isPlaying) return;
+        if (Time.unscaledTime > zoomSoundUntil)
+        {
+            zoomAudio.volume = Mathf.MoveTowards(zoomAudio.volume, 0f, Time.unscaledDeltaTime * 4f);
+            if (zoomAudio.volume <= 0.001f) zoomAudio.Stop();
+        }
+    }
+
+    private void StopZoomSound()
+    {
+        if (zoomAudio != null) zoomAudio.Stop();
+    }
+
     private void StartTransition(bool entering)
     {
+        PlayVisorSound(entering);
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 

@@ -59,6 +59,17 @@ public class TemporalObjectPickup : MonoBehaviour, IInteractable
         Collect();
     }
 
+    public bool IsCollected => isCollected;
+
+    // Save: peca ja coletada numa sessao anterior (sem somar de novo na missao).
+    public void RestoreCollected()
+    {
+        isCollected = true;
+        if (marcadorDetector != null)
+            marcadorDetector.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
     private void Collect()
     {
         if (isCollected)

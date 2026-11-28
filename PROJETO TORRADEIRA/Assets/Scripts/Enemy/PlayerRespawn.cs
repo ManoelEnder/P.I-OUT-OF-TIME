@@ -15,6 +15,7 @@ public static class PlayerRespawn
 
     public static int Deaths { get; private set; }
     public static void ResetDeaths() => Deaths = 0;
+    public static void RestoreDeaths(int value) => Deaths = Mathf.Max(0, value);
 
     // So para a cena de teste do cientista.
     public static int SimulateDeath() => ++Deaths;
@@ -41,6 +42,7 @@ public static class PlayerRespawn
             enemy.enabled = true;
             Animator anim = enemy.GetComponentInChildren<Animator>();
             if (anim != null) anim.enabled = true;
+            enemy.ClearPeeStates();
             enemy.ResetToStart(3f); // volta a cacar logo (antes ficava ~12s parado)
             enemyPos = enemy.transform.position;
         }
@@ -61,6 +63,7 @@ public static class PlayerRespawn
         player.gameObject.AddComponent<PlayerStunned>();
         Deaths++;
         // O cientista fala pelo radio logo depois dos olhos abrirem.
+        PeeReaction.ResetState();
         ScientistRadio.Say(Deaths, 1.6f);
         return true;
     }

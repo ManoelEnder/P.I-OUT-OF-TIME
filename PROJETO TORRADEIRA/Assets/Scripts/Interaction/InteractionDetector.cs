@@ -9,6 +9,7 @@ public class InteractionDetector : MonoBehaviour
     [SerializeField] private LayerMask interactionLayers = ~0;
 
     private IInteractable currentInteractable;
+    private Vector3 lastHitPoint;
 
     private void Start()
     {
@@ -33,9 +34,8 @@ public class InteractionDetector : MonoBehaviour
 
         DetectInteraction();
 
-        if (currentInteractable != null &&
-            Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
+        // Interagir = botao esquerdo do mouse (com o visor fechado).
+        if (currentInteractable != null && InteractInput.Pressed)
         {
             currentInteractable.Interact();
         }
@@ -44,6 +44,14 @@ public class InteractionDetector : MonoBehaviour
     private void DetectInteraction()
     {
         IInteractable detectedInteractable = null;
+
+        // Visor aberto: clique e para foto, nada de interagir.
+        if (RadioMessageUI.CameraOpen)
+        {
+            currentInteractable = null;
+            HideInteraction();
+            return;
+        }
 
         if (playerCamera == null)
         {
@@ -69,6 +77,7 @@ public class InteractionDetector : MonoBehaviour
         {
             detectedInteractable =
                 hit.collider.GetComponentInParent<IInteractable>();
+            lastHitPoint = hit.point;
         }
 
         if (detectedInteractable == null)
@@ -87,9 +96,11 @@ public class InteractionDetector : MonoBehaviour
 
         currentInteractable = detectedInteractable;
 
-        ShowInteraction(
-            currentInteractable.GetInteractionMessage()
-        );
+        // Em vez da legenda embaixo: iconezinho de mouse no proprio objeto.
+        if (currentInteractable is Component c)
+            InteractionIcon.Show(c, lastHitPoint);
+        if (InteractionUI.Instance != null)
+            InteractionUI.Instance.Hide();
     }
 
     private void ShowInteraction(string message)
@@ -106,5 +117,6 @@ public class InteractionDetector : MonoBehaviour
         {
             InteractionUI.Instance.Hide();
         }
+        InteractionIcon.Hide();
     }
 }

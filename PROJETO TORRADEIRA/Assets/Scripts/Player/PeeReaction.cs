@@ -13,11 +13,19 @@ public static class PeeReaction
     private static float cooldownUntil;
     private static readonly ParticleSystem.Particle[] buffer = new ParticleSystem.Particle[400];
 
+    // Ao renascer: zera a reacao para nada "vazar" da vida anterior.
+    public static void ResetState()
+    {
+        hits = 0;
+        cooldownUntil = Time.time + 3f;
+    }
+
     public static void CheckHit(ParticleSystem stream)
     {
         if (stream == null || Time.time < cooldownUntil) return;
         TemporalEraserController enemy = Object.FindFirstObjectByType<TemporalEraserController>();
-        if (enemy == null || !enemy.isActiveAndEnabled || enemy.IsEnraged) return;
+        if (enemy == null || !enemy.isActiveAndEnabled || enemy.IsEnraged || enemy.IsFleeing || enemy.IsStunned) return;
+        if (DefeatController.IsDefeated) return;
 
         Renderer[] rs = enemy.GetComponentsInChildren<Renderer>();
         if (rs.Length == 0) return;
@@ -45,7 +53,7 @@ public static class PeeReaction
 
         if (count == 1)
         {
-            Achievement("CONQUISTA DESBLOQUEADA", "Marcando território temporal");
+            Achievement(Localization.T("CONQUISTA DESBLOQUEADA"), Localization.T("Marcando território temporal"));
             ScientistRadio.SayLine("Você... URINOU no apagador temporal?! E... ele está FUGINDO?! Vou anotar isso.", 0, 0.8f);
         }
         else if (count == 2)
@@ -58,7 +66,7 @@ public static class PeeReaction
         }
 
         yield return new WaitForSeconds(1.3f);
-        if (enemy == null) yield break;
+        if (enemy == null || DefeatController.IsDefeated) yield break;
 
         if (count < 3)
         {

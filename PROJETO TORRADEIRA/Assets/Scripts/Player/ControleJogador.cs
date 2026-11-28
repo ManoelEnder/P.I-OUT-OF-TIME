@@ -60,13 +60,13 @@ public class ControleJogador : MonoBehaviour
             if (podeConversar)
             {
                 if (!digitando && !falou)
-                    texto.text = "Aperte E para conversar";
+                    texto.text = "Clique para conversar";
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (InteractInput.Pressed)
                 {
                     if (falou && !digitando)
                     {
-                        texto.text = "Aperte E para conversar";
+                        texto.text = "Clique para conversar";
                         painelDialogo.SetActive(false);
                         falou = false;
                         return;

@@ -35,7 +35,7 @@ public class TemporalEraserVision : MonoBehaviour
         fieldOfView = Mathf.Max(fieldOfView, 120f);
         peripheralDetectionDistance = Mathf.Max(peripheralDetectionDistance, 6f);
         senseDistance = Mathf.Max(senseDistance, 2.2f);
-        if (Camera.main != null) cameraRoot = Camera.main.transform.root;
+        if (Camera.main != null) cameraRoot = Camera.main.transform; // so a camera (a hierarquia agora tem grupos)
     }
     private readonly RaycastHit[] hits = new RaycastHit[8];
 

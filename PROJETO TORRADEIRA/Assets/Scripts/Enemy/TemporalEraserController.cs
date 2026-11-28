@@ -97,24 +97,70 @@ public class TemporalEraserController : MonoBehaviour
     public bool IsEnraged => Time.time < rageUntil;
     public void Flee(float seconds) { fleeUntil = Time.time + seconds; nextFleePath = 0f; }
     public void Enrage(float seconds) { rageUntil = Time.time + seconds; fleeUntil = 0f; }
+    public void ClearPeeStates() { fleeUntil = 0f; rageUntil = 0f; wasFleeing = false; }
+
+    private bool FindFleePoint(out Vector3 best)
+    {
+        best = transform.position;
+        float bestScore = float.MinValue;
+        NavMeshPath path = new NavMeshPath();
+        Vector3 me = transform.position, pl = player.position;
+        for (int i = 0; i < 16; i++)
+        {
+            Vector2 c = Random.insideUnitCircle.normalized * Random.Range(8f, 18f);
+            Vector3 p = me + new Vector3(c.x, 0f, c.y);
+            if (!NavMesh.SamplePosition(p, out NavMeshHit hit, 3f, NavMesh.AllAreas)) continue;
+            if (!agent.CalculatePath(hit.position, path) || path.status != NavMeshPathStatus.PathComplete) continue;
+            // Caminho nao pode passar perto do jogador.
+            float closest = float.MaxValue;
+            foreach (Vector3 corner in path.corners) closest = Mathf.Min(closest, Vector3.Distance(corner, pl));
+            if (closest < 1.5f && Vector3.Distance(me, pl) > 3f) continue;
+            float score = Vector3.Distance(hit.position, pl) - Vector3.Distance(hit.position, me) * 0.3f;
+            if (score > bestScore) { bestScore = score; best = hit.position; }
+        }
+        return bestScore > float.MinValue;
+    }
+
+    private bool wasFleeing;
 
     private bool UpdateFleeing()
     {
-        if (!IsFleeing) return false;
+        if (!IsFleeing)
+        {
+            // Acabou a fuga: volta atras do jogador (procura onde ele esta agora).
+            if (wasFleeing)
+            {
+                wasFleeing = false;
+                agent.speed = searchSpeed;
+                lastKnownPlayerPosition = player.position;
+                lastSeenTime = Time.time;
+                StartSearching();
+            }
+            return false;
+        }
+        wasFleeing = true;
         agent.isStopped = false;
         agent.speed = chaseSpeed * 1.15f;
-        if (Time.time >= nextFleePath)
+        // Destino so e trocado quando chega, quando trava ou a cada 3 s (antes trocava toda hora
+        // e ele ficava indeciso, parado no lugar "andando").
+        bool arrived = !agent.pathPending && agent.remainingDistance <= destinationTolerance + 0.5f;
+        bool stuck = agent.velocity.sqrMagnitude < 0.05f && Time.time > nextFleePath - 2.4f;
+        if (Time.time >= nextFleePath || arrived || stuck)
         {
-            nextFleePath = Time.time + 0.6f;
-            Vector3 away = transform.position - player.position;
-            away.y = 0f;
-            if (away.sqrMagnitude < 0.01f) away = -transform.forward;
-            Vector3 target = transform.position + away.normalized * 14f + Random.insideUnitSphere * 3f;
-            if (NavMesh.SamplePosition(target, out NavMeshHit hit, 6f, NavMesh.AllAreas))
-                agent.SetDestination(hit.position);
+            nextFleePath = Time.time + 3f;
+            if (FindFleePoint(out Vector3 dest))
+                agent.SetDestination(dest);
+            else
+            {
+                // Sem ponto bom: so se afasta na direcao oposta ao jogador.
+                Vector3 away = transform.position - player.position;
+                away.y = 0f;
+                if (away.sqrMagnitude < 0.01f) away = -transform.forward;
+                if (NavMesh.SamplePosition(transform.position + away.normalized * 10f, out NavMeshHit h, 8f, NavMesh.AllAreas))
+                    agent.SetDestination(h.position);
+            }
         }
         UpdateRotation();
-        if (!IsFleeing) ReturnToRoaming();
         return true;
     }
 
@@ -228,7 +274,8 @@ public class TemporalEraserController : MonoBehaviour
         if (wasStunned)
         {
             wasStunned = false;
-            StartSearching();
+            if (!IsFleeing)
+                StartSearching();
         }
 
         RecordTrail();

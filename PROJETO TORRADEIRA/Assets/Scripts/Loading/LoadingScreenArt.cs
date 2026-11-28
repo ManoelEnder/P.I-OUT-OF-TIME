@@ -13,4 +13,7 @@ public class LoadingScreenArt : ScriptableObject
     public AudioClip tapeRewind;
     public AudioClip tapeClick;
     public AudioClip radioStatic;
+    public AudioClip doorCreak;
+    public AudioClip cameraOn;
+    public AudioClip cameraOff;
 }

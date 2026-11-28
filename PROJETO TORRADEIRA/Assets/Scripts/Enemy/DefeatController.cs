@@ -65,6 +65,7 @@ public class DefeatController : MonoBehaviour
 
         isDefeated = true;
         IsDefeated = true;
+        ScientistRadio.StopAll(); // nao deixa fala da vida anterior por cima
         StartCoroutine(Jumpscare());
     }
 

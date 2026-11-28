@@ -300,6 +300,36 @@ public class PauseMenuView : MonoBehaviour
             y -= 70f;
         }
 
+        // Linha de idioma (criada pelo SettingsMenu copiando a de Flashes).
+        SettingsMenu settingsMenu = settingsPanel.GetComponentInChildren<SettingsMenu>(true);
+        if (settingsMenu == null) settingsMenu = settingsPanel.GetComponentInParent<SettingsMenu>(true);
+        if (settingsMenu == null) settingsMenu = FindFirstObjectByType<SettingsMenu>(FindObjectsInactive.Include);
+        if (settingsMenu != null) settingsMenu.EnsureLanguageRow();
+        Transform language = FindDeep(settingsPanel.transform, "Idioma");
+        if (language != null)
+        {
+            RectTransform rect = (RectTransform)language;
+            LeftAnchor(rect, new Vector2(Left + 330f, y), new Vector2(320f, 40f));
+            TextMeshProUGUI name = FindText(rect, "Name");
+            if (name != null)
+            {
+                RectTransform t = name.rectTransform;
+                t.anchorMin = t.anchorMax = new Vector2(0f, 0.5f);
+                t.pivot = new Vector2(0f, 0.5f);
+                t.sizeDelta = new Vector2(300f, 40f);
+                t.anchoredPosition = new Vector2(-330f, 0f);
+                name.alignment = TextAlignmentOptions.MidlineLeft;
+                name.fontSize = 26f;
+            }
+            TextMeshProUGUI value = FindText(rect, "Value");
+            if (value != null)
+            {
+                value.fontSize = 26f;
+                value.textWrappingMode = TextWrappingModes.NoWrap;
+            }
+            y -= 70f;
+        }
+
         BackHint(root, y - 30f);
     }
 
@@ -321,6 +351,10 @@ public class PauseMenuView : MonoBehaviour
             list.fontSize = 22f;
             list.lineSpacing = 12f;
             list.text = list.text.Replace("<pos=130>", "<pos=170>");
+            // Interagir agora e com o clique esquerdo (o mesmo clique tira foto com o visor aberto).
+            if (!list.text.Contains("(visor)"))
+                list.text = list.text.Replace("<color=#FFFFFF>E</color>", "<color=#FFFFFF>CLIQUE</color>")
+                                     .Replace("Tirar foto", "Tirar foto (visor)");
             if (!list.text.Contains("Levantar radar"))
                 list.text = list.text.Replace("<color=#FFFFFF>TAB</color>", "<color=#FFFFFF>Q</color><pos=170>Levantar radar\n<color=#FFFFFF>L</color><pos=170>Lanterna (com o visor)\n<color=#FFFFFF>TAB</color>");
         }

@@ -78,6 +78,22 @@ public class TimeTravelIntro : MonoBehaviour
 
     private LoadingScreenArt art;
 
+    // Continuar jogo salvo: entra direto no laboratorio, sem a viagem no tempo.
+    private void SkipIntro()
+    {
+        if (canvasGroup != null) canvasGroup.alpha = 0f;
+        if (yearText != null) yearText.gameObject.SetActive(false);
+        if (glitchText != null) glitchText.gameObject.SetActive(false);
+        if (introVolume != null) introVolume.weight = 0f;
+        if (mainCanvas != null) mainCanvas.SetActive(true);
+        if (mainCanvasGroup != null) mainCanvasGroup.alpha = 1f;
+        if (crosshair != null) crosshair.SetActive(true);
+        SetPlayerControls(true);
+        Time.timeScale = 1f;
+        running = false;
+        enabled = false;
+    }
+
     // ---------- Efeito "bug" digital no ano ----------
     // Sem nada elastico: tudo em degraus duros (como sinal digital corrompido).
     // - cada letra e fatiada/deslocada na horizontal e pula na vertical;
@@ -302,6 +318,12 @@ public class TimeTravelIntro : MonoBehaviour
 
     private void Start()
     {
+        if (GameSave.Continuing)
+        {
+            SkipIntro();
+            return;
+        }
+
         previousTimeScale =
             Time.timeScale;
 

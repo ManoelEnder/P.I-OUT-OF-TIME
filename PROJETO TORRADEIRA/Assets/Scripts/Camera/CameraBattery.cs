@@ -33,6 +33,12 @@ public class CameraBattery : MonoBehaviour
     public bool IsFull => currentBattery >= maxBattery;
     public bool CanReceive => currentBattery < maxBattery;
 
+    public void SetCurrent(int value)
+    {
+        currentBattery = Mathf.Clamp(value, 0, maxBattery);
+        UpdateUI();
+    }
+
     public void Initialize()
     {
         currentBattery = maxBattery;

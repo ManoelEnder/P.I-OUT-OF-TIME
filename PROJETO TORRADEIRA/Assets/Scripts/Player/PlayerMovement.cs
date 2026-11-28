@@ -197,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateSteps(groundedNow, sprinting, dt);
         UpdateCamera(input, sprinting, dt);
 
-        if (itemPerto != null && Keyboard.current.eKey.wasPressedThisFrame)
+        if (itemPerto != null && InteractInput.Pressed)
         {
             Destroy(itemPerto.gameObject);
             itemPerto = null;
@@ -259,8 +259,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private static AudioClip[] passosNovos;
+
     private void PlayFootstep(float volume)
     {
+        // Passos novos (concreto, 5 variacoes recortadas de uma gravacao real).
+        if (passosNovos == null)
+        {
+            System.Collections.Generic.List<AudioClip> list = new System.Collections.Generic.List<AudioClip>();
+            for (int i = 0; i < 5; i++)
+            {
+                AudioClip c = Resources.Load<AudioClip>("Sfx/step_" + i);
+                if (c != null) list.Add(c);
+            }
+            passosNovos = list.ToArray();
+        }
+        if (passosNovos.Length > 0)
+            sonsPassos = passosNovos;
+
         if (audioPassos == null || sonsPassos == null || sonsPassos.Length == 0)
             return;
 
@@ -333,7 +349,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (textoInteracao != null)
         {
-            textoInteracao.text = "Aperte [E] para coletar " + item.itemNome;
+            textoInteracao.text = "Clique para coletar " + item.itemNome;
             textoInteracao.gameObject.SetActive(true);
         }
     }

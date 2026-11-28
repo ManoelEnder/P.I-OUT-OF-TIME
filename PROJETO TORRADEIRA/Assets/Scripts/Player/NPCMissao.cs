@@ -46,9 +46,9 @@ public class NPCMissao : MonoBehaviour
         if (dist <= distancia)
         {
             if (!digitando && !mostrandoFala)
-                texto.text = "Aperte E para falar";
+                texto.text = "Clique para falar";
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (InteractInput.Pressed)
             {
                 if (digitando)
                 {
@@ -58,7 +58,7 @@ public class NPCMissao : MonoBehaviour
 
                 if (mostrandoFala)
                 {
-                    texto.text = "Aperte E para falar";
+                    texto.text = "Clique para falar";
                     painelDialogo.SetActive(false);
                     mostrandoFala = false;
                     return;

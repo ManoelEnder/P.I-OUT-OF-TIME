@@ -122,7 +122,7 @@ public class TemporalEraserPresence : MonoBehaviour
 
     private void UpdateSteps(float speed, bool chasing)
     {
-        if (stepSource == null || speed < 0.2f)
+        if (stepSource == null || speed < 0.6f)   // parado/indeciso nao faz passo
             return;
 
         stepDistance += speed * Time.deltaTime;

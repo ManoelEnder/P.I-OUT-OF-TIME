@@ -216,6 +216,7 @@ public class MissionSystem : MonoBehaviour
             return;
 
         Delivered = true;
+        GameSave.Delete(); // jogo terminado: o "Continuar" some do menu
         DeliveredPieces = Mathf.Max(1, pieces);
         UpdateMissionText();
         // A garra mecanica da sala de montagem monta o prototipo e depois chama LoadFinalScene.
@@ -259,6 +260,23 @@ public class MissionSystem : MonoBehaviour
         }
 
         LoadingScreen.Load(finalSceneName);
+    }
+
+    // ---------- Save (GameSave) ----------
+    public IEnumerable<string> PhotographedLocationIds => photographedLocations;
+
+    public void RestoreProgress(int savedPhotos, int savedPieces, IEnumerable<string> locations)
+    {
+        photos = Mathf.Clamp(savedPhotos, 0, photosRequired);
+        pieces = Mathf.Clamp(savedPieces, 0, piecesRequired);
+        photographedLocations.Clear();
+        foreach (string id in locations)
+            photographedLocations.Add(id);
+        foreach (PhotoLocation location in PhotoLocation.All)
+            if (photographedLocations.Contains(location.Id))
+                location.MarkPhotographed();
+        UpdateMissionText();
+        CheckMissions();
     }
 
     public int GetPhotoCount()

@@ -4,7 +4,7 @@ using UnityEngine;
 // - abre para o lado oposto ao jogador (ele empurra a porta na direcao em que esta indo);
 // - abre rapido, passa um pouco do ponto e assenta; fecha batendo no batente com um leve rebote;
 // - pode ser interrompida no meio (apertar E de novo inverte).
-public class Door : MonoBehaviour, IInteractable
+public class Door : MonoBehaviour, IInteractable, IInteractionAnchor
 {
     [Header("Configuracao")]
     [SerializeField] private float openAngle = 90f;
@@ -51,6 +51,20 @@ public class Door : MonoBehaviour, IInteractable
 
     public bool IsOpen => isOpen;
 
+    public Vector3 IconPosition(Vector3 viewer)
+    {
+        Vector3 leafNow = transform.rotation * leafLocal;          // dobradica -> centro da folha
+        Vector3 handle = transform.position + leafNow * 1.75f;     // perto da borda livre
+        float floor = transform.position.y;
+        Renderer[] rs = GetComponentsInChildren<Renderer>();
+        if (rs.Length > 0) floor = rs[0].bounds.min.y;
+        handle.y = floor + 1.0f;
+        // Lado da porta onde o jogador esta.
+        Vector3 normal = Vector3.Cross(leafNow.normalized, Vector3.up);
+        if (Vector3.Dot(viewer - handle, normal) < 0f) normal = -normal;
+        return handle + normal * 0.06f;
+    }
+
     public bool CanInteract()
     {
         return true;
@@ -64,9 +78,90 @@ public class Door : MonoBehaviour, IInteractable
     public void Interact()
     {
         isOpen = !isOpen;
+        if (isOpen) PlayCreak();
+        else creakFading = true;   // fechando: o rangido some rapido (nao fica tocando por cima)
         // So escolhe o lado quando a porta esta (quase) fechada: aberta, ela volta pelo mesmo caminho.
         if (isOpen && angle < 5f)
             side = SideAwayFromPlayer();
+    }
+
+    // ---------- Sons ----------
+    // Abrir: rangido (som do projeto). Fechar: batida de madeira + trinco (gerado em codigo),
+    // mais forte quanto mais rapido a porta bate.
+    private AudioSource doorAudio;
+    private float nextSlam;
+    private float lastCreak = -10f;
+    private bool creakFading;
+    private static AudioClip slamClip;
+
+    private AudioSource DoorAudio()
+    {
+        if (doorAudio != null) return doorAudio;
+        GameObject go = new GameObject("SomPorta");
+        go.transform.SetParent(transform, false);
+        Vector3 leafNow = transform.rotation * leafLocal;
+        go.transform.position = transform.position + leafNow + Vector3.up * 0.2f;
+        doorAudio = go.AddComponent<AudioSource>();
+        doorAudio.playOnAwake = false;
+        doorAudio.spatialBlend = 1f;
+        doorAudio.rolloffMode = AudioRolloffMode.Linear;
+        doorAudio.minDistance = 1.5f;
+        doorAudio.maxDistance = 20f;
+        doorAudio.dopplerLevel = 0f;
+        return doorAudio;
+    }
+
+    private void PlayCreak()
+    {
+        // Abrindo e fechando rapido: nao reinicia o rangido toda hora.
+        if (Time.time - lastCreak < 0.35f) return;
+        AudioClip clip = Resources.Load<AudioClip>("Sfx/door_open");   // ~0,75 s, igual a animacao
+        if (clip == null) return;
+        lastCreak = Time.time;
+        AudioSource s = DoorAudio();
+        s.Stop();
+        s.clip = clip;
+        s.pitch = Random.Range(0.92f, 1.1f);   // cada porta range um pouco diferente
+        s.volume = 0.45f;
+        creakFading = false;
+        s.Play();
+    }
+
+    private void PlaySlam(float strength)
+    {
+        AudioSource s = DoorAudio();
+        if (s.clip != null && s.isPlaying) s.Stop();   // corta o rangido
+        s.volume = 1f;
+        creakFading = false;
+        if (slamClip == null) slamClip = BuildSlam();
+        s.pitch = Random.Range(0.92f, 1.06f);
+        s.PlayOneShot(slamClip, Mathf.Lerp(0.35f, 0.9f, strength));
+    }
+
+    private static AudioClip BuildSlam()
+    {
+        const int rate = 44100;
+        int n = (int)(rate * 0.6f);
+        float[] d = new float[n];
+        var rng = new System.Random(17);
+        float lp = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            float x = (float)i / rate;
+            // Corpo de madeira: tom grave que cai rapido.
+            float body = Mathf.Sin(2f * Mathf.PI * (95f - 30f * x) * x) * Mathf.Exp(-x * 14f);
+            // Impacto: ruido curto filtrado.
+            float noise = (float)(rng.NextDouble() * 2 - 1);
+            lp += (noise - lp) * 0.25f;
+            float hit = lp * Mathf.Exp(-x * 45f);
+            // Trinco metalico um instante depois.
+            float lx = x - 0.045f;
+            float latch = lx > 0f ? Mathf.Sin(2f * Mathf.PI * 2300f * lx) * Mathf.Exp(-lx * 90f) * 0.35f : 0f;
+            d[i] = Mathf.Clamp(body * 0.9f + hit * 1.2f + latch, -1f, 1f) * 0.8f;
+        }
+        AudioClip c = AudioClip.Create("PortaBatendo", n, 1, rate, false);
+        c.SetData(d, 0);
+        return c;
     }
 
     private float SideAwayFromPlayer()
@@ -104,9 +199,20 @@ public class Door : MonoBehaviour, IInteractable
             // Batente: a porta nao atravessa o batente; bate e volta um pouco.
             if (angle < 0f)
             {
+                if (!isOpen && angularVelocity < -25f && Time.time > nextSlam)
+                {
+                    nextSlam = Time.time + 0.3f;
+                    PlaySlam(Mathf.Clamp01(-angularVelocity / 250f));
+                }
                 angle = 0f;
                 angularVelocity = isOpen ? 0f : -angularVelocity * closeRebound;
             }
+        }
+
+        if (creakFading && doorAudio != null && doorAudio.isPlaying && doorAudio.clip != null)
+        {
+            doorAudio.volume = Mathf.MoveTowards(doorAudio.volume, 0f, Time.deltaTime * 4f);
+            if (doorAudio.volume <= 0.001f) { doorAudio.Stop(); creakFading = false; }
         }
 
         if (!isOpen && angle < 0.02f && Mathf.Abs(angularVelocity) < 0.5f)

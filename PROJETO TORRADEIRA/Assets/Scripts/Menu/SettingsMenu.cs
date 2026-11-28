@@ -45,9 +45,58 @@ public class SettingsMenu : MonoBehaviour
         {
             flashToggleButton.onClick.RemoveAllListeners();
             flashToggleButton.onClick.AddListener(ToggleFlashes);
+            EnsureLanguageRow();
         }
 
         UpdateInterface();
+    }
+
+    // ---------- Idioma ----------
+    // Linha nova copiada da linha "Flashes": IDIOMA  [ Portugues (Brasil) ] / [ English ] / [ Espanol ].
+    private TMP_Text languageValueText;
+
+    // Publico: o PauseMenuView chama antes de montar o layout (o painel comeca desligado).
+    public void EnsureLanguageRow()
+    {
+        if (flashToggleButton == null) return;
+        Transform row = flashToggleButton.transform;
+        if (row.parent != null && row.parent.Find("Idioma") != null) return;
+        GameObject copy = Instantiate(row.gameObject, row.parent);
+        copy.name = "Idioma";
+        RectTransform r = (RectTransform)copy.transform;
+        RectTransform src = (RectTransform)row;
+        r.anchoredPosition = src.anchoredPosition - new Vector2(0f, Mathf.Max(60f, src.rect.height + 20f));
+        copy.transform.SetSiblingIndex(row.GetSiblingIndex() + 1);
+
+        foreach (TMP_Text t in copy.GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (t.name == "Name") t.text = "IDIOMA";
+            else languageValueText = t;
+        }
+        Button b = copy.GetComponent<Button>();
+        if (b != null)
+        {
+            b.onClick.RemoveAllListeners();
+            b.onClick.AddListener(Localization.Next);
+        }
+        Localization.Changed += UpdateLanguageText;
+        UpdateLanguageText();
+
+        // A dica "[ESC] Voltar" desce uma linha para nao ficar por cima.
+        Transform hint = row.parent.Find("BackHint");
+        if (hint is RectTransform h)
+            h.anchoredPosition = new Vector2(h.anchoredPosition.x, Mathf.Min(h.anchoredPosition.y, r.anchoredPosition.y - 60f));
+    }
+
+    private void UpdateLanguageText()
+    {
+        if (languageValueText != null)
+            languageValueText.text = "[ " + Localization.NativeName(Localization.Current) + " ]";
+    }
+
+    private void OnDestroy()
+    {
+        Localization.Changed -= UpdateLanguageText;
     }
 
     public void ToggleFlashes()

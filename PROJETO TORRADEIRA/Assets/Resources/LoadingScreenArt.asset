@@ -18,3 +18,6 @@ MonoBehaviour:
   tapeRewind: {fileID: 8300000, guid: 3268f9fd768d8ad4ab85c7d5ffe2de60, type: 3}
   tapeClick: {fileID: 8300000, guid: 7607d12972b5df442ad5833e002b4b58, type: 3}
   radioStatic: {fileID: 8300000, guid: 98b0214260b03b741979d0ee0680d8f3, type: 3}
+  doorCreak: {fileID: 8300000, guid: 4b715d788109aed448a3c018fa5791b4, type: 3}
+  cameraOn: {fileID: 8300000, guid: 826a90de39645fa4e8c8f901d1680be3, type: 3}
+  cameraOff: {fileID: 8300000, guid: e73ca43555ef9bd499cf78b598cc8941, type: 3}

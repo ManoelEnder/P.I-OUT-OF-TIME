@@ -104,6 +104,13 @@ public class CameraPhotoData : MonoBehaviour
         PlayPreview(photo);
     }
 
+    public void SetPhotoCount(int value)
+    {
+        photoCount = Mathf.Max(0, value);
+        if (photoCounter != null)
+            photoCounter.text = "Fotos: " + photoCount;
+    }
+
     public int GetPhotoCount()
     {
         return photoCount;

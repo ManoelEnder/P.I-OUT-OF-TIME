@@ -25,9 +25,9 @@ public class ItemColetavel : MonoBehaviour
         if (dist <= distancia)
         {
             if (texto.text == "")
-                texto.text = "Aperte E para coletar: " + itemNome;
+                texto.text = "Clique para coletar: " + itemNome;
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (InteractInput.Pressed)
             {
                 Coletar();
             }

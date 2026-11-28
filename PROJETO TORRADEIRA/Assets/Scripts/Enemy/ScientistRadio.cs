@@ -44,16 +44,23 @@ public class ScientistRadio : MonoBehaviour
     // Fala especifica (ex.: reacao a urina). tier 0..3 define o humor.
     public static void SayLine(string line, int tier, float delay)
     {
-        foreach (ScientistRadio old in FindObjectsByType<ScientistRadio>(FindObjectsSortMode.None))
-            Destroy(old.gameObject);
+        StopAll();
         ScientistRadio r = new GameObject("RadioCientista").AddComponent<ScientistRadio>();
         r.custom = line;
         r.customTier = tier;
         r.delay = delay;
     }
 
+    // So um radio por vez: uma fala nova corta a anterior (antes podiam sobrepor).
+    public static void StopAll()
+    {
+        foreach (ScientistRadio old in FindObjectsByType<ScientistRadio>(FindObjectsSortMode.None))
+            Destroy(old.gameObject);
+    }
+
     public static void Say(int deaths, float delay)
     {
+        StopAll();
         ScientistRadio r = new GameObject("RadioCientista").AddComponent<ScientistRadio>();
         r.deaths = deaths;
         r.delay = delay;
@@ -81,7 +88,9 @@ public class ScientistRadio : MonoBehaviour
     {
         int tier = customTier >= 0 ? customTier : Tier(deaths);
         string[] pool = Lines[tier];
-        string line = custom ?? string.Format(pool[Random.Range(0, pool.Length)], deaths);
+        string line = custom != null
+            ? Localization.T(custom)
+            : string.Format(Localization.T(pool[Random.Range(0, pool.Length)]), deaths);
 
         LoadingScreenArt art = Resources.Load<LoadingScreenArt>("LoadingScreenArt");
         AudioSource src = gameObject.AddComponent<AudioSource>();
