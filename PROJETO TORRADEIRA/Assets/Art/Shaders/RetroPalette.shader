@@ -72,7 +72,14 @@ Shader "Retro/Palette"
                 float redValue = Quantize(color.r, levels, dither);
                 float3 red = float3(redValue, redValue * 0.1, redValue * 0.08);
 
-                float3 retro = lerp(gray, red, isRed);
+                // Amarelo forte (urina) tambem fica amarelo: r e g altos, b quase zero.
+                float yellowness = min(color.r, color.g) / max(color.b, 0.001);
+                float isYellow = saturate((yellowness - 2.5) * 1.0) * step(0.03, color.g)
+                               * saturate(1.0 - abs(color.r - color.g) / max(color.r, 0.001) * 1.5) * (1.0 - isRed);
+                float yellowValue = Quantize(max(color.r, color.g), levels, dither);
+                float3 yellow = float3(yellowValue, yellowValue * 0.82, yellowValue * 0.12);
+
+                float3 retro = lerp(lerp(gray, yellow, isYellow), red, isRed);
                 return half4(lerp(color, retro, _Strength), source.a);
             }
             ENDHLSL

@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class TimeTravelIntro : MonoBehaviour
 {
@@ -74,6 +76,206 @@ public class TimeTravelIntro : MonoBehaviour
         "19 75"
     };
 
+    private LoadingScreenArt art;
+
+    // ---------- Efeito "bug" digital no ano ----------
+    // Sem nada elastico: tudo em degraus duros (como sinal digital corrompido).
+    // - cada letra e fatiada/deslocada na horizontal e pula na vertical;
+    // - fantasmas vermelho e ciano deslocados (separacao RGB);
+    // - digitos trocados por lixo por um quadro;
+    // - o efeito "trava" uns quadros e pula (stutter).
+    private float bugAmount;
+    private float nextBugStep;
+    private TextMeshProUGUI ghostR, ghostC;
+    private static readonly string Junk = "#%@&?X0123456789";
+
+    private IEnumerator FinalBurst()
+    {
+        bugAmount = 1f;
+        for (float t = 0f; t < 0.18f; t += Time.unscaledDeltaTime) yield return null;
+        bugAmount = 0f;
+        ApplyBug(true);
+    }
+
+    private void LateUpdate()
+    {
+        if (holdNarrow && introCam != null) introCam.fieldOfView = baseFov * NarrowFactor;
+        if (!running || yearText == null) return;
+        if (ghostR == null) BuildGhosts();
+        ApplyBug(false);
+    }
+
+    private void BuildGhosts()
+    {
+        ghostR = Instantiate(yearText.gameObject, yearText.transform.parent).GetComponent<TextMeshProUGUI>();
+        ghostC = Instantiate(yearText.gameObject, yearText.transform.parent).GetComponent<TextMeshProUGUI>();
+        ghostR.name = "AnoFantasmaR";
+        ghostC.name = "AnoFantasmaC";
+        ghostR.transform.SetSiblingIndex(yearText.transform.GetSiblingIndex());
+        ghostC.transform.SetSiblingIndex(yearText.transform.GetSiblingIndex());
+    }
+
+    private void ApplyBug(bool force)
+    {
+        if (!force && Time.unscaledTime < nextBugStep) return;
+        // Passo irregular: as vezes congela mais tempo (lag).
+        nextBugStep = Time.unscaledTime + (Random.value < 0.15f * bugAmount ? Random.Range(0.1f, 0.22f) : Random.Range(0.03f, 0.06f));
+
+        string clean = yearText.text;
+        float a = FlashSettings.Enabled ? bugAmount : bugAmount * 0.4f;
+
+        // Ghosts RGB.
+        foreach (TextMeshProUGUI g in new[] { ghostR, ghostC })
+        {
+            if (g == null) continue;
+            bool red = g == ghostR;
+            g.text = clean;
+            g.color = red ? new Color(1f, 0.1f, 0.1f, 0.55f * a) : new Color(0.1f, 0.9f, 1f, 0.45f * a);
+            float off = Mathf.Round(Random.Range(4f, 22f) * a) * (red ? -1f : 1f);
+            g.rectTransform.localPosition = yearOriginalPosition + new Vector3(off, Mathf.Round(Random.Range(-3f, 3f) * a), 0f);
+            g.rectTransform.localScale = Vector3.one;
+        }
+
+        // Fatias por letra (vertices do TMP).
+        yearText.ForceMeshUpdate();
+        if (a <= 0.01f) return;
+        TMP_TextInfo info = yearText.textInfo;
+        float sliceY = Random.Range(-0.4f, 0.6f);      // altura do "corte" dentro da letra
+        for (int i = 0; i < info.characterCount; i++)
+        {
+            TMP_CharacterInfo ch = info.characterInfo[i];
+            if (!ch.isVisible) continue;
+            Vector3[] v = info.meshInfo[ch.materialReferenceIndex].vertices;
+            int vi = ch.vertexIndex;
+            float h = ch.topLeft.y - ch.bottomLeft.y;
+            float cut = ch.bottomLeft.y + h * (0.5f + sliceY * 0.5f);
+            float shiftTop = Random.value < 0.6f * a ? Mathf.Round(Random.Range(-28f, 28f) * a / 4f) * 4f : 0f;
+            float shiftAll = Random.value < 0.25f * a ? Mathf.Round(Random.Range(-14f, 14f) * a / 4f) * 4f : 0f;
+            float jumpY = Random.value < 0.2f * a ? Mathf.Round(Random.Range(-10f, 10f) * a / 4f) * 4f : 0f;
+            for (int k = 0; k < 4; k++)
+            {
+                Vector3 p = v[vi + k];
+                p.x += shiftAll + (p.y > cut ? shiftTop : 0f);
+                p.y += jumpY;
+                v[vi + k] = p;
+            }
+        }
+        yearText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
+
+        // Lixo no lugar de um digito, so por um passo (texto real volta no proximo SetYear/passo).
+        if (Random.value < 0.25f * a && clean.Length > 0)
+        {
+            char[] c = clean.ToCharArray();
+            c[Random.Range(0, c.Length)] = Junk[Random.Range(0, Junk.Length)];
+            if (ghostR != null) ghostR.text = new string(c);
+        }
+    }
+
+    // ---------- FOV + volume da viagem ----------
+    // Durante a intro a visao fica estreita (tunel) e corrompida; no fim ela "estoura"
+    // para alem do normal com um whoosh e assenta oscilando ate o FOV do jogo.
+    private Camera introCam;
+    private float baseFov = 60f;
+    private const float NarrowFactor = 0.55f;
+    private Volume fxVolume;
+    private LensDistortion fxLens;
+    private ChromaticAberration fxChroma;
+    private FilmGrain fxGrain;
+    private ColorAdjustments fxColor;
+    private bool holdNarrow;
+
+    private void SetupLens()
+    {
+        introCam = Camera.main;
+        if (introCam != null)
+        {
+            baseFov = introCam.fieldOfView;
+            introCam.fieldOfView = baseFov * NarrowFactor;
+            holdNarrow = true;
+        }
+
+        GameObject go = new GameObject("IntroViagemVolume");
+        fxVolume = go.AddComponent<Volume>();
+        fxVolume.isGlobal = true;
+        fxVolume.priority = 150f;
+        VolumeProfile p = ScriptableObject.CreateInstance<VolumeProfile>();
+        fxVolume.profile = p;
+        fxLens = p.Add<LensDistortion>(true);
+        fxLens.intensity.Override(-0.45f);
+        fxChroma = p.Add<ChromaticAberration>(true);
+        fxChroma.intensity.Override(0.7f);
+        fxGrain = p.Add<FilmGrain>(true);
+        fxGrain.type.Override(FilmGrainLookup.Medium4);
+        fxGrain.intensity.Override(0.7f);
+        fxColor = p.Add<ColorAdjustments>(true);
+        fxColor.saturation.Override(-40f);
+        fxColor.contrast.Override(15f);
+    }
+
+    private IEnumerator Arrival()
+    {
+        holdNarrow = false;
+        PlaySound(Whoosh(), 0.6f);
+        float narrow = baseFov * NarrowFactor;
+        const float burst = 0.45f, settle = 1.1f;
+        for (float t = 0f; t < burst + settle; t += Time.unscaledDeltaTime)
+        {
+            float fov, lens, ca, grain, sat;
+            if (t < burst)
+            {
+                float k = 1f - Mathf.Pow(2f, -10f * t / burst);           // ease-out expo
+                fov = Mathf.Lerp(narrow, baseFov * 1.18f, k);
+                lens = Mathf.Lerp(-0.45f, 0.35f, k);
+                ca = Mathf.Lerp(0.7f, 1f, k);
+                grain = 0.7f;
+                sat = -40f;
+            }
+            else
+            {
+                float u = (t - burst) / settle;
+                float wobble = Mathf.Exp(-5f * u) * Mathf.Cos(9f * u);  // mola amortecida
+                fov = baseFov * (1f + 0.18f * wobble);
+                lens = 0.35f * wobble;
+                ca = 1f - u;
+                grain = Mathf.Lerp(0.7f, 0f, u);
+                sat = Mathf.Lerp(-40f, 0f, u);
+            }
+            if (introCam != null) introCam.fieldOfView = fov;
+            fxLens.intensity.Override(lens);
+            fxChroma.intensity.Override(ca);
+            fxGrain.intensity.Override(grain);
+            fxColor.saturation.Override(sat);
+            yield return null;
+        }
+        if (introCam != null) introCam.fieldOfView = baseFov;
+        if (fxVolume != null) Destroy(fxVolume.gameObject);
+    }
+
+    private static AudioClip whoosh;
+    // Ar "puxado" subindo: ruido filtrado com varredura de frequencia.
+    private static AudioClip Whoosh()
+    {
+        if (whoosh != null) return whoosh;
+        const int rate = 44100;
+        int n = (int)(rate * 0.9f);
+        float[] d = new float[n];
+        var rng = new System.Random(9);
+        float lp = 0f, lp2 = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            float k = (float)i / n;
+            float cutoff = Mathf.Lerp(0.02f, 0.35f, Mathf.Sin(k * Mathf.PI * 0.5f));
+            float noise = (float)(rng.NextDouble() * 2 - 1);
+            lp += (noise - lp) * cutoff;
+            lp2 += (lp - lp2) * cutoff;
+            float env = Mathf.Pow(Mathf.Sin(Mathf.PI * Mathf.Pow(k, 0.6f)), 2f);
+            d[i] = lp2 * env * 1.4f;
+        }
+        whoosh = AudioClip.Create("Whoosh", n, 1, rate, false);
+        whoosh.SetData(d, 0);
+        return whoosh;
+    }
+
     private void Awake()
     {
         if (yearText != null)
@@ -124,6 +326,10 @@ public class TimeTravelIntro : MonoBehaviour
 
         SetYear(startYear);
 
+        PlayerRespawn.ResetDeaths();
+        art = Resources.Load<LoadingScreenArt>("LoadingScreenArt");
+        SetupLens();
+
         running = true;
 
         StartCoroutine(
@@ -161,10 +367,15 @@ public class TimeTravelIntro : MonoBehaviour
             finalSound,
             finalVolume
         );
+        if (art != null && art.tapeClick != null)
+            PlaySound(art.tapeClick, 0.9f);
+        StartCoroutine(FinalBurst());
 
         yield return new WaitForSecondsRealtime(
             finalPause
         );
+
+        StartCoroutine(Arrival());
 
         yield return StartCoroutine(
             FadeIntro()
@@ -185,6 +396,10 @@ public class TimeTravelIntro : MonoBehaviour
         int lastYear = startYear;
 
         SetYear(startYear);
+
+        bool tape = art != null && art.tapeRewind != null;
+        if (tape)
+            PlaySound(art.tapeRewind, 0.5f);
 
         while (elapsed < countdownDuration)
         {
@@ -222,7 +437,11 @@ public class TimeTravelIntro : MonoBehaviour
                 lastYear = year;
             }
 
+            // Corrupcao digital cresce conforme a viagem acelera.
+            bugAmount = Mathf.Lerp(0.15f, 0.7f, progress);
+
             if (
+                !tape &&
                 countdownSound != null &&
                 soundTimer >= countdownSoundInterval
             )
@@ -250,6 +469,7 @@ public class TimeTravelIntro : MonoBehaviour
         bool playedGlitchSound = false;
 
         SetYear(1974);
+        bugAmount = 1f;
 
         while (elapsed < glitchDuration)
         {
@@ -280,7 +500,7 @@ public class TimeTravelIntro : MonoBehaviour
                 playedGlitchSound = true;
             }
 
-            if (soundTimer >= 0.2f)
+            if (soundTimer >= 0.35f)
             {
                 soundTimer = 0f;
 
@@ -288,7 +508,7 @@ public class TimeTravelIntro : MonoBehaviour
                 {
                     PlaySound(
                         glitchSound,
-                        glitchVolume * 0.35f
+                        glitchVolume * 0.15f
                     );
                 }
             }
@@ -394,6 +614,7 @@ public class TimeTravelIntro : MonoBehaviour
             yearText.color =
                 yearOriginalColor;
 
+            yearText.rectTransform.localScale = Vector3.one;
             yearText.rectTransform.localPosition =
                 yearOriginalPosition;
         }
@@ -526,6 +747,9 @@ public class TimeTravelIntro : MonoBehaviour
 
     private void FinishIntro()
     {
+        if (ghostR != null) Destroy(ghostR.gameObject);
+        if (ghostC != null) Destroy(ghostC.gameObject);
+
         if (introVolume != null)
             introVolume.weight = 0f;
 

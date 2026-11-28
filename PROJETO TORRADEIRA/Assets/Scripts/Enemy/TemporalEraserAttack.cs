@@ -24,7 +24,7 @@ public class TemporalEraserAttack : MonoBehaviour
             return;
 
         TemporalEraserController stunned = GetComponentInParent<TemporalEraserController>();
-        if (stunned != null && stunned.IsStunned)
+        if (stunned != null && (stunned.IsStunned || stunned.IsFleeing))
             return;
 
         if (defeatController == null)

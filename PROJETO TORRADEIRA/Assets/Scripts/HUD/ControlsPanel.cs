@@ -23,11 +23,11 @@ public class ControlsPanel : MonoBehaviour
         if (Keyboard.current == null)
             return;
 
-        if (Keyboard.current.tabKey.isPressed && !isVisible)
+        if (Keyboard.current.f1Key.isPressed && !isVisible)
         {
             Show();
         }
-        else if (!Keyboard.current.tabKey.isPressed && isVisible)
+        else if (!Keyboard.current.f1Key.isPressed && isVisible)
         {
             Hide();
         }

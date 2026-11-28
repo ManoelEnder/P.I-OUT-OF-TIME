@@ -253,6 +253,6 @@ public class PauseMenu : MonoBehaviour
         if (otherCanvasRaycaster != null)
             otherCanvasRaycaster.enabled = true;
 
-        SceneManager.LoadScene(mainMenuSceneName);
+        LoadingScreen.Load(mainMenuSceneName);
     }
 }

@@ -78,7 +78,7 @@ public class DefeatController : MonoBehaviour
         if (photo != null)
             photo.TryExitCameraMode();
 
-        yield return JumpscareSequence.Play(this, cam, enemy, screamVolume);
+        yield return JumpscareSequence.Play(this, cam, enemy, Mathf.Min(screamVolume, 1f) * 0.35f); // grito estava alto demais
 
         ShowDefeatPanel();
         // O preto do circulo some por cima da tela de derrota (que tambem e escura): sem piscar o jogo.
@@ -104,7 +104,17 @@ public class DefeatController : MonoBehaviour
         isDefeated = false;
         IsDefeated = false;
         onRetry?.Invoke();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // Progresso fica salvo: o jogador so renasce (atordoado, longe do inimigo).
+        // Se nao achar lugar seguro (ex.: sem NavMesh), recarrega a fase como antes.
+        if (PlayerRespawn.TryRespawn())
+        {
+            if (defeatPanel != null) defeatPanel.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            return;
+        }
+        LoadingScreen.Load(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMenu()
@@ -115,7 +125,7 @@ public class DefeatController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        SceneManager.LoadScene(menuSceneName);
+        LoadingScreen.Load(menuSceneName);
     }
 
     public void SetSpawnPoint(Transform spawnPoint)

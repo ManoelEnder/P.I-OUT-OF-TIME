@@ -46,11 +46,12 @@ public class RadioMessageUI : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         targetPosition = rectTransform.anchoredPosition;
-        // Sobe um pouco o texto para o radio caber embaixo dele.
-        if (messageText != null)
-            messageText.rectTransform.anchoredPosition += new Vector2(0f, LiftForRadio);
-        if (radio == null)
-            BuildRadio();
+        // Radio removido do jogo: so sobra a legenda para avisos do sistema (ex.: camera perdida).
+        // As dicas agora aparecem no menu de pausa e nas telas de carregamento (GameTips).
+        if (radio != null)
+            Destroy(radio.gameObject);
+        radio = null; radioImage = null; led = null; antenna = null;
+        if (audioSource != null) audioSource.Stop();
         HideImmediate();
     }
 
@@ -80,8 +81,8 @@ public class RadioMessageUI : MonoBehaviour
         showing = true;
         messageText.text = message;
 
-        if (audioSource != null && audioClip != null)
-            audioSource.PlayOneShot(audioClip);
+        // Sem chiado/voz de radio.
+        audioClip = null;
 
         Vector2 startPosition = targetPosition - new Vector2(0f, startOffset);
         rectTransform.anchoredPosition = startPosition;

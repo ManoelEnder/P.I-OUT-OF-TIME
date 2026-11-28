@@ -24,7 +24,9 @@ public class RadioSystem : MonoBehaviour
 
     void Start()
     {
-        if (playOnStart)
+        // Radio removido: as dicas foram para o menu de pausa e para as telas de carregamento.
+        enabled = false;
+        if (false)
         {
             radioCoroutine = StartCoroutine(
                 RadioRoutine()

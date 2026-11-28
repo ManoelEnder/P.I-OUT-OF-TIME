@@ -24,7 +24,19 @@ public class TemporalEraserVision : MonoBehaviour
     [Tooltip("Camadas que bloqueiam a visao. O jogador e o proprio inimigo sao ignorados.")]
     [SerializeField] private LayerMask obstacleMask = ~0;
 
-    private static readonly float[] TargetHeights = { 1.55f, 0.9f };
+    private static readonly float[] TargetHeights = { 1.55f, 1.2f, 0.9f };
+    private Transform cameraRoot;
+
+    private void Awake()
+    {
+        // Valores da cena eram curtos demais (10 m, 90 graus): ele ficava "cego" com o
+        // jogador parado na frente dele.
+        detectionDistance = Mathf.Max(detectionDistance, 16f);
+        fieldOfView = Mathf.Max(fieldOfView, 120f);
+        peripheralDetectionDistance = Mathf.Max(peripheralDetectionDistance, 6f);
+        senseDistance = Mathf.Max(senseDistance, 2.2f);
+        if (Camera.main != null) cameraRoot = Camera.main.transform.root;
+    }
     private readonly RaycastHit[] hits = new RaycastHit[8];
 
     public bool CanSeePlayer()
@@ -40,7 +52,8 @@ public class TemporalEraserVision : MonoBehaviour
         if (flatDistance > detectionDistance)
             return false;
 
-        Vector3 forward = eyePoint.forward;
+        // Direcao do corpo (o EyePoint pode girar com a animacao/jumpscare).
+        Vector3 forward = transform.forward;
         forward.y = 0f;
         float angle = flatDistance > 0.01f ? Vector3.Angle(forward, toPlayer) : 0f;
 
@@ -75,6 +88,15 @@ public class TemporalEraserVision : MonoBehaviour
 
             // Ignora o proprio inimigo e o jogador.
             if (hit.IsChildOf(transform) || hit == player || hit.IsChildOf(player))
+                continue;
+            // Camera do jogador (Cinemachine fica fora do Player) e objetos pequenos/soltos
+            // (pecas, baterias, papeis) nao escondem o jogador.
+            if (cameraRoot != null && hit.IsChildOf(cameraRoot))
+                continue;
+            Collider col = hits[i].collider;
+            if (col.attachedRigidbody != null && !col.attachedRigidbody.isKinematic)
+                continue;
+            if (col.bounds.size.magnitude < 0.6f)
                 continue;
 
             return false;

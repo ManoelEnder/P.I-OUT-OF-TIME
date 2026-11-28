@@ -89,7 +89,11 @@ public class PauseMenuView : MonoBehaviour
             anyOpen |= active;
 
             if (active && !wasActive[panel])
+            {
                 StartCoroutine(Enter(panel));
+                if (panel == pausePanel && tipText != null)
+                    tipText.text = "DICA:  " + GameTips.Random();
+            }
 
             wasActive[panel] = active;
         }
@@ -213,7 +217,16 @@ public class PauseMenuView : MonoBehaviour
 
             MakeItem(button, label);
         }
+
+        // Dica (antes vinha pelo radio). Troca a cada vez que o jogo e pausado.
+        tipText = NewText(root, "Dica", header != null ? header.font : null, "", 24f, Dim);
+        tipText.textWrappingMode = TextWrappingModes.Normal;
+        tipText.alignment = TextAlignmentOptions.TopLeft;
+        LeftAnchor(tipText.rectTransform, new Vector2(Left, y - 30f), new Vector2(820f, 90f));
+        tipText.rectTransform.pivot = new Vector2(0f, 1f);
     }
+
+    private TextMeshProUGUI tipText;
 
     private void LayOutSettings()
     {

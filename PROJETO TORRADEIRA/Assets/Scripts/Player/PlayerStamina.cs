@@ -141,12 +141,26 @@ public class PlayerStamina : MonoBehaviour
 
         // Some quando cheia; esgotada pisca.
         float targetAlpha = n >= 0.999f && !Exhausted ? 0f : 1f;
+        // Nao fica por cima do album, do menu de pausa nem do visor da camera.
+        if (OverlayOpen())
+        {
+            targetAlpha = 0f;
+            group.alpha = 0f;
+        }
         group.alpha = Mathf.MoveTowards(group.alpha, targetAlpha, dt * (targetAlpha > 0f ? 6f : 1.5f));
 
         Color c = new Color(0.88f, 0.88f, 0.86f, 1f);
         if (Exhausted)
             c = Mathf.Repeat(Time.time * 3f, 1f) < 0.5f ? new Color(0.55f, 0.55f, 0.53f, 1f) : new Color(0.3f, 0.3f, 0.29f, 1f);
         fill.color = c;
+    }
+
+    private AlbumController album;
+    private bool OverlayOpen()
+    {
+        if (PauseMenu.IsPaused || RadioMessageUI.CameraOpen) return true;
+        if (album == null) album = FindFirstObjectByType<AlbumController>();
+        return album != null && album.IsAlbumOpen;
     }
 
     private static Image NewImage(string name, Transform parent, Color color)

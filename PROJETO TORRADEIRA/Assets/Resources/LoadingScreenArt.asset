@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6e1a1b5d204f9d983006fa25031137, type: 3}
+  m_Name: LoadingScreenArt
+  m_EditorClassIdentifier: 
+  font: {fileID: 11400000, guid: 4a4a2da3efba7af46bc2f16999f20ea3, type: 2}
+  tapeDeck: {fileID: 2800000, guid: 9fea91eb2b6d039458471d351060bfc0, type: 3}
+  tapeReel: {fileID: 2800000, guid: ec8423b470d14fb4fa7ee84482f6770f, type: 3}
+  tapeRewind: {fileID: 8300000, guid: 3268f9fd768d8ad4ab85c7d5ffe2de60, type: 3}
+  tapeClick: {fileID: 8300000, guid: 7607d12972b5df442ad5833e002b4b58, type: 3}
+  radioStatic: {fileID: 8300000, guid: 98b0214260b03b741979d0ee0680d8f3, type: 3}

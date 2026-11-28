@@ -167,6 +167,6 @@ public class NPCMissao : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(nomeCenaMenu);
+        LoadingScreen.Load(nomeCenaMenu);
     }
 }

@@ -36,6 +36,9 @@ public class TemporalEraserPresence : MonoBehaviour
     private static readonly int SpeedId = Animator.StringToHash("Speed");
     private bool hasSpeedParameter;
 
+    // Mixagem: o inimigo estava alto demais. Tudo dele passa por este fator.
+    private const float Loudness = 0.4f;
+
     private static AudioClip droneClip;
     private static AudioClip stepClip;
 
@@ -72,8 +75,13 @@ public class TemporalEraserPresence : MonoBehaviour
 
             droneSource.clip = droneClip;
             droneSource.loop = true;
-            droneSource.volume = roamingVolume;
+            droneSource.volume = roamingVolume * Loudness;
+            Make3D(droneSource);
             droneSource.Play();
+        }
+        if (stepSource != null)
+            Make3D(stepSource);
+        {
         }
 
         if (stepClip == null)
@@ -103,7 +111,7 @@ public class TemporalEraserPresence : MonoBehaviour
 
         if (droneSource != null)
         {
-            float target = chasing ? chasingVolume : roamingVolume;
+            float target = (chasing ? chasingVolume : roamingVolume) * Loudness;
             droneSource.volume = Mathf.MoveTowards(droneSource.volume, target, Time.deltaTime * 0.8f);
             droneSource.pitch = Mathf.MoveTowards(droneSource.pitch, chasing ? 1.15f : 1f, Time.deltaTime * 0.5f);
         }
@@ -124,7 +132,17 @@ public class TemporalEraserPresence : MonoBehaviour
 
         stepDistance = 0f;
         stepSource.pitch = Random.Range(0.85f, 1.05f);
-        stepSource.PlayOneShot(stepClip, chasing ? 0.9f : 0.55f);
+        stepSource.PlayOneShot(stepClip, (chasing ? 0.9f : 0.55f) * Loudness * 1.5f);
+    }
+
+    // Som 3D que some com a distancia (antes dava para ouvir alto pelo mapa todo).
+    private static void Make3D(AudioSource s)
+    {
+        s.spatialBlend = 1f;
+        s.rolloffMode = AudioRolloffMode.Linear;
+        s.minDistance = 2f;
+        s.maxDistance = 22f;
+        s.dopplerLevel = 0f;
     }
 
     private void UpdateGlitch(bool chasing)

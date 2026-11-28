@@ -25,10 +25,15 @@ public class Door : MonoBehaviour, IInteractable
     private float side = 1f;      // +1 ou -1: para que lado abre
     private Quaternion closedRotation;
     private Vector3 leafLocal;    // do eixo (dobradica) ate o centro da folha, em espaco local
+    private Collider[] doorColliders;
+    private CharacterController playerController;
 
     private void Start()
     {
         closedRotation = transform.rotation;
+        doorColliders = GetComponentsInChildren<Collider>();
+        PlayerMovement pm = FindFirstObjectByType<PlayerMovement>();
+        if (pm != null) playerController = pm.GetComponent<CharacterController>();
 
         // Centro da folha da porta em relacao a dobradica (o pivo do objeto).
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
@@ -110,6 +115,31 @@ public class Door : MonoBehaviour, IInteractable
             angularVelocity = 0f;
         }
 
+        Quaternion previous = transform.rotation;
         transform.rotation = closedRotation * Quaternion.Euler(0f, angle * side, 0f);
+
+        // A porta e girada por transform: se ela entrar no CharacterController, o Unity
+        // empurra o jogador para fora com forca (o bug de "arremessar" o player).
+        // Agora o jogador bloqueia a porta: ela para onde encostou nele.
+        if (previous != transform.rotation && OverlapsPlayer())
+        {
+            transform.rotation = previous;
+            angle = Mathf.Abs(Quaternion.Angle(closedRotation, previous));
+            angularVelocity = 0f;
+        }
+    }
+
+    private bool OverlapsPlayer()
+    {
+        if (playerController == null || doorColliders == null) return false;
+        Transform pt = playerController.transform;
+        foreach (Collider c in doorColliders)
+        {
+            if (c == null || !c.enabled || c.isTrigger) continue;
+            if (Physics.ComputePenetration(c, c.transform.position, c.transform.rotation,
+                    playerController, pt.position, pt.rotation, out _, out float dist) && dist > 0.001f)
+                return true;
+        }
+        return false;
     }
 }

@@ -154,7 +154,7 @@ public class FieldJournal : MonoBehaviour
         missionsTab = Label(header, "MissionsTab", "MISSÕES", 30f, Dim, TextAlignmentOptions.Center);
         Place(missionsTab.rectTransform, new Vector2(110f, 0f), new Vector2(200f, 44f));
 
-        TextMeshProUGUI tabKey = Label(header, "TabKey", "[TAB]", 18f, Dim, TextAlignmentOptions.Center);
+        TextMeshProUGUI tabKey = Label(header, "TabKey", "◄ TAB ►", 20f, Accent, TextAlignmentOptions.Center);
         Place(tabKey.rectTransform, new Vector2(0f, 0f), new Vector2(60f, 30f));
 
         Image marker = NewImage("Marker", header, Accent);
@@ -178,7 +178,7 @@ public class FieldJournal : MonoBehaviour
         for (int i = 0; i < rows.Length; i++)
             rows[i] = BuildRow(missionsPage, i, 168f - i * 88f);
 
-        TextMeshProUGUI footer = Label(panel, "JournalHint", "[SETAS] escolher foto    [X] apagar foto    [TAB] missões    [ESC] fechar", 18f, Dim, TextAlignmentOptions.Center);
+        TextMeshProUGUI footer = Label(panel, "JournalHint", "[←→] trocar foto   [X] apagar   [TAB] ÁLBUM / MISSÕES   [F] ou [ESC] fechar", 22f, Ink, TextAlignmentOptions.Center);
         albumCounter = Label(panel, "AlbumCounter", "", 22f, Ink, TextAlignmentOptions.Right);
         RectTransform ac = albumCounter.rectTransform;
         ac.anchorMin = ac.anchorMax = new Vector2(1f, 1f);

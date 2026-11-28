@@ -54,7 +54,7 @@ public class EnemyProximityWarning : MonoBehaviour
         if (near > 0.02f && Time.time >= nextBeat)
         {
             nextBeat = Time.time + Mathf.Lerp(1.05f, 0.33f, near);
-            audioSource.PlayOneShot(beatClip, maxVolume * Mathf.Lerp(0.25f, 1f, near));
+            audioSource.PlayOneShot(beatClip, maxVolume * 0.6f * Mathf.Lerp(0.25f, 1f, near));
             beatGlow = 1f;
         }
 

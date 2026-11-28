@@ -91,7 +91,9 @@ public class IntroVideoCutscene : MonoBehaviour
         player.Stop();
         Cursor.lockState = savedLock;
         Cursor.visible = savedVisible;
-        SceneManager.LoadScene(nextScene);
+        // Tela ja esta preta: entra direto na tela de carregamento (com dica) e a cena principal
+        // aparece com fade, em vez do corte seco de antes.
+        LoadingScreen.Load(nextScene, fadeIn: false);
     }
 
     private void OnDestroy()

@@ -91,6 +91,33 @@ public class TemporalEraserController : MonoBehaviour
     public bool IsChasing => currentState == State.Chasing;
     public bool IsStunned => Time.time < stunnedUntil;
 
+    // Reacao a urina (PeeReaction): foge com nojo ou fica furioso.
+    private float fleeUntil, rageUntil, nextFleePath;
+    public bool IsFleeing => Time.time < fleeUntil;
+    public bool IsEnraged => Time.time < rageUntil;
+    public void Flee(float seconds) { fleeUntil = Time.time + seconds; nextFleePath = 0f; }
+    public void Enrage(float seconds) { rageUntil = Time.time + seconds; fleeUntil = 0f; }
+
+    private bool UpdateFleeing()
+    {
+        if (!IsFleeing) return false;
+        agent.isStopped = false;
+        agent.speed = chaseSpeed * 1.15f;
+        if (Time.time >= nextFleePath)
+        {
+            nextFleePath = Time.time + 0.6f;
+            Vector3 away = transform.position - player.position;
+            away.y = 0f;
+            if (away.sqrMagnitude < 0.01f) away = -transform.forward;
+            Vector3 target = transform.position + away.normalized * 14f + Random.insideUnitSphere * 3f;
+            if (NavMesh.SamplePosition(target, out NavMeshHit hit, 6f, NavMesh.AllAreas))
+                agent.SetDestination(hit.position);
+        }
+        UpdateRotation();
+        if (!IsFleeing) ReturnToRoaming();
+        return true;
+    }
+
     // Flash da camera de perto: fica atordoado, parado, e depois procura onde o jogador estava.
     public void Stun(float seconds)
     {
@@ -113,7 +140,35 @@ public class TemporalEraserController : MonoBehaviour
 
         if (vision == null)
             vision = GetComponent<TemporalEraserVision>();
+
+        ApplyThreatTuning();
     }
+
+    // Valores da cena eram faceis de despistar. Garante um minimo de agressividade
+    // (sobrescreve o que estiver serializado so quando for mais "bonzinho").
+    private void ApplyThreatTuning()
+    {
+        // Equilibrio: perigoso, mas da para despistar quebrando a linha de visao e
+        // se escondendo. Correndo (6) o jogador abre distancia; andando (3.5) nao.
+        chaseSpeed = Mathf.Clamp(chaseSpeed, 4.4f, 4.8f);
+        roamingSpeed = Mathf.Max(roamingSpeed, 2.2f);
+        searchSpeed = Mathf.Clamp(searchSpeed, 3f, 3.4f);
+        reactionTime = Mathf.Clamp(reactionTime, 0.2f, 0.3f);
+        loseSightGrace = Mathf.Clamp(loseSightGrace, 1f, 1.4f);
+        searchDuration = Mathf.Clamp(searchDuration, 7f, 9f);
+        searchAttempts = Mathf.Clamp(searchAttempts, 2, 4);
+        hearSprint = Mathf.Clamp(hearSprint, 9f, 12f);
+        hearWalk = Mathf.Clamp(hearWalk, 2.5f, 3.5f);
+        activationDelay = Mathf.Min(activationDelay, 3f); // antes ficava 12 s parado no comeco
+    }
+
+    [Header("Caca")]
+    [SerializeField] private float huntInterval = 70f;
+    [SerializeField] private float huntRadius = 16f;
+    private float nextHunt;
+    private Vector3 lastSafePosition;
+    private bool hasSafePosition;
+    private float lastLockOnTime;
 
     private void Start()
     {
@@ -178,7 +233,10 @@ public class TemporalEraserController : MonoBehaviour
 
         RecordTrail();
 
-        bool sees = vision.CanSeePlayer();
+        if (UpdateFleeing())
+            return;
+
+        bool sees = vision.CanSeePlayer() || IsEnraged; // furioso: sabe onde voce esta
 
         if (!sees && currentState != State.Chasing && Hears())
         {
@@ -192,6 +250,18 @@ public class TemporalEraserController : MonoBehaviour
         {
             lastKnownPlayerPosition = player.position;
             lastSeenTime = Time.time;
+        }
+
+        // De tempos em tempos ele "fareja" a regiao do jogador em vez de vagar a esmo.
+        if (currentState == State.Roaming && Time.time >= nextHunt)
+        {
+            nextHunt = Time.time + huntInterval * Random.Range(0.7f, 1.3f);
+            if (Time.time > activateAt + 5f && Time.time - lastSeenTime > 45f)
+            {
+                lastKnownPlayerPosition = player.position + Random.insideUnitSphere * huntRadius;
+                lastSeenTime = Time.time;
+                StartSearching();
+            }
         }
 
         switch (currentState)
@@ -211,6 +281,71 @@ public class TemporalEraserController : MonoBehaviour
 
         UpdateRotation();
         UpdateStuck();
+    }
+
+    // O agente so anda no NavMesh; se ele estiver desatualizado (fitas/paredes adicionadas
+    // depois do bake), o inimigo atravessava. Aqui cada passo e conferido contra colisores
+    // solidos: se cruzar um, volta e recorta o NavMesh naquele ponto para recalcular o caminho.
+    private void LateUpdate()
+    {
+        if (agent == null || !agent.isOnNavMesh) return;
+        Vector3 pos = transform.position;
+        if (!hasSafePosition) { lastSafePosition = pos; hasSafePosition = true; return; }
+
+        Vector3 delta = pos - lastSafePosition;
+        delta.y = 0f;
+        if (delta.sqrMagnitude < 0.0001f) return;
+        if (delta.sqrMagnitude > 4f) { lastSafePosition = pos; return; } // teleporte (Warp/reset)
+
+        float radius = Mathf.Max(0.15f, agent.radius * 0.6f);
+        Vector3 from = lastSafePosition + Vector3.up * 0.9f;
+        RaycastHit[] hits = Physics.SphereCastAll(from, radius, delta.normalized, delta.magnitude + 0.05f,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        foreach (RaycastHit h in hits)
+        {
+            if (h.collider == null || h.distance <= 0f) continue;   // ja estava dentro: ignora
+            Transform t = h.collider.transform;
+            if (t.IsChildOf(transform) || (player != null && t.IsChildOf(player))) continue;
+            if (h.collider.attachedRigidbody != null && !h.collider.attachedRigidbody.isKinematic) continue;
+            if (h.collider.GetComponentInParent<Door>() != null) continue; // portas tem NavMeshObstacle proprio
+
+            agent.Warp(lastSafePosition);
+            BlockAt(h.point, h.collider);
+            return;
+        }
+        lastSafePosition = pos;
+    }
+
+    private void BlockAt(Vector3 point, Collider c)
+    {
+        if (c.GetComponent<NavMeshObstacle>() == null && c.bounds.size.magnitude < 12f)
+        {
+            NavMeshObstacle o = c.gameObject.AddComponent<NavMeshObstacle>();
+            o.carving = true;
+            o.carveOnlyStationary = true;
+            o.shape = NavMeshObstacleShape.Box;
+            o.center = c.transform.InverseTransformPoint(c.bounds.center);
+            Vector3 s = c.transform.lossyScale;
+            o.size = new Vector3(c.bounds.size.x / Mathf.Max(0.001f, Mathf.Abs(s.x)),
+                                 c.bounds.size.y / Mathf.Max(0.001f, Mathf.Abs(s.y)),
+                                 c.bounds.size.z / Mathf.Max(0.001f, Mathf.Abs(s.z)));
+        }
+        else
+        {
+            // Colisor grande (parede inteira): recorta so um pedaco no ponto do impacto.
+            GameObject g = new GameObject("NavBlock");
+            g.transform.position = point;
+            NavMeshObstacle o = g.AddComponent<NavMeshObstacle>();
+            o.carving = true;
+            o.shape = NavMeshObstacleShape.Box;
+            o.size = new Vector3(0.6f, 2f, 0.6f);
+        }
+        if (agent.hasPath)
+        {
+            Vector3 dest = agent.destination;
+            agent.ResetPath();
+            agent.SetDestination(dest);
+        }
     }
 
     // ---------- Estados ----------
@@ -257,7 +392,7 @@ public class TemporalEraserController : MonoBehaviour
             return;
         }
 
-        agent.speed = chaseSpeed;
+        agent.speed = IsEnraged ? chaseSpeed * 1.3f : chaseSpeed;
         agent.isStopped = false;
 
         if (Time.time >= nextRepath)
@@ -356,21 +491,29 @@ public class TemporalEraserController : MonoBehaviour
     }
 
     // Chamado no "tentar de novo": volta ao ponto inicial e esquece o jogador.
-    public void ResetToStart()
+    public void ResetToStart() => ResetToStart(activationDelay);
+
+    public void ResetToStart(float wakeDelay)
     {
         if (agent == null || !agent.isActiveAndEnabled)
             return;
 
         agent.Warp(startPosition);
+        hasSafePosition = false;
         transform.rotation = startRotation;
         trail.Clear();
         trailTime.Clear();
         trailIndex = -1;
         lastSeenTime = -999f;
-        activateAt = Time.time + activationDelay;
+        activateAt = Time.time + wakeDelay;
+        sightTimer = 0f;
+        stunnedUntil = 0f;
 
         if (agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
             ReturnToRoaming();
+        }
     }
 
     // ---------- Movimento ----------

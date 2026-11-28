@@ -239,7 +239,7 @@ public class MissionSystem : MonoBehaviour
 
         if (fadeImage == null)
         {
-            SceneManager.LoadScene(finalSceneName);
+            LoadingScreen.Load(finalSceneName);
             yield break;
         }
 
@@ -258,7 +258,7 @@ public class MissionSystem : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.LoadScene(finalSceneName);
+        LoadingScreen.Load(finalSceneName);
     }
 
     public int GetPhotoCount()
